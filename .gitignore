@@ -1,0 +1,9 @@
+_site/
+.quarto/
+
+# Preserve downloaded source archives locally; do not commit multi-gigabyte raw data.
+data/raw/
+__pycache__/
+
+/.quarto/
+**/*.quarto_ipynb

@@ -1,0 +1,158 @@
+---
+title: "A First Look at Terminated Trials"
+subtitle: "Here are statistics on 602,514 registered studies on drug trials, with a focus on those that were marked \"terminated.\""
+format:
+  html:
+    toc: false
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| message: false
+library(ggplot2)
+library(dplyr)
+library(readr)
+library(scales)
+library(forcats)
+
+candidate_path <- "data/processed/aact_trial_termination_candidate_2026-09-12.tsv.gz"
+candidate <- read_tsv(candidate_path, show_col_types = FALSE, na = c("", "[missing]")) |>
+  mutate(
+    terminated = if_else(terminated_binary == 1, "Terminated", "Other status"),
+    phase_display = case_when(
+      phase %in% c("PHASE1", "EARLY_PHASE1") ~ "Phase I",
+      phase == "PHASE2" ~ "Phase II",
+      phase == "PHASE3" ~ "Phase III",
+      phase == "PHASE4" ~ "Phase IV",
+      phase == "NA" ~ "Not applicable",
+      TRUE ~ "Other / missing"
+    ),
+    phase_display = factor(phase_display, levels = c("Phase I", "Phase II", "Phase III", "Phase IV", "Not applicable", "Other / missing")),
+    status_display = fct_reorder(overall_status, terminated_binary, .fun = mean)
+  )
+
+status_summary <- candidate |>
+  group_by(overall_status) |>
+  summarise(
+    studies = n(),
+    terminated = sum(terminated_binary == 1),
+    termination_rate = terminated / studies,
+    .groups = "drop"
+  ) |>
+  arrange(desc(termination_rate), desc(studies)) |>
+  mutate(overall_status = factor(overall_status, levels = rev(overall_status)))
+
+phase_summary <- candidate |>
+  filter(!is.na(phase_display)) |>
+  group_by(phase_display) |>
+  summarise(
+    studies = n(),
+    terminated = sum(terminated_binary == 1),
+    termination_rate = terminated / studies,
+    .groups = "drop"
+  )
+
+design_summary <- candidate |>
+  mutate(
+    design_group = case_when(
+      randomized_vs_nonrandomized == "randomized" ~ "Randomized",
+      randomized_vs_nonrandomized == "non-randomized" ~ "Non-randomized",
+      TRUE ~ "Not reported"
+    )
+  ) |>
+  group_by(design_group, placebo_used) |>
+  summarise(studies = n(), .groups = "drop") |>
+  mutate(placebo_used = case_when(
+    placebo_used == "yes" ~ "Placebo mentioned",
+    placebo_used == "no" ~ "No placebo found",
+    TRUE ~ "Not reported"
+  ))
+```
+
+## Trial status
+
+This chart shows how many studies are in each status group. The coral bar indicates studies whose original `overall_status` is `TERMINATED`.
+
+```{r}
+#| label: fig-status
+#| fig-cap: "Study status and terminated studies"
+#| fig-width: 10
+#| fig-height: 6.5
+
+ggplot(status_summary, aes(x = studies, y = overall_status)) +
+  geom_col(fill = "#b8d8d8", width = 0.68) +
+  geom_col(aes(x = terminated), fill = "#e76f51", width = 0.68) +
+  geom_text(aes(label = comma(studies)), hjust = -0.12, color = "#183642", size = 3.4) +
+  scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.1))) +
+  labs(x = NULL, y = NULL) +
+  theme_minimal(base_family = "DM Sans") +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text.y = element_text(face = "bold", color = "#183642"),
+    axis.text.x = element_text(color = "#42616a"),
+    plot.background = element_rect(fill = "#f7f4ed", color = NA),
+    panel.background = element_rect(fill = "#f7f4ed", color = NA)
+  )
+```
+
+## Trial phase
+
+This chart shows the percentage of studies marked terminated in each phase group throughout the duration of the drug trials observed. Small and mixed groups are also shown. No studies were removed.
+
+```{r}
+#| label: fig-phase
+#| fig-cap: "Percentage of studies marked terminated in each phase group"
+#| fig-width: 10
+#| fig-height: 5.5
+
+ggplot(phase_summary, aes(x = phase_display, y = termination_rate)) +
+  geom_col(fill = "#e76f51", width = 0.62) +
+  geom_text(aes(label = percent(termination_rate, accuracy = 0.1)), vjust = -0.5, color = "#183642", size = 3.6) +
+  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, max(phase_summary$termination_rate) * 1.18), expand = c(0, 0)) +
+  labs(x = NULL, y = "Terminated share") +
+  theme_minimal(base_family = "DM Sans") +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text = element_text(color = "#183642"),
+    plot.background = element_rect(fill = "#f7f4ed", color = NA),
+    panel.background = element_rect(fill = "#f7f4ed", color = NA)
+  )
+```
+
+## Study design
+
+ This chart shows study counts by randomization and placebo reporting. The dataset keeps several study-design details instead of combining them into one score.
+
+```{r}
+#| label: fig-design
+#| fig-cap: "Study counts by randomization and placebo reporting"
+#| fig-width: 9
+#| fig-height: 4.8
+
+ggplot(design_summary, aes(x = design_group, y = studies, fill = placebo_used)) +
+  geom_col(position = "stack", width = 0.62) +
+  geom_text(aes(label = if_else(studies > 10000, comma(studies), "")), position = position_stack(vjust = 0.5), color = "#183642", size = 3.1) +
+  scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.08))) +
+  scale_fill_manual(values = c("Placebo mentioned" = "#e76f51", "No placebo found" = "#b8d8d8", "Not reported" = "#42616a")) +
+  labs(x = NULL, y = "Studies", fill = NULL) +
+  theme_minimal(base_family = "DM Sans") +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text = element_text(color = "#183642"),
+    legend.position = "bottom",
+    plot.background = element_rect(fill = "#f7f4ed", color = NA),
+    panel.background = element_rect(fill = "#f7f4ed", color = NA)
+  )
+```
+
+::: {.callout-note}
+## How to read this
+
+These charts describe the data; they do not prove that one factor causes a trial to stop. `terminated_binary` marks the original `TERMINATED` status. We have not yet chosen a comparison group, a way to handle missing data, a disease grouping, or a complexity score.
+:::

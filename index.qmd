@@ -1,0 +1,50 @@
+---
+title: "Make room for the next idea"
+subtitle: "Milestone 4 is a small, deliberate place to turn unfinished thoughts into visible progress."
+about:
+  template: jolla
+  image: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1600&q=85"
+  image-shape: rounded
+  links:
+    - text: Explore the project
+      href: about.qmd
+      icon: arrow-right
+---
+
+## A clear starting point
+
+Good work gets easier when the starting line is visible. This site is a lightweight home for notes, experiments, and the decisions that move a project forward.
+
+## Where studies stand
+
+<div class="status-graphic">
+<img src="assets/aact_status_distribution.svg" alt="Horizontal bar chart showing all 14 overall-status categories among 602,514 AACT studies. Terminated studies are highlighted in coral, with counts and percentages shown for every category." />
+</div>
+
+This first-pass view uses the existing AACT candidate dataset and keeps every reported status category separate. It highlights `TERMINATED` without labeling the remaining studies as completed or implying that any status causes another.
+
+::: {.grid}
+::: {.g-col-12 .g-col-md-4}
+### Notice
+
+Pay attention to the useful signal: what changed, what matters, and what is ready for a closer look.
+:::
+
+::: {.g-col-12 .g-col-md-4}
+### Shape
+
+Give promising ideas enough structure to become something you can test, share, and improve.
+:::
+
+::: {.g-col-12 .g-col-md-4}
+### Move
+
+Keep the next step small enough to take today, then let momentum do its quiet work.
+:::
+:::
+
+::: {.callout-note}
+## Start where the work is
+
+The first version does not need to be complete. It needs to be real enough to teach you what comes next.
+:::

@@ -1,0 +1,454 @@
+table	column	relevance	reason
+baseline_counts	id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_counts	nct_id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_counts	result_group_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+baseline_counts	ctgov_group_code	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+baseline_counts	units	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_counts	scope	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_counts	count	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	nct_id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	result_group_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+baseline_measurements	ctgov_group_code	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+baseline_measurements	classification	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	category	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	title	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	description	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	units	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	param_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+baseline_measurements	param_value	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	param_value_num	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	dispersion_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+baseline_measurements	dispersion_value	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	dispersion_value_num	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	dispersion_lower_limit	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	dispersion_upper_limit	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	explanation_of_na	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	number_analyzed	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	number_analyzed_units	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	population_description	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+baseline_measurements	calculate_percentage	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+brief_summaries	id	Context	Available in the source table; retain for exploratory analysis or linkage.
+brief_summaries	nct_id	Context	Available in the source table; retain for exploratory analysis or linkage.
+brief_summaries	description	Context	Available in the source table; retain for exploratory analysis or linkage.
+browse_conditions	id	Core	Condition or topic associated with the study.
+browse_conditions	nct_id	Core	Condition or topic associated with the study.
+browse_conditions	mesh_term	Core	Condition or topic associated with the study.
+browse_conditions	downcase_mesh_term	Core	Condition or topic associated with the study.
+browse_conditions	mesh_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+browse_interventions	id	Core	Intervention, treatment group, or intervention classification associated with the study.
+browse_interventions	nct_id	Core	Intervention, treatment group, or intervention classification associated with the study.
+browse_interventions	mesh_term	Core	Intervention, treatment group, or intervention classification associated with the study.
+browse_interventions	downcase_mesh_term	Core	Intervention, treatment group, or intervention classification associated with the study.
+browse_interventions	mesh_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+calculated_values	id	Context	Available in the source table; retain for exploratory analysis or linkage.
+calculated_values	nct_id	Context	Available in the source table; retain for exploratory analysis or linkage.
+calculated_values	number_of_facilities	Context	Available in the source table; retain for exploratory analysis or linkage.
+calculated_values	number_of_nsae_subjects	Context	Available in the source table; retain for exploratory analysis or linkage.
+calculated_values	number_of_sae_subjects	Context	Available in the source table; retain for exploratory analysis or linkage.
+calculated_values	registered_in_calendar_year	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+calculated_values	nlm_download_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+calculated_values	actual_duration	Context	Available in the source table; retain for exploratory analysis or linkage.
+calculated_values	were_results_reported	Context	Available in the source table; retain for exploratory analysis or linkage.
+calculated_values	months_to_report_results	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+calculated_values	has_us_facility	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+calculated_values	has_single_facility	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+calculated_values	minimum_age_num	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+calculated_values	maximum_age_num	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+calculated_values	minimum_age_unit	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+calculated_values	maximum_age_unit	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+calculated_values	number_of_primary_outcomes_to_measure	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+calculated_values	number_of_secondary_outcomes_to_measure	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+calculated_values	number_of_other_outcomes_to_measure	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+central_contacts	id	Core	Sponsor, responsible party, investigator, contact, or site information.
+central_contacts	nct_id	Core	Sponsor, responsible party, investigator, contact, or site information.
+central_contacts	contact_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+central_contacts	name	Core	Sponsor, responsible party, investigator, contact, or site information.
+central_contacts	phone	Core	Sponsor, responsible party, investigator, contact, or site information.
+central_contacts	email	Core	Sponsor, responsible party, investigator, contact, or site information.
+central_contacts	phone_extension	Core	Sponsor, responsible party, investigator, contact, or site information.
+central_contacts	role	Core	Sponsor, responsible party, investigator, contact, or site information.
+conditions	id	Core	Condition or topic associated with the study.
+conditions	nct_id	Core	Condition or topic associated with the study.
+conditions	name	Core	Condition or topic associated with the study.
+conditions	downcase_name	Core	Condition or topic associated with the study.
+countries	id	Supporting	Geographic or site-level context that may be associated with study continuation or termination.
+countries	nct_id	Supporting	Geographic or site-level context that may be associated with study continuation or termination.
+countries	name	Supporting	Geographic or site-level context that may be associated with study continuation or termination.
+countries	removed	Supporting	Geographic or site-level context that may be associated with study continuation or termination.
+design_group_interventions	id	Core	Intervention, treatment group, or intervention classification associated with the study.
+design_group_interventions	nct_id	Core	Intervention, treatment group, or intervention classification associated with the study.
+design_group_interventions	design_group_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+design_group_interventions	intervention_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+design_groups	id	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+design_groups	nct_id	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+design_groups	group_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+design_groups	title	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+design_groups	description	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+design_outcomes	id	Context	Available in the source table; retain for exploratory analysis or linkage.
+design_outcomes	nct_id	Context	Available in the source table; retain for exploratory analysis or linkage.
+design_outcomes	outcome_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+design_outcomes	measure	Context	Available in the source table; retain for exploratory analysis or linkage.
+design_outcomes	time_frame	Context	Available in the source table; retain for exploratory analysis or linkage.
+design_outcomes	population	Context	Available in the source table; retain for exploratory analysis or linkage.
+design_outcomes	description	Context	Available in the source table; retain for exploratory analysis or linkage.
+designs	id	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+designs	nct_id	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+designs	allocation	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+designs	intervention_model	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+designs	observational_model	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+designs	primary_purpose	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+designs	time_perspective	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+designs	masking	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+designs	masking_description	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+designs	intervention_model_description	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+designs	subject_masked	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+designs	caregiver_masked	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+designs	investigator_masked	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+designs	outcomes_assessor_masked	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+detailed_descriptions	id	Context	Available in the source table; retain for exploratory analysis or linkage.
+detailed_descriptions	nct_id	Context	Available in the source table; retain for exploratory analysis or linkage.
+detailed_descriptions	description	Context	Available in the source table; retain for exploratory analysis or linkage.
+documents	id	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+documents	nct_id	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+documents	document_id	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+documents	document_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+documents	url	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+documents	comment	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+drop_withdrawals	id	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+drop_withdrawals	nct_id	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+drop_withdrawals	result_group_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+drop_withdrawals	ctgov_group_code	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+drop_withdrawals	period	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+drop_withdrawals	reason	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+drop_withdrawals	count	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+drop_withdrawals	drop_withdraw_comment	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+drop_withdrawals	reason_comment	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+drop_withdrawals	count_units	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+eligibilities	id	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+eligibilities	nct_id	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+eligibilities	sampling_method	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+eligibilities	gender	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+eligibilities	minimum_age	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+eligibilities	maximum_age	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+eligibilities	healthy_volunteers	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+eligibilities	population	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+eligibilities	criteria	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+eligibilities	gender_description	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+eligibilities	gender_based	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+eligibilities	adult	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+eligibilities	child	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+eligibilities	older_adult	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+facilities	id	Supporting	Geographic or site-level context that may be associated with study continuation or termination.
+facilities	nct_id	Supporting	Geographic or site-level context that may be associated with study continuation or termination.
+facilities	status	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+facilities	name	Supporting	Geographic or site-level context that may be associated with study continuation or termination.
+facilities	city	Supporting	Geographic or site-level context that may be associated with study continuation or termination.
+facilities	state	Supporting	Geographic or site-level context that may be associated with study continuation or termination.
+facilities	zip	Supporting	Geographic or site-level context that may be associated with study continuation or termination.
+facilities	country	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+facilities	latitude	Supporting	Geographic or site-level context that may be associated with study continuation or termination.
+facilities	longitude	Supporting	Geographic or site-level context that may be associated with study continuation or termination.
+facility_contacts	id	Core	Sponsor, responsible party, investigator, contact, or site information.
+facility_contacts	nct_id	Core	Sponsor, responsible party, investigator, contact, or site information.
+facility_contacts	facility_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+facility_contacts	contact_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+facility_contacts	name	Core	Sponsor, responsible party, investigator, contact, or site information.
+facility_contacts	email	Core	Sponsor, responsible party, investigator, contact, or site information.
+facility_contacts	phone	Core	Sponsor, responsible party, investigator, contact, or site information.
+facility_contacts	phone_extension	Core	Sponsor, responsible party, investigator, contact, or site information.
+facility_investigators	id	Core	Sponsor, responsible party, investigator, contact, or site information.
+facility_investigators	nct_id	Core	Sponsor, responsible party, investigator, contact, or site information.
+facility_investigators	facility_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+facility_investigators	role	Core	Sponsor, responsible party, investigator, contact, or site information.
+facility_investigators	name	Core	Sponsor, responsible party, investigator, contact, or site information.
+id_information	id	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+id_information	nct_id	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+id_information	id_source	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+id_information	id_value	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+id_information	id_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+id_information	id_type_description	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+id_information	id_link	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+intervention_other_names	id	Core	Intervention, treatment group, or intervention classification associated with the study.
+intervention_other_names	nct_id	Core	Intervention, treatment group, or intervention classification associated with the study.
+intervention_other_names	intervention_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+intervention_other_names	name	Core	Intervention, treatment group, or intervention classification associated with the study.
+interventions	id	Core	Intervention, treatment group, or intervention classification associated with the study.
+interventions	nct_id	Core	Intervention, treatment group, or intervention classification associated with the study.
+interventions	intervention_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+interventions	name	Core	Intervention, treatment group, or intervention classification associated with the study.
+interventions	description	Core	Intervention, treatment group, or intervention classification associated with the study.
+ipd_information_types	id	Context	Available in the source table; retain for exploratory analysis or linkage.
+ipd_information_types	nct_id	Context	Available in the source table; retain for exploratory analysis or linkage.
+ipd_information_types	name	Context	Available in the source table; retain for exploratory analysis or linkage.
+keywords	id	Core	Condition or topic associated with the study.
+keywords	nct_id	Core	Condition or topic associated with the study.
+keywords	name	Core	Condition or topic associated with the study.
+keywords	downcase_name	Core	Condition or topic associated with the study.
+links	id	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+links	nct_id	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+links	url	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+links	description	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+milestones	id	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+milestones	nct_id	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+milestones	result_group_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+milestones	ctgov_group_code	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+milestones	title	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+milestones	period	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+milestones	description	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+milestones	count	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+milestones	milestone_description	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+milestones	count_units	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+outcome_analyses	id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	nct_id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	outcome_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcome_analyses	non_inferiority_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcome_analyses	non_inferiority_description	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	param_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcome_analyses	param_value	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	dispersion_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcome_analyses	dispersion_value	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	p_value_modifier	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	p_value	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	ci_n_sides	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	ci_percent	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	ci_lower_limit	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	ci_upper_limit	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	ci_upper_limit_na_comment	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	p_value_description	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	method	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	method_description	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	estimate_description	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	groups_description	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcome_analyses	other_analysis_description	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	ci_upper_limit_raw	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	ci_lower_limit_raw	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analyses	p_value_raw	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analysis_groups	id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analysis_groups	nct_id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_analysis_groups	outcome_analysis_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcome_analysis_groups	result_group_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcome_analysis_groups	ctgov_group_code	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcome_counts	id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_counts	nct_id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_counts	outcome_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcome_counts	result_group_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcome_counts	ctgov_group_code	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcome_counts	scope	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_counts	units	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_counts	count	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_measurements	id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_measurements	nct_id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_measurements	outcome_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcome_measurements	result_group_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcome_measurements	ctgov_group_code	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcome_measurements	classification	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_measurements	category	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_measurements	title	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_measurements	description	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_measurements	units	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_measurements	param_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcome_measurements	param_value	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_measurements	param_value_num	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_measurements	dispersion_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcome_measurements	dispersion_value	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_measurements	dispersion_value_num	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_measurements	dispersion_lower_limit	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_measurements	dispersion_upper_limit	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_measurements	explanation_of_na	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_measurements	dispersion_upper_limit_raw	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcome_measurements	dispersion_lower_limit_raw	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcomes	id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcomes	nct_id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcomes	outcome_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcomes	title	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcomes	description	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcomes	time_frame	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcomes	population	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcomes	anticipated_posting_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcomes	anticipated_posting_month_year	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcomes	units	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcomes	units_analyzed	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+outcomes	dispersion_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+outcomes	param_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+overall_officials	id	Core	Sponsor, responsible party, investigator, contact, or site information.
+overall_officials	nct_id	Core	Sponsor, responsible party, investigator, contact, or site information.
+overall_officials	role	Core	Sponsor, responsible party, investigator, contact, or site information.
+overall_officials	name	Core	Sponsor, responsible party, investigator, contact, or site information.
+overall_officials	affiliation	Core	Sponsor, responsible party, investigator, contact, or site information.
+participant_flows	id	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+participant_flows	nct_id	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+participant_flows	recruitment_details	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+participant_flows	pre_assignment_details	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+participant_flows	units_analyzed	Core	Study design, eligibility, progress, withdrawal, or participant-flow information.
+pending_results	id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+pending_results	nct_id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+pending_results	event	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+pending_results	event_date_description	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+pending_results	event_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+provided_documents	id	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+provided_documents	nct_id	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+provided_documents	document_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+provided_documents	has_protocol	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+provided_documents	has_icf	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+provided_documents	has_sap	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+provided_documents	document_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+provided_documents	url	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+reported_events	id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_events	nct_id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_events	result_group_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+reported_events	ctgov_group_code	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+reported_events	time_frame	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_events	event_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+reported_events	default_vocab	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_events	default_assessment	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_events	subjects_affected	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_events	subjects_at_risk	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_events	description	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_events	event_count	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+reported_events	organ_system	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_events	adverse_event_term	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+reported_events	frequency_threshold	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_events	vocab	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_events	assessment	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_event_totals	id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_event_totals	nct_id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_event_totals	ctgov_group_code	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+reported_event_totals	event_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+reported_event_totals	classification	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_event_totals	subjects_affected	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_event_totals	subjects_at_risk	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_event_totals	created_at	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+reported_event_totals	updated_at	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+responsible_parties	id	Core	Sponsor, responsible party, investigator, contact, or site information.
+responsible_parties	nct_id	Core	Sponsor, responsible party, investigator, contact, or site information.
+responsible_parties	responsible_party_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+responsible_parties	name	Core	Sponsor, responsible party, investigator, contact, or site information.
+responsible_parties	title	Core	Sponsor, responsible party, investigator, contact, or site information.
+responsible_parties	organization	Core	Sponsor, responsible party, investigator, contact, or site information.
+responsible_parties	affiliation	Core	Sponsor, responsible party, investigator, contact, or site information.
+responsible_parties	old_name_title	Core	Sponsor, responsible party, investigator, contact, or site information.
+result_agreements	id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+result_agreements	nct_id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+result_agreements	pi_employee	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+result_agreements	agreement	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+result_agreements	restriction_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+result_agreements	other_details	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+result_agreements	restrictive_agreement	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+result_contacts	id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+result_contacts	nct_id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+result_contacts	organization	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+result_contacts	name	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+result_contacts	phone	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+result_contacts	email	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+result_contacts	extension	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+result_groups	id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+result_groups	nct_id	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+result_groups	ctgov_group_code	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+result_groups	result_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+result_groups	title	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+result_groups	description	Supporting	Results, outcomes, or adverse-event context potentially associated with study status or termination.
+result_groups	outcome_id	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+retractions	id	Supporting	Data quality, search, or retraction metadata that may affect cohort construction.
+retractions	reference_id	Supporting	Data quality, search, or retraction metadata that may affect cohort construction.
+retractions	pmid	Supporting	Data quality, search, or retraction metadata that may affect cohort construction.
+retractions	source	Supporting	Data quality, search, or retraction metadata that may affect cohort construction.
+retractions	nct_id	Supporting	Data quality, search, or retraction metadata that may affect cohort construction.
+search_results	id	Supporting	Data quality, search, or retraction metadata that may affect cohort construction.
+search_results	nct_id	Supporting	Data quality, search, or retraction metadata that may affect cohort construction.
+search_results	name	Supporting	Data quality, search, or retraction metadata that may affect cohort construction.
+search_results	created_at	Supporting	Data quality, search, or retraction metadata that may affect cohort construction.
+search_results	updated_at	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+search_results	grouping	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+search_results	study_search_id	Supporting	Data quality, search, or retraction metadata that may affect cohort construction.
+search_term_results	id	Supporting	Data quality, search, or retraction metadata that may affect cohort construction.
+search_term_results	nct_id	Supporting	Data quality, search, or retraction metadata that may affect cohort construction.
+search_term_results	search_term_id	Supporting	Data quality, search, or retraction metadata that may affect cohort construction.
+search_term_results	created_at	Supporting	Data quality, search, or retraction metadata that may affect cohort construction.
+search_term_results	updated_at	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+search_terms	id	Supporting	Data quality, search, or retraction metadata that may affect cohort construction.
+search_terms	term	Supporting	Data quality, search, or retraction metadata that may affect cohort construction.
+search_terms	group	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+search_terms	created_at	Supporting	Data quality, search, or retraction metadata that may affect cohort construction.
+search_terms	updated_at	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+sponsors	id	Core	Sponsor, responsible party, investigator, contact, or site information.
+sponsors	nct_id	Core	Sponsor, responsible party, investigator, contact, or site information.
+sponsors	agency_class	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+sponsors	lead_or_collaborator	Core	Sponsor, responsible party, investigator, contact, or site information.
+sponsors	name	Core	Sponsor, responsible party, investigator, contact, or site information.
+studies	nct_id	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	nlm_download_date_description	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	study_first_submitted_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	results_first_submitted_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	disposition_first_submitted_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	last_update_submitted_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	study_first_submitted_qc_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	study_first_posted_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	study_first_posted_date_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	results_first_submitted_qc_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	results_first_posted_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	results_first_posted_date_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	disposition_first_submitted_qc_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	disposition_first_posted_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	disposition_first_posted_date_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	last_update_submitted_qc_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	last_update_posted_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	last_update_posted_date_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	start_month_year	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	start_date_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	start_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	verification_month_year	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	verification_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	completion_month_year	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	completion_date_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	completion_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	primary_completion_month_year	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	primary_completion_date_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	primary_completion_date	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	target_duration	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	study_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	acronym	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	baseline_population	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	brief_title	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	official_title	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	overall_status	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	last_known_status	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	phase	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	enrollment	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	enrollment_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	source	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	limitations_and_caveats	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	number_of_arms	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	number_of_groups	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	why_stopped	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	has_expanded_access	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	expanded_access_type_individual	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	expanded_access_type_intermediate	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	expanded_access_type_treatment	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	has_dmc	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	is_fda_regulated_drug	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	is_fda_regulated_device	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	is_unapproved_device	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	is_ppsd	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	is_us_export	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	biospec_retention	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	biospec_description	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	ipd_time_frame	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	ipd_access_criteria	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	ipd_url	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	plan_to_share_ipd	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	plan_to_share_ipd_description	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	created_at	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	updated_at	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	source_class	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	delayed_posting	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	expanded_access_nctid	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	expanded_access_status_for_nctid	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	fdaaa801_violation	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+studies	baseline_type_units_analyzed	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+studies	patient_registry	Core	Study-level status, timing, design, enrollment, sponsor, or regulatory context.
+study_references	id	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+study_references	nct_id	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+study_references	pmid	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.
+study_references	reference_type	Core	Column name indicates a plausible termination predictor, outcome, timing, design, sponsor, population, intervention, or study-status feature.
+study_references	citation	Supporting	Study identifiers, references, linked records, or documents useful for provenance and enrichment.

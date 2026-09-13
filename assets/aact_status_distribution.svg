@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 876" role="img" aria-labelledby="title desc">
+<title id="title">Clinical trial status distribution</title>
+<desc id="desc">Counts and percentages of 602,514 AACT studies by overall status. Terminated studies are highlighted in coral.</desc>
+<rect width="100%" height="100%" fill="#f7f4ed"/>
+<style>text{font-family:DM Sans,Arial,sans-serif;fill:#183642}.title{font-family:Space Grotesk,Arial,sans-serif;font-size:30px;font-weight:700}.subtitle{font-size:15px;fill:#42616a}.label{font-size:15px;font-weight:700}.value{font-size:14px;font-weight:500}.tick{font-size:12px;fill:#42616a}.grid{stroke:#d9e2df;stroke-width:1}.bar{fill:#b8d8d8}.terminated{fill:#e76f51}.rule{stroke:#e76f51;stroke-width:2}</style>
+<text x="56" y="56" class="title">Where studies stand</text>
+<text x="56" y="84" class="subtitle">602,514 AACT-registered studies, grouped by their original overall status</text>
+<line x1="56" y1="112" x2="1064" y2="112" class="rule"/>
+<text x="56" y="146" class="subtitle">TERMINATED is highlighted. Other categories remain distinct; they are not treated as one comparison group.</text>
+<text x="300" y="178" class="tick">Number of studies</text>
+<line x1="300" y1="227" x2="1024" y2="227" class="grid"/>
+<text x="282" y="224" class="label" text-anchor="end">COMPLETED</text>
+<rect x="300" y="207" width="724.0" height="22" rx="3" class="bar"/>
+<text x="1036.0" y="224" class="value">329,096  (54.6%)</text>
+<line x1="300" y1="269" x2="1024" y2="269" class="grid"/>
+<text x="282" y="266" class="label" text-anchor="end">UNKNOWN</text>
+<rect x="300" y="249" width="213.6" height="22" rx="3" class="bar"/>
+<text x="525.6" y="266" class="value">97,091  (16.1%)</text>
+<line x1="300" y1="311" x2="1024" y2="311" class="grid"/>
+<text x="282" y="308" class="label" text-anchor="end">RECRUITING</text>
+<rect x="300" y="291" width="142.2" height="22" rx="3" class="bar"/>
+<text x="454.2" y="308" class="value">64,647  (10.7%)</text>
+<line x1="300" y1="353" x2="1024" y2="353" class="grid"/>
+<text x="282" y="350" class="label" text-anchor="end">TERMINATED</text>
+<rect x="300" y="333" width="75.4" height="22" rx="3" class="terminated"/>
+<text x="387.4" y="350" class="value">34,295  (5.7%)</text>
+<line x1="300" y1="395" x2="1024" y2="395" class="grid"/>
+<text x="282" y="392" class="label" text-anchor="end">NOT_YET_RECRUITING</text>
+<rect x="300" y="375" width="65.1" height="22" rx="3" class="bar"/>
+<text x="377.1" y="392" class="value">29,592  (4.9%)</text>
+<line x1="300" y1="437" x2="1024" y2="437" class="grid"/>
+<text x="282" y="434" class="label" text-anchor="end">ACTIVE_NOT_RECRUITING</text>
+<rect x="300" y="417" width="48.4" height="22" rx="3" class="bar"/>
+<text x="360.4" y="434" class="value">21,993  (3.7%)</text>
+<line x1="300" y1="479" x2="1024" y2="479" class="grid"/>
+<text x="282" y="476" class="label" text-anchor="end">WITHDRAWN</text>
+<rect x="300" y="459" width="36.8" height="22" rx="3" class="bar"/>
+<text x="348.8" y="476" class="value">16,749  (2.8%)</text>
+<line x1="300" y1="521" x2="1024" y2="521" class="grid"/>
+<text x="282" y="518" class="label" text-anchor="end">ENROLLING_BY_INVITATION</text>
+<rect x="300" y="501" width="11.5" height="22" rx="3" class="bar"/>
+<text x="323.5" y="518" class="value">5,235  (0.9%)</text>
+<line x1="300" y1="563" x2="1024" y2="563" class="grid"/>
+<text x="282" y="560" class="label" text-anchor="end">SUSPENDED</text>
+<rect x="300" y="543" width="3.9" height="22" rx="3" class="bar"/>
+<text x="315.9" y="560" class="value">1,765  (0.3%)</text>
+<line x1="300" y1="605" x2="1024" y2="605" class="grid"/>
+<text x="282" y="602" class="label" text-anchor="end">WITHHELD</text>
+<rect x="300" y="585" width="2.2" height="22" rx="3" class="bar"/>
+<text x="314.2" y="602" class="value">984  (0.2%)</text>
+<line x1="300" y1="647" x2="1024" y2="647" class="grid"/>
+<text x="282" y="644" class="label" text-anchor="end">NO_LONGER_AVAILABLE</text>
+<rect x="300" y="627" width="2.0" height="22" rx="3" class="bar"/>
+<text x="314.0" y="644" class="value">533  (0.1%)</text>
+<line x1="300" y1="689" x2="1024" y2="689" class="grid"/>
+<text x="282" y="686" class="label" text-anchor="end">AVAILABLE</text>
+<rect x="300" y="669" width="2.0" height="22" rx="3" class="bar"/>
+<text x="314.0" y="686" class="value">257  (0.0%)</text>
+<line x1="300" y1="731" x2="1024" y2="731" class="grid"/>
+<text x="282" y="728" class="label" text-anchor="end">APPROVED_FOR_MARKETING</text>
+<rect x="300" y="711" width="2.0" height="22" rx="3" class="bar"/>
+<text x="314.0" y="728" class="value">240  (0.0%)</text>
+<line x1="300" y1="773" x2="1024" y2="773" class="grid"/>
+<text x="282" y="770" class="label" text-anchor="end">TEMPORARILY_NOT_AVAILABLE</text>
+<rect x="300" y="753" width="2.0" height="22" rx="3" class="bar"/>
+<text x="314.0" y="770" class="value">37  (0.0%)</text>
+<text x="56" y="850" class="tick">Source: AACT candidate dataset snapshot 2026-09-12 • descriptive counts, not causal evidence</text>
+</svg>
