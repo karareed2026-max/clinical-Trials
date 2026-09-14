@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Make room for the next idea – Milestone 4</title>
+<title>How Can We Predict the Termination of Clinical Drug Trials and What Are the Factors for Ternination? – Milestone 4</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -44,7 +44,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-64d93b0351ad0b212306d7260128cb00.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-25dd70e1418bf13535bac40b5a4bcb17.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -121,51 +121,36 @@ ul.task-list li input[type="checkbox"] {
     
 <!-- main -->
 <div class="quarto-about-jolla">
-  <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&amp;fit=crop&amp;w=1600&amp;q=85" class="about-image
-  rounded " style="width: 15em;">
  <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Make room for the next idea</h1>
-<p class="subtitle lead">Milestone 4 is a small, deliberate place to turn unfinished thoughts into visible progress.</p>
+<h1 class="title">How Can We Predict the Termination of Clinical Drug Trials and What Are the Factors for Ternination?</h1>
+<p class="subtitle lead">Information based on observations from thousands of clinical drug trials.</p>
 </div>
 <div class="quarto-title-meta">
   </div>
 </header><main class="content" id="quarto-document-content">
-<section id="a-clear-starting-point" class="level2">
-<h2 data-anchor-id="a-clear-starting-point">A clear starting point</h2>
-<p>Good work gets easier when the starting line is visible. This site is a lightweight home for notes, experiments, and the decisions that move a project forward.</p>
-</section>
 <section id="where-studies-stand" class="level2">
 <h2 data-anchor-id="where-studies-stand">Where studies stand</h2>
 <div class="status-graphic">
 <p><img src="assets/aact_status_distribution.svg" alt="Horizontal bar chart showing all 14 overall-status categories among 602,514 AACT studies. Terminated studies are highlighted in coral, with counts and percentages shown for every category."></p>
 </div>
 <p>This first-pass view uses the existing AACT candidate dataset and keeps every reported status category separate. It highlights <code>TERMINATED</code> without labeling the remaining studies as completed or implying that any status causes another.</p>
-<div class="grid">
-<section id="notice" class="level3 g-col-12 g-col-md-4">
-<h3 data-anchor-id="notice">Notice</h3>
-<p>Pay attention to the useful signal: what changed, what matters, and what is ready for a closer look.</p>
 </section>
-<section id="shape" class="level3 g-col-12 g-col-md-4">
-<h3 data-anchor-id="shape">Shape</h3>
-<p>Give promising ideas enough structure to become something you can test, share, and improve.</p>
-</section>
-<section id="move" class="level3 g-col-12 g-col-md-4">
-<h3 data-anchor-id="move">Move</h3>
-<p>Keep the next step small enough to take today, then let momentum do its quiet work.</p>
-</section>
+<section id="are-trials-getting-larger" class="level2">
+<h2 data-anchor-id="are-trials-getting-larger">Are trials getting larger?</h2>
+<p>The status chart counts categories, but it cannot show the studies themselves. This view follows 575,628 trials with a reported positive enrollment and a start year from 1990 through 2026. The line is the median number of planned participants; the shaded band contains the middle half of trials in each year. Both are on a logarithmic scale because trial sizes range from a few participants to millions. The broad pattern is more useful than any single year: typical trial enrollment rises over much of the period, while the wide band shows that trials have never had one standard size.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-home-enrollment" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-home-enrollment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-home-enrollment-1.png" class="img-fluid figure-img" width="1200">
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-home-enrollment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: The typical and middle 50% of reported trial enrollment by study start year
+</figcaption>
+</figure>
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Start where the work is
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The first version does not need to be complete. It needs to be real enough to teach you what comes next.</p>
 </div>
 </div>
 
@@ -247,7 +232,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/kreed30-ops\.github\.io\/milestone-4\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
