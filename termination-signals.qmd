@@ -70,6 +70,17 @@ design_summary <- candidate |>
     placebo_used == "no" ~ "No placebo found",
     TRUE ~ "Not reported"
   ))
+
+trial_enrollment <- candidate |>
+  mutate(
+    start_year = suppressWarnings(as.integer(start_year)),
+    enrollment = suppressWarnings(as.numeric(enrollment))
+  ) |>
+  filter(between(start_year, 1990L, 2026L), !is.na(enrollment), enrollment > 0)
+
+trial_enrollment_medians <- trial_enrollment |>
+  group_by(start_year) |>
+  summarise(median_enrollment = median(enrollment), .groups = "drop")
 ```
 
 ## Trial status
@@ -79,8 +90,8 @@ This chart shows how many studies are in each status group. The coral bar indica
 ```{r}
 #| label: fig-status
 #| fig-cap: "Study status and terminated studies"
-#| fig-width: 10
-#| fig-height: 6.5
+#| fig-width: 12.5
+#| fig-height: 7.5
 
 ggplot(status_summary, aes(x = studies, y = overall_status)) +
   geom_col(fill = "#b8d8d8", width = 0.68) +
@@ -99,6 +110,84 @@ ggplot(status_summary, aes(x = studies, y = overall_status)) +
   )
 ```
 
+## Trial size over time
+
+Each panel contains one trial-level distribution for that start year. The small marks along the baseline are individual studies; the bars show how those studies are distributed. Enrollment is displayed on a logarithmic axis so that small and very large trials remain visible together. Dashed lines mark the yearly median.
+
+<div class="trial-size-panels">
+
+```{r}
+#| label: fig-enrollment-by-year
+#| output: asis
+#| echo: false
+
+panel_dir <- "assets/trial-size-panels"
+dir.create(panel_dir, recursive = TRUE, showWarnings = FALSE)
+
+trial_panel_plot <- function(year) {
+  year_data <- filter(trial_enrollment, start_year == year)
+  year_median <- filter(trial_enrollment_medians, start_year == year)
+
+  ggplot(year_data, aes(x = enrollment)) +
+    geom_histogram(
+      breaks = 10 ^ seq(0, 9, by = 0.25),
+      fill = "#e76f51",
+      color = "#f7f4ed",
+      linewidth = 0.1
+    ) +
+    geom_rug(
+      sides = "b",
+      color = "#183642",
+      alpha = 0.12,
+      linewidth = 0.15,
+      length = grid::unit(0.06, "npc")
+    ) +
+    geom_vline(
+      data = year_median,
+      aes(xintercept = median_enrollment),
+      color = "#183642",
+      linetype = "dashed",
+      linewidth = 0.45,
+      inherit.aes = FALSE
+    ) +
+    scale_x_log10(
+      breaks = c(1, 100, 10000, 1000000, 100000000),
+      labels = comma,
+      limits = c(1, 1e9)
+    ) +
+    scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.06))) +
+    labs(
+      title = as.character(year),
+      subtitle = paste0(nrow(year_data), " trials; median ", comma(round(year_median$median_enrollment))),
+      x = "Participants (log scale)",
+      y = "Trials"
+    ) +
+    theme_minimal(base_family = "DM Sans") +
+    theme(
+      panel.grid.minor = element_blank(),
+      axis.text = element_text(color = "#183642", size = 8),
+      axis.title = element_text(color = "#183642", size = 9),
+      plot.title = element_text(color = "#183642", face = "bold", size = 14),
+      plot.subtitle = element_text(color = "#42616a", size = 8.5),
+      plot.background = element_rect(fill = "#f7f4ed", color = NA),
+      panel.background = element_rect(fill = "#f7f4ed", color = NA),
+      plot.margin = margin(8, 10, 8, 10)
+    )
+}
+
+for (year in sort(unique(trial_enrollment$start_year))) {
+  filename <- paste0("trial-size-", year, ".png")
+  path <- file.path(panel_dir, filename)
+  ggsave(path, trial_panel_plot(year), width = 6.2, height = 4.2, dpi = 180, bg = "#f7f4ed")
+  cat(sprintf(
+    '<a class="trial-size-panel" href="%s" target="_blank" rel="noopener" title="Open the %s trial-size chart full size"><img src="%s" alt="%s trial enrollment histogram; click to open full size"></a>',
+    file.path(panel_dir, filename), year, file.path(panel_dir, filename), year
+  ))
+}
+```
+
+</div>
+
 ## Trial phase
 
 This chart shows the percentage of studies marked terminated in each phase group throughout the duration of the drug trials observed. Small and mixed groups are also shown. No studies were removed.
@@ -106,8 +195,8 @@ This chart shows the percentage of studies marked terminated in each phase group
 ```{r}
 #| label: fig-phase
 #| fig-cap: "Percentage of studies marked terminated in each phase group"
-#| fig-width: 10
-#| fig-height: 5.5
+#| fig-width: 12.5
+#| fig-height: 6.5
 
 ggplot(phase_summary, aes(x = phase_display, y = termination_rate)) +
   geom_col(fill = "#e76f51", width = 0.62) +
@@ -131,8 +220,8 @@ ggplot(phase_summary, aes(x = phase_display, y = termination_rate)) +
 ```{r}
 #| label: fig-design
 #| fig-cap: "Study counts by randomization and placebo reporting"
-#| fig-width: 9
-#| fig-height: 4.8
+#| fig-width: 11.5
+#| fig-height: 5.8
 
 ggplot(design_summary, aes(x = design_group, y = studies, fill = placebo_used)) +
   geom_col(position = "stack", width = 0.62) +

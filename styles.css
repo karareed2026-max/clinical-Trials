@@ -22,7 +22,18 @@ h1 {
   color: var(--ink);
   font-size: clamp(2.8rem, 7vw, 5.8rem);
   line-height: 0.98;
-  max-width: 10ch;
+  max-width: 22ch;
+}
+
+.page-layout-article .quarto-about-jolla,
+.page-layout-article main.content {
+  max-width: min(1440px, calc(100vw - 2rem));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.page-layout-article main.content {
+  width: 100%;
 }
 
 .quarto-title-block .quarto-title .subtitle {
@@ -86,9 +97,53 @@ h1 {
 }
 
 .cell-output-display {
-  margin: 1.5rem 0 3.5rem;
+  margin: 2rem 0 4.5rem;
 }
 
 .cell-output-display img {
   background: var(--paper);
+}
+
+.trial-size-panels {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 2rem 0 4rem;
+}
+
+.trial-size-panel {
+  background: var(--paper);
+  border: 1px solid rgba(24, 54, 66, 0.18);
+  display: block;
+  transition: box-shadow 160ms ease, transform 160ms ease;
+}
+
+.trial-size-panel:hover,
+.trial-size-panel:focus-visible {
+  box-shadow: 0 8px 20px rgba(24, 54, 66, 0.16);
+  transform: translateY(-2px);
+}
+
+.trial-size-panel img {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .trial-size-panels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .page-layout-article .quarto-about-jolla,
+  .page-layout-article main.content {
+    max-width: calc(100vw - 1.5rem);
+  }
+
+  .trial-size-panels {
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
 }
