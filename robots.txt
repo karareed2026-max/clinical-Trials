@@ -1,1 +1,1 @@
-Sitemap: https://kreed30-ops.github.io/milestone-4/sitemap.xml
+Sitemap: https://kreed30-ops.github.io/clinical-trials/sitemap.xml

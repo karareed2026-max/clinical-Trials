@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://kreed30-ops.github.io/milestone-4/data/processed/aact_trial_termination_candidate_2026-09-12_report.html</loc>
-    <lastmod>2026-09-14T00:02:02.179Z</lastmod>
+    <loc>https://kreed30-ops.github.io/clinical-trials/trial-termination.html</loc>
+    <lastmod>2026-09-15T16:30:09.164Z</lastmod>
   </url>
   <url>
-    <loc>https://kreed30-ops.github.io/milestone-4/data/inventory/aact_2026-09-12_readable.html</loc>
-    <lastmod>2026-09-14T00:02:02.033Z</lastmod>
+    <loc>https://kreed30-ops.github.io/clinical-trials/data/inventory/openfda_dataset_assessment_2026-09-13.html</loc>
+    <lastmod>2026-09-15T14:45:49.353Z</lastmod>
   </url>
   <url>
-    <loc>https://kreed30-ops.github.io/milestone-4/index.html</loc>
-    <lastmod>2026-09-14T00:32:41.512Z</lastmod>
+    <loc>https://kreed30-ops.github.io/clinical-trials/data/inventory/clinicaltrials_api_2026-09-13_report.html</loc>
+    <lastmod>2026-09-15T14:45:49.353Z</lastmod>
   </url>
   <url>
-    <loc>https://kreed30-ops.github.io/milestone-4/about.html</loc>
-    <lastmod>2026-09-14T00:02:02.032Z</lastmod>
+    <loc>https://kreed30-ops.github.io/clinical-trials/termination-signals.html</loc>
+    <lastmod>2026-09-15T16:46:09.919Z</lastmod>
   </url>
   <url>
-    <loc>https://kreed30-ops.github.io/milestone-4/termination-signals.html</loc>
-    <lastmod>2026-09-14T00:38:26.879Z</lastmod>
+    <loc>https://kreed30-ops.github.io/clinical-trials/prevention.html</loc>
+    <lastmod>2026-09-15T15:37:31.347Z</lastmod>
   </url>
   <url>
-    <loc>https://kreed30-ops.github.io/milestone-4/data/inventory/clinicaltrials_api_2026-09-13_report.html</loc>
-    <lastmod>2026-09-14T00:02:02.033Z</lastmod>
+    <loc>https://kreed30-ops.github.io/clinical-trials/index.html</loc>
+    <lastmod>2026-09-15T16:48:56.776Z</lastmod>
   </url>
   <url>
-    <loc>https://kreed30-ops.github.io/milestone-4/data/inventory/openfda_dataset_assessment_2026-09-13.html</loc>
-    <lastmod>2026-09-14T00:02:02.033Z</lastmod>
+    <loc>https://kreed30-ops.github.io/clinical-trials/data/inventory/aact_2026-09-12_readable.html</loc>
+    <lastmod>2026-09-15T14:45:49.352Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kreed30-ops.github.io/clinical-trials/data/processed/aact_trial_termination_candidate_2026-09-12_report.html</loc>
+    <lastmod>2026-09-15T14:45:49.466Z</lastmod>
   </url>
 </urlset>

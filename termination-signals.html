@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>A First Look at Terminated Trials – Milestone 4</title>
+<title>Variables to Consider and Possible Links to Failures in Clinical Trials – Clinical Trial Termination Risk</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -74,12 +74,49 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.4/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -87,7 +124,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Milestone 4</span>
+    <span class="navbar-title">Clinical Trial Termination Risk</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -101,12 +138,16 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
-<span class="menu-text">About</span></a>
+    <a class="nav-link active" href="./termination-signals.html" aria-current="page"> 
+<span class="menu-text">Termination Signals</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./termination-signals.html" aria-current="page"> 
-<span class="menu-text">Termination signals</span></a>
+    <a class="nav-link" href="./trial-termination.html"> 
+<span class="menu-text">What Termination Looks Like</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./prevention.html"> 
+<span class="menu-text">Prevention &amp; Benefits</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -119,14 +160,29 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#study-status-the-scope-of-termination" id="toc-study-status-the-scope-of-termination" class="nav-link active" data-scroll-target="#study-status-the-scope-of-termination">1. Study Status &amp; The Scope of Termination</a></li>
+  <li><a href="#trial-size-over-time-interactive-panel-of-histograms" id="toc-trial-size-over-time-interactive-panel-of-histograms" class="nav-link" data-scroll-target="#trial-size-over-time-interactive-panel-of-histograms">2. Trial Size Over Time: Interactive Panel of Histograms</a></li>
+  <li><a href="#trial-phase-the-phase-ii-vulnerability-spike" id="toc-trial-phase-the-phase-ii-vulnerability-spike" class="nav-link" data-scroll-target="#trial-phase-the-phase-ii-vulnerability-spike">3. Trial Phase: The Phase II Vulnerability Spike</a></li>
+  <li><a href="#study-architecture-randomization-placebo-use" id="toc-study-architecture-randomization-placebo-use" class="nav-link" data-scroll-target="#study-architecture-randomization-placebo-use">4. Study Architecture: Randomization &amp; Placebo Use</a></li>
+  <li><a href="#protocol-scale-interventions-number-of-conditions" id="toc-protocol-scale-interventions-number-of-conditions" class="nav-link" data-scroll-target="#protocol-scale-interventions-number-of-conditions">5. Protocol Scale: Interventions &amp; Number of Conditions</a></li>
+  <li><a href="#study-duration-the-attrition-timeline" id="toc-study-duration-the-attrition-timeline" class="nav-link" data-scroll-target="#study-duration-the-attrition-timeline">6. Study Duration: The Attrition Timeline</a></li>
+  <li><a href="#protocol-complexity-score-compounding-structural-risk" id="toc-protocol-complexity-score-compounding-structural-risk" class="nav-link" data-scroll-target="#protocol-complexity-score-compounding-structural-risk">7. Protocol Complexity Score: Compounding Structural Risk</a></li>
+  <li><a href="#sponsor-type-site-network-footprint" id="toc-sponsor-type-site-network-footprint" class="nav-link" data-scroll-target="#sponsor-type-site-network-footprint">8. Sponsor Type &amp; Site Network Footprint</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">A First Look at Terminated Trials</h1>
-<p class="subtitle lead">Here are statistics on 602,514 registered studies on drug trials, with a focus on those that were marked “terminated.”</p>
+<h1 class="title">Variables to Consider and Possible Links to Failures in Clinical Trials</h1>
+<p class="subtitle lead">Empirical risk factors, complexity indicators, and early warning patterns observed across 602,514 studies.</p>
 </div>
 
 
@@ -143,9 +199,9 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="trial-status" class="level2">
-<h2 class="anchored" data-anchor-id="trial-status">Trial status</h2>
-<p>This chart shows how many studies are in each status group. The coral bar indicates studies whose original <code>overall_status</code> is <code>TERMINATED</code>.</p>
+<section id="study-status-the-scope-of-termination" class="level2">
+<h2 class="anchored" data-anchor-id="study-status-the-scope-of-termination">1. Study Status &amp; The Scope of Termination</h2>
+<p>Across the full registry of 602,514 studies, <strong>34,295</strong> are explicitly recorded as <code>TERMINATED</code>. The chart below contrasts total registered studies against those marked terminated across all primary status categories.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-status" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -154,50 +210,7 @@ ul.task-list li input[type="checkbox"] {
 <img src="termination-signals_files/figure-html/fig-status-1.png" class="img-fluid figure-img" width="1200">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-status-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Study status and terminated studies
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="trial-size-over-time" class="level2">
-<h2 class="anchored" data-anchor-id="trial-size-over-time">Trial size over time</h2>
-<p>Each panel contains one trial-level distribution for that start year. The small marks along the baseline are individual studies; the bars show how those studies are distributed. Enrollment is displayed on a logarithmic axis so that small and very large trials remain visible together. Dashed lines mark the yearly median.</p>
-<div class="trial-size-panels">
-<p><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-1990.png" target="_blank" rel="noopener" title="Open the 1990 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-1990.png" alt="1990 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-1991.png" target="_blank" rel="noopener" title="Open the 1991 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-1991.png" alt="1991 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-1992.png" target="_blank" rel="noopener" title="Open the 1992 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-1992.png" alt="1992 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-1993.png" target="_blank" rel="noopener" title="Open the 1993 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-1993.png" alt="1993 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-1994.png" target="_blank" rel="noopener" title="Open the 1994 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-1994.png" alt="1994 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-1995.png" target="_blank" rel="noopener" title="Open the 1995 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-1995.png" alt="1995 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-1996.png" target="_blank" rel="noopener" title="Open the 1996 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-1996.png" alt="1996 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-1997.png" target="_blank" rel="noopener" title="Open the 1997 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-1997.png" alt="1997 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-1998.png" target="_blank" rel="noopener" title="Open the 1998 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-1998.png" alt="1998 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-1999.png" target="_blank" rel="noopener" title="Open the 1999 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-1999.png" alt="1999 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2000.png" target="_blank" rel="noopener" title="Open the 2000 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2000.png" alt="2000 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2001.png" target="_blank" rel="noopener" title="Open the 2001 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2001.png" alt="2001 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2002.png" target="_blank" rel="noopener" title="Open the 2002 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2002.png" alt="2002 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2003.png" target="_blank" rel="noopener" title="Open the 2003 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2003.png" alt="2003 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2004.png" target="_blank" rel="noopener" title="Open the 2004 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2004.png" alt="2004 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2005.png" target="_blank" rel="noopener" title="Open the 2005 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2005.png" alt="2005 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2006.png" target="_blank" rel="noopener" title="Open the 2006 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2006.png" alt="2006 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2007.png" target="_blank" rel="noopener" title="Open the 2007 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2007.png" alt="2007 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2008.png" target="_blank" rel="noopener" title="Open the 2008 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2008.png" alt="2008 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2009.png" target="_blank" rel="noopener" title="Open the 2009 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2009.png" alt="2009 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2010.png" target="_blank" rel="noopener" title="Open the 2010 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2010.png" alt="2010 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2011.png" target="_blank" rel="noopener" title="Open the 2011 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2011.png" alt="2011 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2012.png" target="_blank" rel="noopener" title="Open the 2012 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2012.png" alt="2012 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2013.png" target="_blank" rel="noopener" title="Open the 2013 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2013.png" alt="2013 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2014.png" target="_blank" rel="noopener" title="Open the 2014 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2014.png" alt="2014 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2015.png" target="_blank" rel="noopener" title="Open the 2015 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2015.png" alt="2015 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2016.png" target="_blank" rel="noopener" title="Open the 2016 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2016.png" alt="2016 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2017.png" target="_blank" rel="noopener" title="Open the 2017 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2017.png" alt="2017 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2018.png" target="_blank" rel="noopener" title="Open the 2018 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2018.png" alt="2018 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2019.png" target="_blank" rel="noopener" title="Open the 2019 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2019.png" alt="2019 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2020.png" target="_blank" rel="noopener" title="Open the 2020 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2020.png" alt="2020 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2021.png" target="_blank" rel="noopener" title="Open the 2021 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2021.png" alt="2021 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2022.png" target="_blank" rel="noopener" title="Open the 2022 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2022.png" alt="2022 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2023.png" target="_blank" rel="noopener" title="Open the 2023 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2023.png" alt="2023 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2024.png" target="_blank" rel="noopener" title="Open the 2024 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2024.png" alt="2024 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2025.png" target="_blank" rel="noopener" title="Open the 2025 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2025.png" alt="2025 trial enrollment histogram; click to open full size"></a><a class="trial-size-panel" href="assets/trial-size-panels/trial-size-2026.png" target="_blank" rel="noopener" title="Open the 2026 trial-size chart full size"><img src="assets/trial-size-panels/trial-size-2026.png" alt="2026 trial enrollment histogram; click to open full size"></a></p>
-</div>
-</section>
-<section id="trial-phase" class="level2">
-<h2 class="anchored" data-anchor-id="trial-phase">Trial phase</h2>
-<p>This chart shows the percentage of studies marked terminated in each phase group throughout the duration of the drug trials observed. Small and mixed groups are also shown. No studies were removed.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-phase" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-phase-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="termination-signals_files/figure-html/fig-phase-1.png" class="img-fluid figure-img" width="1200">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-phase-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Percentage of studies marked terminated in each phase group
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="study-design" class="level2">
-<h2 class="anchored" data-anchor-id="study-design">Study design</h2>
-<p>This chart shows study counts by randomization and placebo reporting. The dataset keeps several study-design details instead of combining them into one score.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-design" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-design-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="termination-signals_files/figure-html/fig-design-1.png" class="img-fluid figure-img" width="1104">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-design-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Study counts by randomization and placebo reporting
+Figure&nbsp;1: Total registered studies and terminated subset by reported status category
 </figcaption>
 </figure>
 </div>
@@ -209,15 +222,217 @@ Figure&nbsp;3: Study counts by randomization and placebo reporting
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>How to read this
+<span class="screen-reader-only">Note</span>Understanding Closed vs Active Statuses
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>These charts describe the data; they do not prove that one factor causes a trial to stop. <code>terminated_binary</code> marks the original <code>TERMINATED</code> status. We have not yet chosen a comparison group, a way to handle missing data, a disease grouping, or a complexity score.</p>
+<p>While the baseline termination rate across all registered records is 5.7%, among closed, definitive trials (completed + terminated: 363,391 studies), <strong>the realized termination rate is 9.4%</strong>—approaching 1 in every 10 trials.</p>
+</div>
+</div>
+</section>
+<section id="trial-size-over-time-interactive-panel-of-histograms" class="level2">
+<h2 class="anchored" data-anchor-id="trial-size-over-time-interactive-panel-of-histograms">2. Trial Size Over Time: Interactive Panel of Histograms</h2>
+<p>Trial enrollment is one of the most critical structural constraints in clinical trial design. Under-recruitment directly leads to premature termination, while over-ambitious targets create severe operational drag.</p>
+<p>The interactive histogram panel below reveals how planned participant cohorts are distributed across major research eras (<strong>1990–1999</strong>, <strong>2000–2009</strong>, <strong>2010–2019</strong>, and <strong>2020–2026</strong>). Use the dropdown menu in the upper-left of the chart to inspect specific eras, or hover over bars to view exact trial counts and percentages.</p>
+<div class="cell">
+<div id="fig-interactive-histograms" class="cell-output-display quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-interactive-histograms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-277812c7e4638df46fab" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-277812c7e4638df46fab">{"x":{"visdat":{"1c6c6290bc4d0":["function () ","plotlyVisDat"],"1c6c66d82ed8d":["function () ","data"],"1c6c64f53ce04":["function () ","data"],"1c6c61f3b6771":["function () ","data"],"1c6c666abb16f":["function () ","data"]},"cur_data":"1c6c666abb16f","attrs":{"1c6c66d82ed8d":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"type":"bar","name":"1990–1999","visible":false,"marker":{"color":"#e76f51","line":{"color":"#183642","width":0.59999999999999998}},"hovertemplate":["<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.34%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 2.52%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 11.07%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 16.99%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 14.86%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 18.15%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 11.03%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 8.99%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 7.03%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 2.66%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.69%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 2.11%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.56%<extra><\/extra>"],"inherit":true},"1c6c64f53ce04":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"type":"bar","name":"2000–2009","visible":false,"marker":{"color":"#e76f51","line":{"color":"#183642","width":0.59999999999999998}},"hovertemplate":["<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.63%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 2.75%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 14.09%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 18.56%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 18.79%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 20.12%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 10.29%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 6.36%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 4.13%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.46%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.77%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.69%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.37%<extra><\/extra>"],"inherit":true},"1c6c61f3b6771":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"type":"bar","name":"2010–2019","visible":false,"marker":{"color":"#e76f51","line":{"color":"#183642","width":0.59999999999999998}},"hovertemplate":["<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 2.17%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 3.18%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 15.04%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 18.64%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 20.45%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 20.93%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 8.42%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 4.85%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 3.44%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.08%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.65%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.75%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.38%<extra><\/extra>"],"inherit":true},"1c6c666abb16f":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"type":"bar","name":"2020–2026","visible":true,"marker":{"color":"#e76f51","line":{"color":"#183642","width":0.59999999999999998}},"hovertemplate":["<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.19%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.95%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 12.07%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 19.02%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 23.64%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 22.66%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 8.43%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 4.73%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 3.46%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.06%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.67%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.73%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.4%<extra><\/extra>"],"inherit":true}},"layout":{"margin":{"b":70,"l":60,"t":60,"r":30},"title":{"text":"<b>Trial Enrollment Distribution (2020–2026)<\/b>","font":{"family":"DM Sans","size":15,"color":"#183642"}},"xaxis":{"domain":[0,1],"automargin":true,"title":{"text":"Planned Enrollment Range","font":{"size":11,"color":"#183642"}},"tickangle":-35,"tickfont":{"size":9,"color":"#183642"},"gridcolor":"rgba(24, 54, 66, 0.08)","type":"category","categoryorder":"array","categoryarray":["1–4","5–9","10–24","25–49","50–99","100–249","250–499","500–999","1,000–2,499","2,500–4,999","5,000–9,999","10,000–49,999","50,000+"]},"yaxis":{"domain":[0,1],"automargin":true,"title":{"text":"Number of Trials","font":{"size":11,"color":"#183642"}},"tickfont":{"size":9,"color":"#183642"},"gridcolor":"rgba(24, 54, 66, 0.1)"},"paper_bgcolor":"#f7f4ed","plot_bgcolor":"#f7f4ed","updatemenus":[{"type":"dropdown","active":3,"y":1.1799999999999999,"x":0,"xanchor":"left","buttons":[{"method":"update","args":[{"visible":[true,false,false,false]},{"title":{"text":"<b>Trial Enrollment Distribution (1990–1999)<\/b>","font":{"family":"DM Sans","size":15,"color":"#183642"}}}],"label":"1990–1999"},{"method":"update","args":[{"visible":[false,true,false,false]},{"title":{"text":"<b>Trial Enrollment Distribution (2000–2009)<\/b>","font":{"family":"DM Sans","size":15,"color":"#183642"}}}],"label":"2000–2009"},{"method":"update","args":[{"visible":[false,false,true,false]},{"title":{"text":"<b>Trial Enrollment Distribution (2010–2019)<\/b>","font":{"family":"DM Sans","size":15,"color":"#183642"}}}],"label":"2010–2019"},{"method":"update","args":[{"visible":[false,false,false,true]},{"title":{"text":"<b>Trial Enrollment Distribution (2020–2026)<\/b>","font":{"family":"DM Sans","size":15,"color":"#183642"}}}],"label":"2020–2026"}],"font":{"family":"DM Sans","size":11,"color":"#183642"}}],"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["1–4","5–9","10–24","25–49","50–99","100–249","250–499","500–999","1,000–2,499","2,500–4,999","5,000–9,999","10,000–49,999","50,000+"],"y":[66,124,545,837,732,894,543,443,346,131,83,104,77],"type":"bar","name":"1990–1999","visible":false,"marker":{"color":"#e76f51","line":{"color":"#183642","width":0.59999999999999998}},"hovertemplate":["<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.34%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 2.52%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 11.07%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 16.99%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 14.86%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 18.15%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 11.03%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 8.99%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 7.03%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 2.66%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.69%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 2.11%<extra><\/extra>","<b>Era: 1990–1999<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.56%<extra><\/extra>"],"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["1–4","5–9","10–24","25–49","50–99","100–249","250–499","500–999","1,000–2,499","2,500–4,999","5,000–9,999","10,000–49,999","50,000+"],"y":[1353,2292,11724,15451,15636,16742,8561,5297,3438,1215,637,571,310],"type":"bar","name":"2000–2009","visible":false,"marker":{"color":"#e76f51","line":{"color":"#183642","width":0.59999999999999998}},"hovertemplate":["<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.63%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 2.75%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 14.09%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 18.56%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 18.79%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 20.12%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 10.29%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 6.36%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 4.13%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.46%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.77%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.69%<extra><\/extra>","<b>Era: 2000–2009<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.37%<extra><\/extra>"],"error_y":{"color":"rgba(255,127,14,1)"},"error_x":{"color":"rgba(255,127,14,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["1–4","5–9","10–24","25–49","50–99","100–249","250–499","500–999","1,000–2,499","2,500–4,999","5,000–9,999","10,000–49,999","50,000+"],"y":[5024,7366,34824,43166,47357,48469,19490,11240,7963,2494,1505,1747,891],"type":"bar","name":"2010–2019","visible":false,"marker":{"color":"#e76f51","line":{"color":"#183642","width":0.59999999999999998}},"hovertemplate":["<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 2.17%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 3.18%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 15.04%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 18.64%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 20.45%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 20.93%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 8.42%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 4.85%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 3.44%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.08%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.65%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.75%<extra><\/extra>","<b>Era: 2010–2019<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.38%<extra><\/extra>"],"error_y":{"color":"rgba(44,160,44,1)"},"error_x":{"color":"rgba(44,160,44,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["1–4","5–9","10–24","25–49","50–99","100–249","250–499","500–999","1,000–2,499","2,500–4,999","5,000–9,999","10,000–49,999","50,000+"],"y":[3043,5002,30883,48667,60507,58001,21576,12095,8843,2719,1711,1863,1030],"type":"bar","name":"2020–2026","visible":true,"marker":{"color":"#e76f51","line":{"color":"#183642","width":0.59999999999999998}},"hovertemplate":["<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.19%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.95%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 12.07%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 19.02%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 23.64%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 22.66%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 8.43%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 4.73%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 3.46%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 1.06%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.67%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.73%<extra><\/extra>","<b>Era: 2020–2026<\/b><br>Cohort: %{x} participants<br>Studies: %{y:,}<br>Share of Era: 0.4%<extra><\/extra>"],"error_y":{"color":"rgba(214,39,40,1)"},"error_x":{"color":"rgba(214,39,40,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-interactive-histograms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2
+</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="trial-phase-the-phase-ii-vulnerability-spike" class="level2">
+<h2 class="anchored" data-anchor-id="trial-phase-the-phase-ii-vulnerability-spike">3. Trial Phase: The Phase II Vulnerability Spike</h2>
+<p>Phase of development is one of the strongest predictive signals for trial termination. As drugs transition from preliminary safety to formal proof-of-concept testing, the failure rate sharply peaks.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-phase" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-phase-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="termination-signals_files/figure-html/fig-phase-1.png" class="img-fluid figure-img" width="1200">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-phase-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Trial termination rate by development phase
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="study-architecture-randomization-placebo-use" class="level2">
+<h2 class="anchored" data-anchor-id="study-architecture-randomization-placebo-use">4. Study Architecture: Randomization &amp; Placebo Use</h2>
+<p>The design of a trial’s control mechanism directly impacts patient enrollment willingness, protocol compliance, and operational feasibility.</p>
+<section id="a.-randomization-status" class="level3">
+<h3 class="anchored" data-anchor-id="a.-randomization-status">A. Randomization Status</h3>
+<p>Non-randomized interventional studies experience a significantly higher termination rate (<strong>8.4%</strong>) than randomized trials (<strong>5.5%</strong>), often reflecting single-arm exploratory designs that are vulnerable to early discontinuation.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-randomization" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-randomization-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="termination-signals_files/figure-html/fig-randomization-1.png" class="img-fluid figure-img" width="1200">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-randomization-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Termination rate by study randomization status
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="b.-placebo-use" class="level3">
+<h3 class="anchored" data-anchor-id="b.-placebo-use">B. Placebo Use</h3>
+<p>Placebo-controlled trials demand rigorous double-blinding, identical manufacturing of active and sham agents, and ethical consent for potential inactive treatment. Consequently, trials with reported placebo controls exhibit an <strong>8.6% termination rate</strong>—more than 50% higher than trials without placebo controls (5.6%).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-placebo" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-placebo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="termination-signals_files/figure-html/fig-placebo-1.png" class="img-fluid figure-img" width="1200">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-placebo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Termination rate by placebo control reporting
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="protocol-scale-interventions-number-of-conditions" class="level2">
+<h2 class="anchored" data-anchor-id="protocol-scale-interventions-number-of-conditions">5. Protocol Scale: Interventions &amp; Number of Conditions</h2>
+<section id="a.-number-of-interventions" class="level3">
+<h3 class="anchored" data-anchor-id="a.-number-of-interventions">A. Number of Interventions</h3>
+<p>As trials incorporate multiple drugs, combination therapies, or complex dosing arms, the termination hazard rises steadily. The data reveals a clear dose-response relationship between intervention count and study termination:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-interventions" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-interventions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="termination-signals_files/figure-html/fig-interventions-1.png" class="img-fluid figure-img" width="1200">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-interventions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Trial termination rate across number of tested interventions
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="b.-number-of-conditions-listed" class="level3">
+<h3 class="anchored" data-anchor-id="b.-number-of-conditions-listed">B. Number of Conditions Listed</h3>
+<p>Protocols targeting multiple comorbid conditions or broad diagnostic indications introduce diagnostic heterogeneity and patient subgroup stratification challenges:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-conditions" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-conditions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="termination-signals_files/figure-html/fig-conditions-1.png" class="img-fluid figure-img" width="1200">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-conditions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Trial termination rate by number of reported conditions
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="study-duration-the-attrition-timeline" class="level2">
+<h2 class="anchored" data-anchor-id="study-duration-the-attrition-timeline">6. Study Duration: The Attrition Timeline</h2>
+<p>How does elapsed study timeline correlate with termination? The chart below tracks termination rates across study duration brackets (from short studies under 6 months to multi-year longitudinal trials):</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-durations" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-durations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="termination-signals_files/figure-html/fig-durations-1.png" class="img-fluid figure-img" width="1200">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-durations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Termination rate by total study duration bracket
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The 2–5 Year Vulnerability Window
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Short studies (&lt; 6 months) resolve quickly before major institutional or competitive shifts occur (3.4% failure). Studies extending into years 2 through 5 endure prolonged exposure to funding renewals, principal investigator relocations, and patient dropouts.</p>
+</div>
+</div>
+</section>
+<section id="protocol-complexity-score-compounding-structural-risk" class="level2">
+<h2 class="anchored" data-anchor-id="protocol-complexity-score-compounding-structural-risk">7. Protocol Complexity Score: Compounding Structural Risk</h2>
+<p>To capture the holistic operational burden of a clinical trial, we synthesized a <strong>Composite Study Complexity Score (0 to 5 points)</strong> incorporating: - Multi-arm design (<span class="math inline">\(\ge 3\)</span> arms or <span class="math inline">\(\ge 3\)</span> interventions) - Placebo control reporting - Blinded masking (double, triple, or quadruple) - Multi-site geographic footprint (<span class="math inline">\(\ge 6\)</span> facilities) - Multi-endpoint burden (<span class="math inline">\(\ge 3\)</span> primary outcomes)</p>
+<p>Stratifying 602,514 studies by complexity score reveals a stark, linear escalation in failure risk:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-complexity" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-complexity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="termination-signals_files/figure-html/fig-complexity-1.png" class="img-fluid figure-img" width="1200">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-complexity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Trial termination rate across composite protocol complexity tiers
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="sponsor-type-site-network-footprint" class="level2">
+<h2 class="anchored" data-anchor-id="sponsor-type-site-network-footprint">8. Sponsor Type &amp; Site Network Footprint</h2>
+<section id="a.-lead-sponsor-category" class="level3">
+<h3 class="anchored" data-anchor-id="a.-lead-sponsor-category">A. Lead Sponsor Category</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-sponsor" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sponsor-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="termination-signals_files/figure-html/fig-sponsor-1.png" class="img-fluid figure-img" width="1200">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sponsor-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: Trial termination rate across lead sponsor categories
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="b.-clinical-site-footprint" class="level3">
+<h3 class="anchored" data-anchor-id="b.-clinical-site-footprint">B. Clinical Site Footprint</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-sites" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sites-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="termination-signals_files/figure-html/fig-sites-1.png" class="img-fluid figure-img" width="1200">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sites-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11: Termination rate across clinical site footprint categories
+</figcaption>
+</figure>
+</div>
 </div>
 </div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -294,7 +509,7 @@ Figure&nbsp;3: Study counts by randomization and placebo reporting
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/kreed30-ops\.github\.io\/milestone-4\/");
+        var filterRegex = new RegExp("https:\/\/kreed30-ops\.github\.io\/clinical-trials\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -625,7 +840,7 @@ Figure&nbsp;3: Study counts by randomization and placebo reporting
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>© 2026 Milestone 4</p>
+<p>© 2026 Clinical Trial Termination Project</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;
