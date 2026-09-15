@@ -3,20 +3,22 @@ project:
   output-dir: _site
 
 website:
-  title: "Milestone 4"
-  description: "A focused space for thoughtful work and clear progress."
+  title: "Clinical Trial Termination Risk"
+  description: "Investigating failure signals, risk patterns, and prevention strategies across 602,514 clinical drug trials."
   navbar:
     background: "#183642"
     foreground: "#f7f4ed"
     left:
       - href: index.qmd
         text: Home
-      - href: about.qmd
-        text: About
       - href: termination-signals.qmd
-        text: Termination signals
+        text: Termination Signals
+      - href: trial-termination.qmd
+        text: What Termination Looks Like
+      - href: prevention.qmd
+        text: Prevention & Benefits
   page-footer:
-    left: "© 2026 Milestone 4"
+    left: "© 2026 Clinical Trial Termination Project"
     right: "Built with Quarto"
 
 format:

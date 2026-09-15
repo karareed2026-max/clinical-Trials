@@ -1,9 +1,10 @@
 ---
-title: "A First Look at Terminated Trials"
-subtitle: "Here are statistics on 602,514 registered studies on drug trials, with a focus on those that were marked \"terminated.\""
+title: "Variables to Consider and Possible Links to Failures in Clinical Trials"
+subtitle: "Empirical risk factors, complexity indicators, and early warning patterns observed across 602,514 studies."
 format:
   html:
-    toc: false
+    toc: true
+    toc-depth: 2
 execute:
   echo: false
   warning: false
@@ -16,232 +17,538 @@ library(ggplot2)
 library(dplyr)
 library(readr)
 library(scales)
-library(forcats)
+library(plotly)
 
-candidate_path <- "data/processed/aact_trial_termination_candidate_2026-09-12.tsv.gz"
-candidate <- read_tsv(candidate_path, show_col_types = FALSE, na = c("", "[missing]")) |>
-  mutate(
-    terminated = if_else(terminated_binary == 1, "Terminated", "Other status"),
-    phase_display = case_when(
-      phase %in% c("PHASE1", "EARLY_PHASE1") ~ "Phase I",
-      phase == "PHASE2" ~ "Phase II",
-      phase == "PHASE3" ~ "Phase III",
-      phase == "PHASE4" ~ "Phase IV",
-      phase == "NA" ~ "Not applicable",
-      TRUE ~ "Other / missing"
-    ),
-    phase_display = factor(phase_display, levels = c("Phase I", "Phase II", "Phase III", "Phase IV", "Not applicable", "Other / missing")),
-    status_display = fct_reorder(overall_status, terminated_binary, .fun = mean)
-  )
+# Load precomputed summaries
+status_summary <- read_tsv("data/processed/summary_status.tsv", show_col_types = FALSE)
+phase_summary <- read_tsv("data/processed/summary_phase.tsv", show_col_types = FALSE)
+design_summary <- read_tsv("data/processed/summary_design.tsv", show_col_types = FALSE)
+sponsor_summary <- read_tsv("data/processed/summary_sponsors.tsv", show_col_types = FALSE)
+site_summary <- read_tsv("data/processed/summary_sites.tsv", show_col_types = FALSE)
+hist_summary <- read_tsv("data/processed/summary_enrollment_histograms.tsv", show_col_types = FALSE)
 
-status_summary <- candidate |>
-  group_by(overall_status) |>
-  summarise(
-    studies = n(),
-    terminated = sum(terminated_binary == 1),
-    termination_rate = terminated / studies,
-    .groups = "drop"
-  ) |>
-  arrange(desc(termination_rate), desc(studies)) |>
-  mutate(overall_status = factor(overall_status, levels = rev(overall_status)))
-
-phase_summary <- candidate |>
-  filter(!is.na(phase_display)) |>
-  group_by(phase_display) |>
-  summarise(
-    studies = n(),
-    terminated = sum(terminated_binary == 1),
-    termination_rate = terminated / studies,
-    .groups = "drop"
-  )
-
-design_summary <- candidate |>
-  mutate(
-    design_group = case_when(
-      randomized_vs_nonrandomized == "randomized" ~ "Randomized",
-      randomized_vs_nonrandomized == "non-randomized" ~ "Non-randomized",
-      TRUE ~ "Not reported"
-    )
-  ) |>
-  group_by(design_group, placebo_used) |>
-  summarise(studies = n(), .groups = "drop") |>
-  mutate(placebo_used = case_when(
-    placebo_used == "yes" ~ "Placebo mentioned",
-    placebo_used == "no" ~ "No placebo found",
-    TRUE ~ "Not reported"
-  ))
-
-trial_enrollment <- candidate |>
-  mutate(
-    start_year = suppressWarnings(as.integer(start_year)),
-    enrollment = suppressWarnings(as.numeric(enrollment))
-  ) |>
-  filter(between(start_year, 1990L, 2026L), !is.na(enrollment), enrollment > 0)
-
-trial_enrollment_medians <- trial_enrollment |>
-  group_by(start_year) |>
-  summarise(median_enrollment = median(enrollment), .groups = "drop")
+# New signal summaries
+df_interventions <- read_tsv("data/processed/summary_interventions.tsv", show_col_types = FALSE)
+df_durations <- read_tsv("data/processed/summary_durations.tsv", show_col_types = FALSE)
+df_randomization <- read_tsv("data/processed/summary_randomization.tsv", show_col_types = FALSE)
+df_placebo <- read_tsv("data/processed/summary_placebo.tsv", show_col_types = FALSE)
+df_complexity <- read_tsv("data/processed/summary_complexity.tsv", show_col_types = FALSE)
+df_conditions <- read_tsv("data/processed/summary_conditions_count.tsv", show_col_types = FALSE)
 ```
 
-## Trial status
+## 1. Study Status & The Scope of Termination
 
-This chart shows how many studies are in each status group. The coral bar indicates studies whose original `overall_status` is `TERMINATED`.
+Across the full registry of 602,514 studies, **34,295** are explicitly recorded as `TERMINATED`. The chart below contrasts total registered studies against those marked terminated across all primary status categories.
 
 ```{r}
 #| label: fig-status
-#| fig-cap: "Study status and terminated studies"
+#| fig-cap: "Total registered studies and terminated subset by reported status category"
 #| fig-width: 12.5
-#| fig-height: 7.5
+#| fig-height: 7.2
 
-ggplot(status_summary, aes(x = studies, y = overall_status)) +
+status_plot_data <- status_summary |>
+  mutate(overall_status = factor(overall_status, levels = rev(overall_status)))
+
+ggplot(status_plot_data, aes(x = studies, y = overall_status)) +
   geom_col(fill = "#b8d8d8", width = 0.68) +
-  geom_col(aes(x = terminated), fill = "#e76f51", width = 0.68) +
-  geom_text(aes(label = comma(studies)), hjust = -0.12, color = "#183642", size = 3.4) +
-  scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.1))) +
-  labs(x = NULL, y = NULL) +
+  geom_col(aes(x = terminated_count), fill = "#e76f51", width = 0.68) +
+  geom_text(aes(label = comma(studies)), hjust = -0.12, color = "#183642", size = 3.3) +
+  scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.12))) +
+  labs(
+    x = "Number of studies",
+    y = NULL,
+    subtitle = "Mint bars indicate total registered studies; coral bars denote studies marked TERMINATED."
+  ) +
   theme_minimal(base_family = "DM Sans") +
   theme(
     panel.grid.major.y = element_blank(),
     panel.grid.minor = element_blank(),
-    axis.text.y = element_text(face = "bold", color = "#183642"),
+    axis.text.y = element_text(face = "bold", color = "#183642", size = 10),
     axis.text.x = element_text(color = "#42616a"),
-    plot.background = element_rect(fill = "#f7f4ed", color = NA),
-    panel.background = element_rect(fill = "#f7f4ed", color = NA)
-  )
-```
-
-## Trial size over time
-
-Each panel contains one trial-level distribution for that start year. The small marks along the baseline are individual studies; the bars show how those studies are distributed. Enrollment is displayed on a logarithmic axis so that small and very large trials remain visible together. Dashed lines mark the yearly median.
-
-<div class="trial-size-panels">
-
-```{r}
-#| label: fig-enrollment-by-year
-#| output: asis
-#| echo: false
-
-panel_dir <- "assets/trial-size-panels"
-dir.create(panel_dir, recursive = TRUE, showWarnings = FALSE)
-
-trial_panel_plot <- function(year) {
-  year_data <- filter(trial_enrollment, start_year == year)
-  year_median <- filter(trial_enrollment_medians, start_year == year)
-
-  ggplot(year_data, aes(x = enrollment)) +
-    geom_histogram(
-      breaks = 10 ^ seq(0, 9, by = 0.25),
-      fill = "#e76f51",
-      color = "#f7f4ed",
-      linewidth = 0.1
-    ) +
-    geom_rug(
-      sides = "b",
-      color = "#183642",
-      alpha = 0.12,
-      linewidth = 0.15,
-      length = grid::unit(0.06, "npc")
-    ) +
-    geom_vline(
-      data = year_median,
-      aes(xintercept = median_enrollment),
-      color = "#183642",
-      linetype = "dashed",
-      linewidth = 0.45,
-      inherit.aes = FALSE
-    ) +
-    scale_x_log10(
-      breaks = c(1, 100, 10000, 1000000, 100000000),
-      labels = comma,
-      limits = c(1, 1e9)
-    ) +
-    scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.06))) +
-    labs(
-      title = as.character(year),
-      subtitle = paste0(nrow(year_data), " trials; median ", comma(round(year_median$median_enrollment))),
-      x = "Participants (log scale)",
-      y = "Trials"
-    ) +
-    theme_minimal(base_family = "DM Sans") +
-    theme(
-      panel.grid.minor = element_blank(),
-      axis.text = element_text(color = "#183642", size = 8),
-      axis.title = element_text(color = "#183642", size = 9),
-      plot.title = element_text(color = "#183642", face = "bold", size = 14),
-      plot.subtitle = element_text(color = "#42616a", size = 8.5),
-      plot.background = element_rect(fill = "#f7f4ed", color = NA),
-      panel.background = element_rect(fill = "#f7f4ed", color = NA),
-      plot.margin = margin(8, 10, 8, 10)
-    )
-}
-
-for (year in sort(unique(trial_enrollment$start_year))) {
-  filename <- paste0("trial-size-", year, ".png")
-  path <- file.path(panel_dir, filename)
-  ggsave(path, trial_panel_plot(year), width = 6.2, height = 4.2, dpi = 180, bg = "#f7f4ed")
-  cat(sprintf(
-    '<a class="trial-size-panel" href="%s" target="_blank" rel="noopener" title="Open the %s trial-size chart full size"><img src="%s" alt="%s trial enrollment histogram; click to open full size"></a>',
-    file.path(panel_dir, filename), year, file.path(panel_dir, filename), year
-  ))
-}
-```
-
-</div>
-
-## Trial phase
-
-This chart shows the percentage of studies marked terminated in each phase group throughout the duration of the drug trials observed. Small and mixed groups are also shown. No studies were removed.
-
-```{r}
-#| label: fig-phase
-#| fig-cap: "Percentage of studies marked terminated in each phase group"
-#| fig-width: 12.5
-#| fig-height: 6.5
-
-ggplot(phase_summary, aes(x = phase_display, y = termination_rate)) +
-  geom_col(fill = "#e76f51", width = 0.62) +
-  geom_text(aes(label = percent(termination_rate, accuracy = 0.1)), vjust = -0.5, color = "#183642", size = 3.6) +
-  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, max(phase_summary$termination_rate) * 1.18), expand = c(0, 0)) +
-  labs(x = NULL, y = "Terminated share") +
-  theme_minimal(base_family = "DM Sans") +
-  theme(
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.text = element_text(color = "#183642"),
-    plot.background = element_rect(fill = "#f7f4ed", color = NA),
-    panel.background = element_rect(fill = "#f7f4ed", color = NA)
-  )
-```
-
-## Study design
-
- This chart shows study counts by randomization and placebo reporting. The dataset keeps several study-design details instead of combining them into one score.
-
-```{r}
-#| label: fig-design
-#| fig-cap: "Study counts by randomization and placebo reporting"
-#| fig-width: 11.5
-#| fig-height: 5.8
-
-ggplot(design_summary, aes(x = design_group, y = studies, fill = placebo_used)) +
-  geom_col(position = "stack", width = 0.62) +
-  geom_text(aes(label = if_else(studies > 10000, comma(studies), "")), position = position_stack(vjust = 0.5), color = "#183642", size = 3.1) +
-  scale_y_continuous(labels = comma, expand = expansion(mult = c(0, 0.08))) +
-  scale_fill_manual(values = c("Placebo mentioned" = "#e76f51", "No placebo found" = "#b8d8d8", "Not reported" = "#42616a")) +
-  labs(x = NULL, y = "Studies", fill = NULL) +
-  theme_minimal(base_family = "DM Sans") +
-  theme(
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.text = element_text(color = "#183642"),
-    legend.position = "bottom",
+    plot.subtitle = element_text(color = "#42616a", size = 9.5),
     plot.background = element_rect(fill = "#f7f4ed", color = NA),
     panel.background = element_rect(fill = "#f7f4ed", color = NA)
   )
 ```
 
 ::: {.callout-note}
-## How to read this
-
-These charts describe the data; they do not prove that one factor causes a trial to stop. `terminated_binary` marks the original `TERMINATED` status. We have not yet chosen a comparison group, a way to handle missing data, a disease grouping, or a complexity score.
+### Understanding Closed vs Active Statuses
+While the baseline termination rate across all registered records is 5.7%, among closed, definitive trials (completed + terminated: 363,391 studies), **the realized termination rate is 9.4%**—approaching 1 in every 10 trials.
 :::
+
+## 2. Trial Size Over Time: Interactive Panel of Histograms
+
+Trial enrollment is one of the most critical structural constraints in clinical trial design. Under-recruitment directly leads to premature termination, while over-ambitious targets create severe operational drag.
+
+The interactive histogram panel below reveals how planned participant cohorts are distributed across major research eras (**1990–1999**, **2000–2009**, **2010–2019**, and **2020–2026**). Use the dropdown menu in the upper-left of the chart to inspect specific eras, or hover over bars to view exact trial counts and percentages.
+
+```{r}
+#| label: fig-interactive-histograms
+#| echo: false
+#| message: false
+#| warning: false
+
+hist_summary$bin_label <- factor(hist_summary$bin_label, levels = unique(hist_summary$bin_label))
+eras <- unique(hist_summary$era)
+
+p_panel <- plot_ly()
+
+for (i in seq_along(eras)) {
+  e <- eras[i]
+  sub_data <- filter(hist_summary, era == e)
+  is_active <- (i == length(eras))
+  
+  p_panel <- add_bars(
+    p_panel,
+    data = sub_data,
+    x = ~bin_label,
+    y = ~count,
+    name = e,
+    visible = is_active,
+    marker = list(
+      color = "#e76f51",
+      line = list(color = "#183642", width = 0.6)
+    ),
+    hovertemplate = paste0(
+      "<b>Era: ", e, "</b><br>",
+      "Cohort: %{x} participants<br>",
+      "Studies: %{y:,}<br>",
+      "Share of Era: ", sub_data$pct, "%<extra></extra>"
+    )
+  )
+}
+
+buttons <- lapply(seq_along(eras), function(i) {
+  vis <- rep(FALSE, length(eras))
+  vis[i] <- TRUE
+  list(
+    method = "update",
+    args = list(
+      list(visible = vis),
+      list(title = list(
+        text = paste0("<b>Trial Enrollment Distribution (", eras[i], ")</b>"),
+        font = list(family = "DM Sans", size = 15, color = "#183642")
+      ))
+    ),
+    label = eras[i]
+  )
+})
+
+p_panel <- layout(
+  p_panel,
+  title = list(
+    text = paste0("<b>Trial Enrollment Distribution (", eras[length(eras)], ")</b>"),
+    font = list(family = "DM Sans", size = 15, color = "#183642")
+  ),
+  xaxis = list(
+    title = list(text = "Planned Enrollment Range", font = list(size = 11, color = "#183642")),
+    tickangle = -35,
+    tickfont = list(size = 9, color = "#183642"),
+    gridcolor = "rgba(24, 54, 66, 0.08)"
+  ),
+  yaxis = list(
+    title = list(text = "Number of Trials", font = list(size = 11, color = "#183642")),
+    tickfont = list(size = 9, color = "#183642"),
+    gridcolor = "rgba(24, 54, 66, 0.1)"
+  ),
+  paper_bgcolor = "#f7f4ed",
+  plot_bgcolor = "#f7f4ed",
+  updatemenus = list(list(
+    type = "dropdown",
+    active = length(eras) - 1,
+    y = 1.18,
+    x = 0.0,
+    xanchor = "left",
+    buttons = buttons,
+    font = list(family = "DM Sans", size = 11, color = "#183642")
+  )),
+  margin = list(t = 60, b = 70, l = 60, r = 30)
+)
+
+p_panel
+```
+
+## 3. Trial Phase: The Phase II Vulnerability Spike
+
+Phase of development is one of the strongest predictive signals for trial termination. As drugs transition from preliminary safety to formal proof-of-concept testing, the failure rate sharply peaks.
+
+```{r}
+#| label: fig-phase
+#| fig-cap: "Trial termination rate by development phase"
+#| fig-width: 12.5
+#| fig-height: 5.8
+
+phase_plot <- phase_summary |>
+  filter(!phase_display %in% c("Not applicable", "Other / Missing")) |>
+  mutate(phase_display = factor(phase_display, levels = c("Phase I", "Mixed Phase (I/II or II/III)", "Phase II", "Phase III", "Phase IV")))
+
+ggplot(phase_plot, aes(x = phase_display, y = termination_rate)) +
+  geom_col(fill = "#e76f51", width = 0.62) +
+  geom_text(
+    aes(label = paste0(percent(termination_rate, accuracy = 0.1), "\n(", comma(terminated_studies), " / ", comma(total_studies), ")")),
+    vjust = -0.3,
+    color = "#183642",
+    size = 3.4,
+    lineheight = 0.85
+  ) +
+  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.14), expand = c(0, 0)) +
+  labs(
+    x = "Development Phase",
+    y = "Termination Rate",
+    subtitle = "Phase II experiences the highest termination rate (11.1%), representing the classical 'valley of death' in drug development."
+  ) +
+  theme_minimal(base_family = "DM Sans") +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text = element_text(color = "#183642", size = 10),
+    axis.title = element_text(color = "#183642", face = "bold"),
+    plot.subtitle = element_text(color = "#42616a", size = 9.5),
+    plot.background = element_rect(fill = "#f7f4ed", color = NA),
+    panel.background = element_rect(fill = "#f7f4ed", color = NA)
+  )
+```
+
+## 4. Study Architecture: Randomization & Placebo Use
+
+The design of a trial's control mechanism directly impacts patient enrollment willingness, protocol compliance, and operational feasibility.
+
+### A. Randomization Status
+
+Non-randomized interventional studies experience a significantly higher termination rate (**8.4%**) than randomized trials (**5.5%**), often reflecting single-arm exploratory designs that are vulnerable to early discontinuation.
+
+```{r}
+#| label: fig-randomization
+#| fig-cap: "Termination rate by study randomization status"
+#| fig-width: 12.5
+#| fig-height: 5.4
+
+rand_plot <- df_randomization |>
+  mutate(randomization_status = factor(randomization_status, levels = c("Randomized", "Non-randomized", "Not reported")))
+
+ggplot(rand_plot, aes(x = randomization_status, y = termination_rate)) +
+  geom_col(fill = "#e76f51", width = 0.55) +
+  geom_text(
+    aes(label = paste0(percent(termination_rate, accuracy = 0.1), "\n(", comma(terminated_studies), " / ", comma(total_studies), " trials)")),
+    vjust = -0.25,
+    color = "#183642",
+    size = 3.4,
+    lineheight = 0.9
+  ) +
+  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.11), expand = c(0, 0)) +
+  labs(
+    x = "Allocation / Randomization Architecture",
+    y = "Termination Rate",
+    subtitle = "Non-randomized studies encounter an 8.4% termination rate, compared to 5.5% in randomized designs."
+  ) +
+  theme_minimal(base_family = "DM Sans") +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text = element_text(color = "#183642", size = 10),
+    axis.title = element_text(color = "#183642", face = "bold"),
+    plot.subtitle = element_text(color = "#42616a", size = 9.5),
+    plot.background = element_rect(fill = "#f7f4ed", color = NA),
+    panel.background = element_rect(fill = "#f7f4ed", color = NA)
+  )
+```
+
+### B. Placebo Use
+
+Placebo-controlled trials demand rigorous double-blinding, identical manufacturing of active and sham agents, and ethical consent for potential inactive treatment. Consequently, trials with reported placebo controls exhibit an **8.6% termination rate**—more than 50% higher than trials without placebo controls (5.6%).
+
+```{r}
+#| label: fig-placebo
+#| fig-cap: "Termination rate by placebo control reporting"
+#| fig-width: 12.5
+#| fig-height: 5.4
+
+placebo_plot <- df_placebo |>
+  mutate(placebo_status = factor(placebo_status, levels = c("Placebo control used", "No placebo reported", "Not reported")))
+
+ggplot(placebo_plot, aes(x = placebo_status, y = termination_rate)) +
+  geom_col(fill = "#42616a", width = 0.55) +
+  geom_text(
+    aes(label = paste0(percent(termination_rate, accuracy = 0.1), "\n(", comma(terminated_studies), " / ", comma(total_studies), " trials)")),
+    vjust = -0.25,
+    color = "#183642",
+    size = 3.4,
+    lineheight = 0.9
+  ) +
+  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.11), expand = c(0, 0)) +
+  labs(
+    x = "Placebo Reporting",
+    y = "Termination Rate",
+    subtitle = "Placebo-controlled studies terminate at 8.6%, driven by patient reluctance to receive sham therapy and double-blind logistical burdens."
+  ) +
+  theme_minimal(base_family = "DM Sans") +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text = element_text(color = "#183642", size = 10),
+    axis.title = element_text(color = "#183642", face = "bold"),
+    plot.subtitle = element_text(color = "#42616a", size = 9.5),
+    plot.background = element_rect(fill = "#f7f4ed", color = NA),
+    panel.background = element_rect(fill = "#f7f4ed", color = NA)
+  )
+```
+
+## 5. Protocol Scale: Interventions & Number of Conditions
+
+### A. Number of Interventions
+
+As trials incorporate multiple drugs, combination therapies, or complex dosing arms, the termination hazard rises steadily. The data reveals a clear dose-response relationship between intervention count and study termination:
+
+```{r}
+#| label: fig-interventions
+#| fig-cap: "Trial termination rate across number of tested interventions"
+#| fig-width: 12.5
+#| fig-height: 5.6
+
+int_plot <- df_interventions |>
+  mutate(intervention_label = factor(intervention_label, levels = rev(intervention_label)))
+
+ggplot(int_plot, aes(x = termination_rate, y = intervention_label)) +
+  geom_col(fill = "#e76f51", width = 0.65) +
+  geom_text(
+    aes(label = paste0(percent(termination_rate, accuracy = 0.1), " (", comma(terminated_studies), " / ", comma(total_studies), ")")),
+    hjust = -0.06,
+    color = "#183642",
+    size = 3.3
+  ) +
+  scale_x_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.11), expand = expansion(mult = c(0, 0.18))) +
+  labs(
+    x = "Termination Rate",
+    y = NULL,
+    subtitle = "Monotherapy trials fail at 5.3%, while complex regimens with 5+ interventions experience an 8.2% termination rate."
+  ) +
+  theme_minimal(base_family = "DM Sans") +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text.y = element_text(face = "bold", color = "#183642", size = 9.5),
+    axis.text.x = element_text(color = "#42616a"),
+    plot.subtitle = element_text(color = "#42616a", size = 9.5),
+    plot.background = element_rect(fill = "#f7f4ed", color = NA),
+    panel.background = element_rect(fill = "#f7f4ed", color = NA)
+  )
+```
+
+### B. Number of Conditions Listed
+
+Protocols targeting multiple comorbid conditions or broad diagnostic indications introduce diagnostic heterogeneity and patient subgroup stratification challenges:
+
+```{r}
+#| label: fig-conditions
+#| fig-cap: "Trial termination rate by number of reported conditions"
+#| fig-width: 12.5
+#| fig-height: 5.2
+
+cond_plot <- df_conditions |>
+  filter(conditions_category != "0 / Missing") |>
+  mutate(conditions_category = factor(conditions_category, levels = conditions_category))
+
+ggplot(cond_plot, aes(x = conditions_category, y = termination_rate)) +
+  geom_col(fill = "#42616a", width = 0.55) +
+  geom_text(
+    aes(label = paste0(percent(termination_rate, accuracy = 0.1), "\n(", comma(terminated_studies), " trials)")),
+    vjust = -0.25,
+    color = "#183642",
+    size = 3.4,
+    lineheight = 0.9
+  ) +
+  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.085), expand = c(0, 0)) +
+  labs(
+    x = "Number of Conditions Listed in Registry",
+    y = "Termination Rate",
+    subtitle = "Single-condition and highly multi-morbid protocols (5+ conditions) each reach 5.8%–6.0% termination rates."
+  ) +
+  theme_minimal(base_family = "DM Sans") +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text = element_text(color = "#183642", size = 10),
+    axis.title = element_text(color = "#183642", face = "bold"),
+    plot.subtitle = element_text(color = "#42616a", size = 9.5),
+    plot.background = element_rect(fill = "#f7f4ed", color = NA),
+    panel.background = element_rect(fill = "#f7f4ed", color = NA)
+  )
+```
+
+## 6. Study Duration: The Attrition Timeline
+
+How does elapsed study timeline correlate with termination? The chart below tracks termination rates across study duration brackets (from short studies under 6 months to multi-year longitudinal trials):
+
+```{r}
+#| label: fig-durations
+#| fig-cap: "Termination rate by total study duration bracket"
+#| fig-width: 12.5
+#| fig-height: 5.6
+
+dur_plot <- df_durations |>
+  mutate(duration_bracket = factor(duration_bracket, levels = rev(duration_bracket)))
+
+ggplot(dur_plot, aes(x = termination_rate, y = duration_bracket)) +
+  geom_col(fill = "#b8d8d8", color = "#183642", width = 0.65) +
+  geom_text(
+    aes(label = paste0(percent(termination_rate, accuracy = 0.1), " (", comma(terminated_studies), " trials)")),
+    hjust = -0.06,
+    color = "#183642",
+    size = 3.3,
+    fontface = "bold"
+  ) +
+  scale_x_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.09), expand = expansion(mult = c(0, 0.16))) +
+  labs(
+    x = "Termination Rate",
+    y = NULL,
+    subtitle = "Trials lasting 2 to 5 years experience the highest termination rate (6.8%), facing chronic accrual fatigue and sponsor shifts."
+  ) +
+  theme_minimal(base_family = "DM Sans") +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text.y = element_text(face = "bold", color = "#183642", size = 9.5),
+    axis.text.x = element_text(color = "#42616a"),
+    plot.subtitle = element_text(color = "#42616a", size = 9.5),
+    plot.background = element_rect(fill = "#f7f4ed", color = NA),
+    panel.background = element_rect(fill = "#f7f4ed", color = NA)
+  )
+```
+
+::: {.callout-note}
+### The 2–5 Year Vulnerability Window
+Short studies (< 6 months) resolve quickly before major institutional or competitive shifts occur (3.4% failure). Studies extending into years 2 through 5 endure prolonged exposure to funding renewals, principal investigator relocations, and patient dropouts.
+:::
+
+## 7. Protocol Complexity Score: Compounding Structural Risk
+
+To capture the holistic operational burden of a clinical trial, we synthesized a **Composite Study Complexity Score (0 to 5 points)** incorporating:
+- Multi-arm design ($\ge 3$ arms or $\ge 3$ interventions)
+- Placebo control reporting
+- Blinded masking (double, triple, or quadruple)
+- Multi-site geographic footprint ($\ge 6$ facilities)
+- Multi-endpoint burden ($\ge 3$ primary outcomes)
+
+Stratifying 602,514 studies by complexity score reveals a stark, linear escalation in failure risk:
+
+```{r}
+#| label: fig-complexity
+#| fig-cap: "Trial termination rate across composite protocol complexity tiers"
+#| fig-width: 12.5
+#| fig-height: 5.6
+
+comp_plot <- df_complexity |>
+  mutate(complexity_tier = factor(complexity_tier, levels = complexity_tier))
+
+ggplot(comp_plot, aes(x = complexity_tier, y = termination_rate)) +
+  geom_col(fill = "#e76f51", width = 0.55) +
+  geom_text(
+    aes(label = paste0(percent(termination_rate, accuracy = 0.1), "\n(", comma(terminated_studies), " / ", comma(total_studies), ")")),
+    vjust = -0.25,
+    color = "#183642",
+    size = 3.4,
+    lineheight = 0.9
+  ) +
+  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.12), expand = c(0, 0)) +
+  labs(
+    x = "Protocol Complexity Tier",
+    y = "Termination Rate",
+    subtitle = "Termination risk nearly doubles from Low Complexity (5.2%) to Very High Complexity (9.3%)."
+  ) +
+  theme_minimal(base_family = "DM Sans") +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text = element_text(color = "#183642", size = 10),
+    axis.title = element_text(color = "#183642", face = "bold"),
+    plot.subtitle = element_text(color = "#42616a", size = 9.5),
+    plot.background = element_rect(fill = "#f7f4ed", color = NA),
+    panel.background = element_rect(fill = "#f7f4ed", color = NA)
+  )
+```
+
+## 8. Sponsor Type & Site Network Footprint
+
+### A. Lead Sponsor Category
+
+```{r}
+#| label: fig-sponsor
+#| fig-cap: "Trial termination rate across lead sponsor categories"
+#| fig-width: 12.5
+#| fig-height: 5.6
+
+sponsor_plot <- sponsor_summary |>
+  filter(total_studies >= 1000) |>
+  arrange(desc(termination_rate)) |>
+  mutate(sponsor_label = factor(sponsor_label, levels = rev(sponsor_label)))
+
+ggplot(sponsor_plot, aes(x = termination_rate, y = sponsor_label)) +
+  geom_col(fill = "#42616a", width = 0.65) +
+  geom_text(
+    aes(label = paste0(percent(termination_rate, accuracy = 0.1), " (", comma(terminated_studies), " trials)")),
+    hjust = -0.08,
+    color = "#183642",
+    size = 3.3
+  ) +
+  scale_x_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.12), expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    x = "Termination Rate",
+    y = NULL,
+    subtitle = "Industry (8.9%) and NIH-sponsored studies (8.5%) exhibit nearly double the termination rate of academic networks (4.8%)."
+  ) +
+  theme_minimal(base_family = "DM Sans") +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text.y = element_text(face = "bold", color = "#183642", size = 9.5),
+    axis.text.x = element_text(color = "#42616a"),
+    plot.subtitle = element_text(color = "#42616a", size = 9.5),
+    plot.background = element_rect(fill = "#f7f4ed", color = NA),
+    panel.background = element_rect(fill = "#f7f4ed", color = NA)
+  )
+```
+
+### B. Clinical Site Footprint
+
+```{r}
+#| label: fig-sites
+#| fig-cap: "Termination rate across clinical site footprint categories"
+#| fig-width: 12.5
+#| fig-height: 5.4
+
+site_plot <- site_summary |>
+  filter(site_category != "0 sites / Not reported") |>
+  mutate(site_category = factor(site_category, levels = c(
+    "Single-site (1)",
+    "Small multi-site (2–5)",
+    "Medium multi-site (6–20)",
+    "Large multi-site (21–50)",
+    "Global mega-network (51+)"
+  )))
+
+ggplot(site_plot, aes(x = site_category, y = termination_rate)) +
+  geom_col(fill = "#b8d8d8", color = "#183642", width = 0.6) +
+  geom_text(
+    aes(label = percent(termination_rate, accuracy = 0.1)),
+    vjust = -0.5,
+    color = "#183642",
+    fontface = "bold",
+    size = 3.6
+  ) +
+  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.13), expand = c(0, 0)) +
+  labs(
+    x = "Operational Footprint (Number of Clinical Sites)",
+    y = "Termination Rate",
+    subtitle = "Moving from a single site (5.0%) to multi-site networks (10.0%–10.3%) doubles termination risk."
+  ) +
+  theme_minimal(base_family = "DM Sans") +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text = element_text(color = "#183642", size = 9.5),
+    axis.title = element_text(color = "#183642", face = "bold"),
+    plot.subtitle = element_text(color = "#42616a", size = 9.5),
+    plot.background = element_rect(fill = "#f7f4ed", color = NA),
+    panel.background = element_rect(fill = "#f7f4ed", color = NA)
+  )
+```

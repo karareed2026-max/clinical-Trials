@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-<head>
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
 
-<meta charset="utf-8" />
-<meta name="generator" content="quarto-1.10.18" />
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>How Can We Predict the Termination of Clinical Drug Trials and What Are the Factors for Ternination? – Milestone 4</title>
+<title>openfda_dataset_assessment_2026-09-13 – Clinical Trial Termination Risk</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -30,7 +28,24 @@ ul.task-list li input[type="checkbox"] {
 }
 </style>
 
-<!-- htmldependencies:E3FAD763 -->
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-25dd70e1418bf13535bac40b5a4bcb17.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -61,39 +76,41 @@ ul.task-list li input[type="checkbox"] {
 <style>html{ scroll-behavior: smooth; }</style>
 
 
-<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body>
+<body class="nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="/index.html">
-    <span class="navbar-title">Milestone 4</span>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Clinical Trial Termination Risk</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-  aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation"
-  onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="/index.html"> 
+    <a class="nav-link" href="../../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="/about.html"> 
-<span class="menu-text">About</span></a>
+    <a class="nav-link" href="../../termination-signals.html"> 
+<span class="menu-text">Termination Signals</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="/termination-signals.html"> 
-<span class="menu-text">Termination signals</span></a>
+    <a class="nav-link" href="../../trial-termination.html"> 
+<span class="menu-text">What Termination Looks Like</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../prevention.html"> 
+<span class="menu-text">Prevention &amp; Benefits</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -106,89 +123,180 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    </div>
+    
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">How Can We Predict the Termination of Clinical Drug Trials and What Are the Factors for Ternination?</h1>
-<p class="subtitle lead">Information based on observations from thousands of clinical drug trials.</p>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
 
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<section id="where-studies-stand" class="level2">
-<h2>Where studies stand</h2>
-<div class="status-graphic">
-<p><img src="assets/aact_status_distribution.svg" alt="Horizontal bar chart showing all 14 overall-status categories among 602,514 AACT studies. Terminated studies are highlighted in coral, with counts and percentages shown for every category." /></p>
-</div>
-<p>This first-pass view uses the existing AACT candidate dataset and keeps every reported status category separate. It highlights <code>TERMINATED</code> without labeling the remaining studies as completed or implying that any status causes another.</p>
+<section id="openfda-dataset-assessment-for-trial-termination-research" class="level1">
+<h1>openFDA Dataset Assessment for Trial Termination Research</h1>
+<section id="scope" class="level2">
+<h2 class="anchored" data-anchor-id="scope">Scope</h2>
+<p>The research question is: <strong>What factors are associated with early termination of clinical trials?</strong></p>
+<p>This assessment uses the official <a href="https://open.fda.gov/apis/">openFDA API catalog</a>, endpoint documentation, and API metadata responses. No openFDA bulk dataset was downloaded. The AACT raw archive remains separate and untouched.</p>
+<p>Record counts below are approximate API record counts observed on 2026-09-13; they change as FDA updates the APIs. A record count is not a count of unique drugs, products, patients, adverse events, or trials.</p>
 </section>
-<section id="are-trials-getting-larger" class="level2">
-<h2>Are trials getting larger?</h2>
-<p>The status chart counts categories, but it cannot show the studies themselves. This view follows 575,628 trials with a reported positive enrollment and a start year from 1990 through 2026. The line is the median number of planned participants; the shaded band contains the middle half of trials in each year. Both are on a logarithmic scale because trial sizes range from a few participants to millions. The broad pattern is more useful than any single year: typical trial enrollment rises over much of the period, while the wide band shows that trials have never had one standard size.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-home-enrollment" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-float-fig">
-<div aria-describedby="fig-home-enrollment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="index_files/figure-html/fig-home-enrollment-1.png" class="img-fluid" width="1200" />
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-home-enrollment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 1: The typical and middle 50% of reported trial enrollment by study start year
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<div id="quarto-navigation-envelope" class="hidden">
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1zaWRlYmFyLXRpdGxl">Milestone 4</span></p>
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXItdGl0bGU=">Milestone 4</span></p>
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6SG9tZQ==">Home</span></p>
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L2luZGV4Lmh0bWw=">/index.html</span></p>
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6QWJvdXQ=">About</span></p>
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L2Fib3V0Lmh0bWw=">/about.html</span></p>
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6VGVybWluYXRpb24gc2lnbmFscw==">Termination signals</span></p>
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLWludC1uYXZiYXI6L3Rlcm1pbmF0aW9uLXNpZ25hbHMuaHRtbA==">/termination-signals.html</span></p>
-<div class="hidden quarto-markdown-envelope-contents" data-render-id="Zm9vdGVyLWxlZnQ=">
-<p>© 2026 Milestone 4</p>
-</div>
-<div class="hidden quarto-markdown-envelope-contents" data-render-id="Zm9vdGVyLXJpZ2h0">
-<p>Built with Quarto</p>
-</div>
-</div>
-<div id="quarto-about-pipeline" class="hidden">
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="RXhwbG9yZSB0aGUgcHJvamVjdA==">Explore the project</span></p>
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="OEIxRTQ2QjctcmVuZGVyLWFib3V0LWxpbmstMQ==">/about.html</span></p>
-</div>
-<div id="quarto-meta-markdown" class="hidden">
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLW1ldGF0aXRsZQ==">How Can We Predict the Termination of Clinical Drug Trials and What Are the Factors for Ternination? – Milestone 4</span></p>
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLXR3aXR0ZXJjYXJkdGl0bGU=">How Can We Predict the Termination of Clinical Drug Trials and What Are the Factors for Ternination? – Milestone 4</span></p>
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLW9nY2FyZHRpdGxl">How Can We Predict the Termination of Clinical Drug Trials and What Are the Factors for Ternination? – Milestone 4</span></p>
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLW1ldGFzaXRlbmFtZQ==">Milestone 4</span></p>
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLXR3aXR0ZXJjYXJkZGVzYw==">Information based on observations from thousands of clinical drug trials.</span></p>
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLW9nY2FyZGRkZXNj">Information based on observations from thousands of clinical drug trials.</span></p>
-<p><span class="hidden quarto-markdown-envelope-contents" data-render-id="cXVhcnRvLW1ldGFzaXRlZGVzYw==">A focused space for thoughtful work and clear progress.</span></p>
-</div>
+<section id="candidate-datasets" class="level2">
+<h2 class="anchored" data-anchor-id="candidate-datasets">Candidate datasets</h2>
+<section id="drug-and-safety-datasets" class="level3">
+<h3 class="anchored" data-anchor-id="drug-and-safety-datasets">Drug and safety datasets</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Dataset</th>
+<th style="text-align: right;">Approximate size and currentness</th>
+<th>Contents</th>
+<th>Possible connection to AACT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://open.fda.gov/apis/drug/event/">Drug adverse events</a> (<code>drug/event</code>)</td>
+<td style="text-align: right;">20,692,690 records; API metadata last updated 2026-07-30</td>
+<td>FAERS reports from 2004 onward, including report dates, seriousness indicators, patient characteristics, suspected or concomitant products, indications, routes, and reported reactions.</td>
+<td>Match AACT intervention names to <code>patient.drug.medicinalproduct</code>, then derive pre-specified drug-level safety-signal features or post-market adverse-event burden. No NCT ID is provided, so this is an intervention-level linkage rather than a trial-level join.</td>
+</tr>
+<tr class="even">
+<td><a href="https://open.fda.gov/apis/drug/drugsfda/">Drugs@FDA</a> (<code>drug/drugsfda</code>)</td>
+<td style="text-align: right;">29,325 records; API metadata last updated 2026-09-11</td>
+<td>FDA drug applications and approval history, including application number, sponsor name, products, submission types/statuses, submission dates, review priority, and class descriptions.</td>
+<td>Match drug interventions and sponsor names to identify whether an intervention has an FDA application or approval history, regulatory maturity, submission activity, or sponsor-level regulatory context.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://open.fda.gov/apis/drug/label/">Drug labeling</a> (<code>drug/label</code>)</td>
+<td style="text-align: right;">262,842 records; API metadata last updated 2026-09-11</td>
+<td>Structured product labels, including active ingredients, brand/generic names, manufacturer, route, indications, warnings, contraindications, dosage, and safety information.</td>
+<td>Match intervention names, ingredients, UNII, or product NDC to add labeled indication, route, warning, and contraindication features. Labels generally describe marketed products and do not identify the originating clinical trial.</td>
+</tr>
+<tr class="even">
+<td><a href="https://open.fda.gov/apis/drug/orangebook/">Orange Book</a> (<code>drug/orangebook</code>)</td>
+<td style="text-align: right;">48,664 records; API metadata last updated 2026-09-11</td>
+<td>Approved drug products, active ingredients, application/product numbers, marketing status, dosage form, route, therapeutic-equivalence codes, patent, and exclusivity information where available.</td>
+<td>Match drug interventions to characterize approval status, generic/reference-product status, route, and market or exclusivity context. Useful as a regulatory maturity covariate, but not a direct trial-termination source.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://open.fda.gov/apis/drug/ndc/">Drug NDC</a> (<code>drug/ndc</code>)</td>
+<td style="text-align: right;">137,841 records; API metadata last updated 2026-09-11</td>
+<td>National Drug Code product/package records, including labeler, product and package identifiers, active ingredients, dosage form, route, marketing category, and product status.</td>
+<td>Normalize intervention names to ingredients and marketed products, then link to labels, Orange Book, or FAERS. The NDC is a product identifier and is not a clinical-trial identifier.</td>
+</tr>
+<tr class="even">
+<td><a href="https://open.fda.gov/apis/drug/enforcement/">Drug enforcement reports</a> (<code>drug/enforcement</code>)</td>
+<td style="text-align: right;">17,938 records; API metadata last updated 2026-09-02</td>
+<td>Drug recalls and enforcement actions, including recalling firm, product description, recall reason, classification, dates, distribution, and termination date.</td>
+<td>Match products or firms to identify recalls or quality/safety actions that could contextualize a trial intervention. Usually post-market and vulnerable to name-matching ambiguity.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://open.fda.gov/apis/drug/drugshortages/">Drug shortages</a></td>
+<td style="text-align: right;">Official openFDA catalog entry; no working public JSON endpoint was returned during this review, so size was not estimated.</td>
+<td>Drug shortage status and related supply information where available through FDA resources.</td>
+<td>Could provide an operational or supply-related explanation for interruption or termination, but it needs endpoint verification before use and is not a direct trial dataset.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="device-datasets" class="level3">
+<h3 class="anchored" data-anchor-id="device-datasets">Device datasets</h3>
+<p>These are potentially relevant because AACT includes device and drug-device interventions, but they are less useful for an all-therapeutic-area first pass unless device trials are analyzed separately.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Dataset</th>
+<th style="text-align: right;">Approximate size and currentness</th>
+<th>Contents</th>
+<th>Possible connection to AACT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://open.fda.gov/apis/device/event/">Device adverse events</a> (<code>device/event</code>)</td>
+<td style="text-align: right;">26,136,889 records; API metadata last updated 2026-09-08</td>
+<td>Medical-device adverse-event reports, including device identifiers, event types, patient/event details, manufacturers, and report dates.</td>
+<td>Match device intervention names or identifiers to add post-market device-event burden. Direct trial linkage is generally unavailable.</td>
+</tr>
+<tr class="even">
+<td><a href="https://open.fda.gov/apis/device/recall/">Device recalls</a> (<code>device/recall</code>)</td>
+<td style="text-align: right;">59,131 records; API metadata last updated 2026-09-10</td>
+<td>Device recall records, products, firms, recall reasons, classifications, and dates.</td>
+<td>Add device recall or quality-action context for trials involving devices.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://open.fda.gov/apis/device/510k/">510(k)</a> (<code>device/510k</code>)</td>
+<td style="text-align: right;">176,000 records; API metadata last updated 2026-08-31</td>
+<td>Premarket notification records, applicants, product codes, decision dates, trade names, and decision codes.</td>
+<td>Characterize device regulatory clearance and applicant history for device interventions.</td>
+</tr>
+<tr class="even">
+<td><a href="https://open.fda.gov/apis/device/pma/">PMA</a> (<code>device/pma</code>)</td>
+<td style="text-align: right;">57,066 records; API metadata last updated 2026-08-31</td>
+<td>Premarket approval records, applicants, device names, PMA numbers, decision dates, and supplement information.</td>
+<td>Characterize higher-risk device approval history and regulatory status.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://open.fda.gov/apis/device/classification/">Device classification</a> (<code>device/classification</code>)</td>
+<td style="text-align: right;">7,091 records; API metadata last updated 2026-08-31</td>
+<td>Device product codes, classification, regulation numbers, review panels, and risk class.</td>
+<td>Map device interventions to device class and regulatory category.</td>
+</tr>
+<tr class="even">
+<td><a href="https://open.fda.gov/apis/device/registrationlisting/">Device registration/listing</a> (<code>device/registrationlisting</code>)</td>
+<td style="text-align: right;">334,839 records; API metadata last updated 2026-08-31</td>
+<td>Establishment registration and device listing information.</td>
+<td>Add manufacturer or marketed-device context, but weak direct connection to trial termination.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://open.fda.gov/apis/device/udi/">Unique Device Identification</a> (<code>device/udi</code>)</td>
+<td style="text-align: right;">5,182,695 records; API metadata last updated 2026-09-02</td>
+<td>UDI device records, brand, company, model/version, identifiers, product codes, and distribution/status attributes.</td>
+<td>Improve device-name and identifier normalization before linking to device events, recalls, or approvals.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="what-is-not-present" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-not-present">What is not present</h2>
+<p>The openFDA API catalog does not provide a general clinical-trial registry that duplicates ClinicalTrials.gov or AACT. ClinicalTrials.gov remains the source for trial status, enrollment, phase, design, dates, arms, allocation, masking, and reported stopping reason. openFDA can add product, safety, labeling, approval, recall, or device context, but it generally does not provide an NCT-level join.</p>
+</section>
+<section id="recommendation" class="level2">
+<h2 class="anchored" data-anchor-id="recommendation">Recommendation</h2>
+<section id="recommended-dataset-drug-adverse-events-drugevent" class="level3">
+<h3 class="anchored" data-anchor-id="recommended-dataset-drug-adverse-events-drugevent">Recommended dataset: Drug adverse events (<code>drug/event</code>)</h3>
+<p>For a first complementary dataset, use the openFDA <strong>Drug Adverse Events API</strong>. It is the best match to a plausible mechanism of early termination: safety or tolerability concerns related to an intervention. It is also broad enough to cover drug interventions across the therapeutic areas represented in AACT and large enough to support intervention-level safety features rather than relying on a small hand-picked product list.</p>
+<p>This recommendation is for a future, carefully defined linkage study. It does not imply that an adverse-event report caused a particular trial to terminate. The openFDA documentation warns that reports may list several drugs and several reactions, that causality is not established, that reporting is affected by exposure and publicity, and that the data should not be used alone for clinical or causal conclusions. FAERS is also largely post-market, so features must be restricted by date relative to trial start or termination to avoid temporal leakage.</p>
+</section>
+</section>
+<section id="variables-to-consider-later" class="level2">
+<h2 class="anchored" data-anchor-id="variables-to-consider-later">Variables to consider later</h2>
+<p>Potential derived variables from <code>drug/event</code> include:</p>
+<ul>
+<li><code>patient.drug.medicinalproduct</code>: normalized intervention/product name for linkage to AACT <code>interventions.name</code>.</li>
+<li><code>patient.drug.drugindication</code>: reported indication, useful for comparing the event context with AACT <code>conditions.name</code>.</li>
+<li><code>patient.drug.drugadministrationroute</code>: administration route, potentially comparable with intervention details and product labels.</li>
+<li><code>patient.reaction.reactionmeddrapt</code>: reported reaction terms, summarized into pre-specified safety categories rather than used as unrestricted post hoc features.</li>
+<li><code>serious</code>, <code>seriousnessdeath</code>, and related seriousness flags: counts or rates of serious reports, with careful denominators and sensitivity analyses.</li>
+<li><code>receivedate</code>, <code>receiptdate</code>, and <code>transmissiondate</code>: time windows for restricting events to information available before a trial’s termination.</li>
+<li><code>primarysource.reportercountry</code> and <code>primarysource.qualification</code>: reporting context and source type.</li>
+<li><code>drugauthorizationnumb</code> and other available product identifiers: possible support for matching to Drugs@FDA, NDC, or labels, subject to coverage.</li>
+</ul>
+<p>The initial AACT linkage would likely be at the intervention/product level, with manual or dictionary-assisted name normalization and an explicit unresolved match category. No openFDA data has been downloaded, transformed, or joined yet.</p>
+
+
+</section>
 </section>
 
 </main> <!-- /main -->
-<script id = "quarto-html-after-body" type="application/javascript">
+<script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     
@@ -584,17 +692,19 @@ Figure 1: The typical and middle 50% of reported trial enrollment by study star
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-      <div class='footer-contents'>© 2026 Milestone 4</div>  
-    </div>   
+<p>© 2026 Clinical Trial Termination Project</p>
+</div>   
     <div class="nav-footer-center">
       &nbsp;
     </div>
     <div class="nav-footer-right">
-      <div class='footer-contents'>Built with Quarto</div>  
-    </div>
+<p>Built with Quarto</p>
+</div>
   </div>
 </footer>
 
-</body>
 
-</html>
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

@@ -1,0 +1,8 @@
+design_group	placebo_used	total_studies	terminated_studies	termination_rate
+Randomized	No placebo found	238545	11259	0.0472
+Non-randomized	No placebo found	150616	12672	0.0841
+Not reported	No placebo found	86945	2788	0.0321
+Randomized	Placebo mentioned	64037	5511	0.0861
+Not reported	Not reported	61041	1979	0.0324
+Non-randomized	Placebo mentioned	951	70	0.0736
+Not reported	Placebo mentioned	379	16	0.0422

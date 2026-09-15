@@ -1,12 +1,18 @@
 ---
-title: "How Can We Predict the Termination of Clinical Drug Trials and What Are the Factors for Ternination?"
-subtitle: "Information based on observations from thousands of clinical drug trials."
+title: "How Can Observations of Clinical Trial Termination Risk Factors Help Researchers Identify and Address Potential Problems Before Trials Are Terminated?"
+subtitle: "We can utilize observations across thousands of clinical drug trials, including those that have failed, to predict if a trial may terminate. Using those insights, how might we be able to prevent trial failure?"
 about:
   template: jolla
   links:
-    - text: Explore the project
-      href: about.qmd
-      icon: arrow-right
+    - text: Termination Signals
+      href: termination-signals.qmd
+      icon: activity
+    - text: What Termination Looks Like
+      href: trial-termination.qmd
+      icon: eye
+    - text: Prevention & Benefits
+      href: prevention.qmd
+      icon: shield-check
 ---
 
 ## Where studies stand
@@ -15,17 +21,62 @@ about:
 <img src="assets/aact_status_distribution.svg" alt="Horizontal bar chart showing all 14 overall-status categories among 602,514 AACT studies. Terminated studies are highlighted in coral, with counts and percentages shown for every category." />
 </div>
 
-This first-pass view uses the existing AACT candidate dataset and keeps every reported status category separate. It highlights `TERMINATED` without labeling the remaining studies as completed or implying that any status causes another.
+This foundational view captures all **602,514** registered clinical studies in the Aggregate Analysis of ClinicalTrials.gov (AACT) candidate dataset, maintaining each reported status category independently.
 
-## Are trials getting larger?
+A central finding immediately emerges: **34,295 studies were explicitly marked `TERMINATED`** (representing **5.7%** of all registered trials, and **9.4%** of closed completed or terminated trials). Rather than treating trial termination as a rare anomaly, the data reveals that premature study termination is a recurring challenge across the clinical research enterprise.
 
-The status chart counts categories, but it cannot show the studies themselves. This view follows 575,628 trials with a reported positive enrollment and a start year from 1990 through 2026. The line is the median number of planned participants; the shaded band contains the middle half of trials in each year. Both are on a logarithmic scale because trial sizes range from a few participants to millions. The broad pattern is more useful than any single year: typical trial enrollment rises over much of the period, while the wide band shows that trials have never had one standard size.
+::: {.callout-note}
+### Key Takeaway from Status Distribution
+While completed studies represent the largest single group (329,096 trials), over 34,000 trials halted prematurely. Understanding the operational, design, and clinical factors associated with these terminations provides a blueprint for early detection and prevention.
+:::
+
+## Key Variables & Data Dimensions Gathered
+
+To evaluate termination risk factors comprehensively, we gathered and synthesized multidimensional indicators across 602,514 studies:
+
+<div class="metrics-container">
+  <div class="metric-card">
+    <div class="metric-number">602,514</div>
+    <div class="metric-label">Total Studies</div>
+    <div class="metric-sub">Complete AACT spine analyzed</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-number">34,295</div>
+    <div class="metric-label">Terminated Trials</div>
+    <div class="metric-sub">5.7% of total; 9.4% of resolved trials</div>
+  </div>
+  <div class="metric-card alt">
+    <div class="metric-number">459,840</div>
+    <div class="metric-label">Interventional Trials</div>
+    <div class="metric-sub">vs 140,623 observational studies</div>
+  </div>
+  <div class="metric-card alt">
+    <div class="metric-number">30,742</div>
+    <div class="metric-label">Reported Reasons</div>
+    <div class="metric-sub">Documented causes of premature halts</div>
+  </div>
+</div>
+
+### Variables Collected Across Clinical Dimensions
+
+| Domain | Key Variables Gathered | Description & Analytical Value |
+|:---|:---|:---|
+| **Study Identification & Status** | `nct_id`, `overall_status`, `terminated_binary`, `why_stopped` | Tracks trial status across 14 categories and captures free-text stopping rationales for over 30,000 terminated studies. |
+| **Recruitment & Scale** | `enrollment`, `enrollment_type` | Quantifies planned and actual participant cohorts, distinguishing between anticipated targets and actual accrual. |
+| **Development Phase** | `phase` (Phase I, II, III, IV, Mixed, NA) | Evaluates how failure rates evolve from early safety testing to large-scale confirmatory trials. |
+| **Sponsorship & Funding** | `lead_sponsor_type`, `lead_sponsor_organization`, `sponsor_count` | Categorizes sponsors into Industry, Academic/Hospital, NIH, and Federal agencies to assess funding stability. |
+| **Study Architecture & Complexity** | `randomized_vs_nonrandomized`, `placebo_used`, `number_of_arms`, `number_of_sites` | Captures structural protocol complexity, including blinding, control arms, and global facility footprints. |
+| **Timeline & Duration** | `start_year`, `study_start_date`, `study_completion_date`, `study_duration_days` | Tracks temporal evolution over 36 years (1990–2026) and measures elapsed trial duration before resolution. |
+
+## Therapeutic Areas & Disease Distribution
+
+Clinical trial volume and termination vulnerability vary widely across medical disciplines. The statistics chart below maps registered trials and termination rates across major therapeutic areas:
 
 ```{r}
-#| label: fig-home-enrollment
-#| fig-cap: "The typical and middle 50% of reported trial enrollment by study start year"
+#| label: fig-therapeutic-areas
+#| fig-cap: "Clinical trial volume and termination rate across primary therapeutic areas"
 #| fig-width: 12.5
-#| fig-height: 5.8
+#| fig-height: 7.2
 #| echo: false
 #| message: false
 #| warning: false
@@ -35,38 +86,176 @@ library(dplyr)
 library(readr)
 library(scales)
 
-homepage_enrollment <- read_tsv(
-  "data/processed/aact_trial_termination_candidate_2026-09-12.tsv.gz",
-  show_col_types = FALSE,
-  na = c("", "[missing]")
-) |>
-  mutate(
-    start_year = suppressWarnings(as.integer(start_year)),
-    enrollment = suppressWarnings(as.numeric(enrollment))
-  ) |>
-  filter(between(start_year, 1990L, 2026L), !is.na(enrollment), enrollment > 0) |>
-  group_by(start_year) |>
-  summarise(
-    lower = quantile(enrollment, 0.25),
-    median = median(enrollment),
-    upper = quantile(enrollment, 0.75),
-    studies = n(),
-    .groups = "drop"
-  )
+df_area <- read_tsv("data/processed/summary_therapeutic_areas.tsv", show_col_types = FALSE) |>
+  filter(therapeutic_area != "Unspecified / Missing") |>
+  mutate(therapeutic_area = factor(therapeutic_area, levels = rev(therapeutic_area)))
 
-ggplot(homepage_enrollment, aes(x = start_year)) +
-  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#b8d8d8", alpha = 0.9) +
-  geom_line(aes(y = median), color = "#e76f51", linewidth = 1.1) +
-  geom_point(aes(y = median), color = "#183642", fill = "#e76f51", shape = 21, size = 2.3, stroke = 0.5) +
-  scale_y_log10(labels = comma, breaks = c(10, 100, 1000, 10000, 100000, 1000000)) +
-  scale_x_continuous(breaks = seq(1990, 2025, by = 5), expand = expansion(mult = c(0.01, 0.02))) +
-  labs(x = "Study start year", y = "Reported enrollment") +
+ggplot(df_area, aes(x = total_studies, y = therapeutic_area)) +
+  geom_col(fill = "#b8d8d8", width = 0.68) +
+  geom_col(aes(x = terminated_studies), fill = "#e76f51", width = 0.68) +
+  geom_text(
+    aes(label = paste0(comma(total_studies), " studies (", percent(termination_rate, accuracy = 0.1), " terminated)")),
+    hjust = -0.04,
+    color = "#183642",
+    size = 3.3
+  ) +
+  scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.28))) +
+  labs(
+    x = "Total Registered Studies",
+    y = NULL,
+    subtitle = "Mint bars indicate total registered studies; coral bars denote studies marked TERMINATED."
+  ) +
   theme_minimal(base_family = "DM Sans") +
   theme(
+    panel.grid.major.y = element_blank(),
     panel.grid.minor = element_blank(),
-    axis.text = element_text(color = "#183642"),
-    axis.title = element_text(color = "#183642"),
+    axis.text.y = element_text(face = "bold", color = "#183642", size = 9.8),
+    axis.text.x = element_text(color = "#42616a"),
+    axis.title.x = element_text(color = "#183642", face = "bold", margin = margin(t = 8)),
+    plot.subtitle = element_text(color = "#42616a", size = 9.5),
     plot.background = element_rect(fill = "#f7f4ed", color = NA),
     panel.background = element_rect(fill = "#f7f4ed", color = NA)
   )
 ```
+
+::: {.callout-note}
+### Therapeutic Area Insights
+- **Oncology Dominance & Risk**: Oncology / Cancer represents the largest identified clinical indication with **110,360 studies (18.3% of all trials)**, and simultaneously exhibits the highest termination rate at **9.3%** (over 10,200 terminated trials). Oncology trials face severe patient accrual hurdles due to narrow biomarker inclusion criteria and toxicities.
+- **Healthy Volunteer Baseline**: Studies on healthy volunteers and normal controls display the lowest termination rate (**3.0%**), underscoring that patient disease severity and complex eligibility directly elevate termination hazard.
+:::
+
+## Are trials getting larger? Trial enrollment over time
+
+A critical question when predicting trial feasibility is whether clinical trials have grown in scale over the decades. The two coordinated visualizations below combine the **longitudinal trajectory of planned enrollment** with an **interactive panel of histograms** illustrating how trial sizes are distributed across eras.
+
+### 1. Longitudinal Enrollment Trajectory (1990–2026)
+
+This view tracks median planned enrollment (solid coral line) and the middle 50% interquartile band (shaded mint band) on a logarithmic scale for 575,628 trials with positive reported enrollment.
+
+```{r}
+#| label: fig-home-enrollment
+#| fig-cap: "The typical and middle 50% of reported trial enrollment by study start year (1990–2026)"
+#| fig-width: 12.5
+#| fig-height: 5.5
+#| echo: false
+#| message: false
+#| warning: false
+
+annual_enrollment <- read_tsv(
+  "data/processed/summary_annual_enrollment.tsv",
+  show_col_types = FALSE
+)
+
+ggplot(annual_enrollment, aes(x = start_year)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#b8d8d8", alpha = 0.85) +
+  geom_line(aes(y = median), color = "#e76f51", linewidth = 1.15) +
+  geom_point(aes(y = median), color = "#183642", fill = "#e76f51", shape = 21, size = 2.4, stroke = 0.5) +
+  scale_y_log10(labels = comma, breaks = c(10, 100, 1000, 10000, 100000, 1000000)) +
+  scale_x_continuous(breaks = seq(1990, 2025, by = 5), expand = expansion(mult = c(0.01, 0.02))) +
+  labs(
+    x = "Study start year",
+    y = "Reported enrollment (log scale)",
+    subtitle = "Solid coral line represents yearly median; shaded band shows the interquartile range (25th to 75th percentiles)."
+  ) +
+  theme_minimal(base_family = "DM Sans") +
+  theme(
+    panel.grid.minor = element_blank(),
+    axis.text = element_text(color = "#183642"),
+    axis.title = element_text(color = "#183642", face = "bold"),
+    plot.subtitle = element_text(color = "#42616a", size = 9.5),
+    plot.background = element_rect(fill = "#f7f4ed", color = NA),
+    panel.background = element_rect(fill = "#f7f4ed", color = NA)
+  )
+```
+
+### 2. Interactive Panel of Histograms: Enrollment Distribution by Era
+
+The histogram panel below details the distribution of participant enrollment across four distinct historical eras: **1990–1999**, **2000–2009**, **2010–2019**, and **2020–2026**. Hover over any bar to inspect the exact share and number of trials within that enrollment bin, or click eras in the legend to compare subsets.
+
+```{r}
+#| label: fig-home-histograms
+#| echo: false
+#| message: false
+#| warning: false
+
+library(plotly)
+
+hist_data <- read_tsv(
+  "data/processed/summary_enrollment_histograms.tsv",
+  show_col_types = FALSE
+)
+
+hist_data$bin_label <- factor(hist_data$bin_label, levels = unique(hist_data$bin_label))
+
+era_colors <- c(
+  "1990–1999" = "#42616a",
+  "2000–2009" = "#b8d8d8",
+  "2010–2019" = "#183642",
+  "2020–2026" = "#e76f51"
+)
+
+p_hist <- plot_ly()
+
+for (era_name in unique(hist_data$era)) {
+  sub_era <- filter(hist_data, era == era_name)
+  p_hist <- add_bars(
+    p_hist,
+    data = sub_era,
+    x = ~bin_label,
+    y = ~pct,
+    name = era_name,
+    marker = list(
+      color = era_colors[era_name],
+      line = list(color = "#ffffff", width = 0.5)
+    ),
+    hovertemplate = paste0(
+      "<b>", era_name, " Era</b><br>",
+      "Cohort Range: %{x} participants<br>",
+      "Share of Trials: %{y:.1f}%<br>",
+      "Total Trials in Bin: ", comma(sub_era$count),
+      "<extra></extra>"
+    )
+  )
+}
+
+p_hist <- layout(
+  p_hist,
+  barmode = "group",
+  bargap = 0.15,
+  bargroupgap = 0.05,
+  font = list(family = "DM Sans", color = "#183642"),
+  paper_bgcolor = "#f7f4ed",
+  plot_bgcolor = "#f7f4ed",
+  xaxis = list(
+    title = list(text = "Planned Enrollment Range", font = list(size = 12, color = "#183642")),
+    tickangle = -35,
+    tickfont = list(size = 10, color = "#183642"),
+    gridcolor = "rgba(24, 54, 66, 0.08)"
+  ),
+  yaxis = list(
+    title = list(text = "Share of Trials in Era (%)", font = list(size = 12, color = "#183642")),
+    ticksuffix = "%",
+    tickfont = list(size = 10, color = "#183642"),
+    gridcolor = "rgba(24, 54, 66, 0.1)"
+  ),
+  legend = list(
+    title = list(text = "<b>Study Era</b>"),
+    orientation = "h",
+    x = 0.15,
+    y = 1.12
+  ),
+  margin = list(t = 50, b = 80, l = 60, r = 30)
+)
+
+p_hist
+```
+
+::: {.callout-note}
+### Key Insights from Enrollment Distribution
+1. **Convergence on Modern Target Sizes**: In the 1990s (prior to mandated registry reporting), recorded trials were disproportionately large landmark trials. Since the mid-2000s, clinical research has settled into a consistent distribution, with the bulk of trials enrolling between **25 and 250 participants** (typical Phase I–II studies).
+2. **The Long Tail of Mega-Trials**: While median trial size has remained relatively stable (~60–80 patients), roughly 10% of trials plan for 1,000+ participants, introducing dramatic operational complexity and multi-site coordination risks.
+:::
+
+## Important Note
+
+Correlation does **NOT** equal causation. Instead, data related to the risk factors for the termination of drug trials are merely *associated* with drug trial failure. Identifying these statistical associations allows research teams to flag operational vulnerabilities and implement risk-mitigation strategies early in trial planning.

@@ -1,0 +1,143 @@
+---
+title: "What Clinical Trial Termination Looks Like"
+subtitle: "An empirical examination of 34,295 prematurely stopped trials, the underlying drivers of failure, and their clinical footprint."
+format:
+  html:
+    toc: true
+    toc-depth: 2
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| message: false
+library(ggplot2)
+library(dplyr)
+library(readr)
+library(scales)
+
+why_stopped <- read_tsv("data/processed/summary_why_stopped.tsv", show_col_types = FALSE)
+phase_summary <- read_tsv("data/processed/summary_phase.tsv", show_col_types = FALSE)
+```
+
+## What is Clinical Trial Termination?
+
+In biomedical research, a **terminated trial** is a registered study that was stopped prematurely before reaching its planned completion date and enrollment targets, with an explicit determination that recruitment and intervention will **not resume**.
+
+Unlike studies that are temporarily *suspended* (placed on pause pending safety review, protocol amendment, or supply replenishment) or *withdrawn* (cancelled before enrolling a single participant), a terminated study has typically:
+
+1. Expended substantial institutional capital, investigator time, and administrative effort.
+2. Often administered experimental investigational drugs or surgical procedures to human volunteers.
+3. Halted before generating adequate statistical power to answer its primary clinical endpoint.
+
+Across the 602,514 studies registered in ClinicalTrials.gov (AACT), **34,295 trials met this terminal fate**.
+
+<div class="metrics-container">
+  <div class="metric-card">
+    <div class="metric-number">34,295</div>
+    <div class="metric-label">Terminated Trials</div>
+    <div class="metric-sub">Permanent study halts in AACT</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-number">44.6%</div>
+    <div class="metric-label">Accrual Failures</div>
+    <div class="metric-sub">#1 reported reason for termination</div>
+  </div>
+  <div class="metric-card alt">
+    <div class="metric-number">80%+</div>
+    <div class="metric-label">Operational Causes</div>
+    <div class="metric-sub">Recruitment, funding & administration</div>
+  </div>
+  <div class="metric-card alt">
+    <div class="metric-number">&lt; 10%</div>
+    <div class="metric-label">True Biological Fails</div>
+    <div class="metric-sub">Toxicity or confirmed futility</div>
+  </div>
+</div>
+
+## The Anatomy of Failure: Why Do Trials Halt? 
+
+When sponsors terminate a study, ClinicalTrials.gov asks for a reason in the `why_stopped` field. In our candidate dataset, **30,742 terminated studies** provided an informative rationale. 
+
+Categorizing these records reveals a stark, crucial reality: **the vast majority of clinical trial terminations are NOT caused by drug toxicity or biological failure, but by operational and logistical breakdown.** This means that the company running the trial cannot produce its goods or sell what little it may have on the market.
+
+```{r}
+#| label: fig-why-stopped
+#| fig-cap: "Distribution of reported reasons for clinical trial termination (n = 30,742)"
+#| fig-width: 12.5
+#| fig-height: 6.8
+
+why_plot <- why_stopped |>
+  arrange(count) |>
+  mutate(
+    category = factor(category, levels = category),
+    is_recruitment = (category == "Accrual & Recruitment Bottlenecks")
+  )
+
+ggplot(why_plot, aes(x = count, y = category, fill = is_recruitment)) +
+  geom_col(width = 0.7) +
+  geom_text(
+    aes(label = paste0(comma(count), " (", percentage, "%)")),
+    hjust = -0.06,
+    color = "#183642",
+    size = 3.4,
+    fontface = ifelse(why_plot$is_recruitment, "bold", "plain")
+  ) +
+  scale_fill_manual(values = c("TRUE" = "#e76f51", "FALSE" = "#42616a"), guide = "none") +
+  scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.16))) +
+  labs(
+    x = "Number of Terminated Trials",
+    y = NULL,
+    subtitle = "Patient accrual and recruitment failure accounts for 44.6% of all informative terminations."
+  ) +
+  theme_minimal(base_family = "DM Sans") +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text.y = element_text(color = "#183642", size = 10),
+    axis.text.x = element_text(color = "#42616a"),
+    plot.subtitle = element_text(color = "#42616a", size = 9.5),
+    plot.background = element_rect(fill = "#f7f4ed", color = NA),
+    panel.background = element_rect(fill = "#f7f4ed", color = NA)
+  )
+```
+
+### Deconstructing the Primary Failure Modes
+
+1. **Accrual & Recruitment Bottlenecks (44.6%, 13,708 trials)**:
+   - Phrases such as *"slow accrual," "low enrollment," "inability to recruit eligible participants,"* and *"zero participants enrolled after 12 months"* dominate the registry.
+   - Trials often fail because inclusion criteria were too stringent, competing trials siphoned eligible patients, or investigators drastically overestimated community disease prevalence.
+
+2. **Business, Funding & Strategic Reprioritization (17.9%, 5,490 trials)**:
+   - Commercial sponsors terminate viable trials due to corporate mergers, portfolio reprioritization, or competitor drugs achieving earlier approval.
+   - Academic and grant-funded trials encounter funding cliffs where multi-year grant cycles expire before enrollment completes.
+
+3. **Administrative & Investigator Departures (22.3%, 6,855 trials combined)**:
+   - A critical vulnerability in academic medicine: when a Principal Investigator (PI) relocates, retires, or changes institutions, studies frequently stall and terminate due to lack of leadership succession.
+
+4. **Biological Endpoints: Safety & Futility (< 10%, 2,759 trials)**:
+   - Only **2.6%** of terminations cite severe adverse events, toxicity, or safety concerns, while **6.3%** cite demonstrated futility at planned interim analyses.
+   - While stopping for confirmed futility or toxicity is scientifically appropriate to protect patients, **over 80% of terminations represent preventable operational failure**.
+
+## The Accrual Shortfall: Zero-Participant Trials
+
+What does termination look like at the individual trial level? 
+
+A substantial portion of terminated trials suffer from complete recruitment paralysis:
+- Over **3,200 terminated trials** in AACT report an actual enrollment of **zero participants** despite having spent months navigating ethics review and contract execution.
+- Another **6,500 trials** terminated after enrolling fewer than 5 participants, generating zero statistical value while tying up clinical coordinators and facility bandwidth.
+
+::: {.callout-note}
+### The "Ghost Trial" Phenomenon
+When a trial fails to recruit, it becomes a "ghost trial"—a protocol that consumed IRB resources, clinical site time, and registry space without producing any publishable or actionable medical evidence.
+:::
+
+## The Temporal Drag: How Terminated Trials Linger
+
+Terminated trials do not halt overnight. An analysis of elapsed duration (`study_duration_days`) reveals:
+
+- The median duration of terminated interventional trials before official halting is **812 days (approx. 2.2 years)**.
+- Many trials endure protracted "enrollment drift"—a period lasting 18 to 36 months where recruitment slows to a trickle, but sponsors hesitate to officially pull the plug due to sunk costs.
+- This protracted drift delays investigator reassignment, locks up patient referral pipelines, and defers decision-making on alternative therapeutic candidates.

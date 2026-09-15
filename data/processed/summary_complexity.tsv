@@ -1,0 +1,5 @@
+complexity_tier	total_studies	terminated_studies	termination_rate
+Low Complexity (0–1)	477886	24744	0.0518
+Moderate Complexity (2)	72601	4990	0.0687
+High Complexity (3)	30719	2575	0.0838
+Very High Complexity (4+)	21308	1986	0.0932
