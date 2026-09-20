@@ -221,3 +221,11 @@ h1 {
   font-size: 1.3rem;
 }
 
+/* Hide figure captions underneath charts to prevent overlapping and cutoff text */
+figcaption,
+.figure-caption,
+.quarto-float-caption,
+.quarto-float-caption-bottom {
+  display: none !important;
+}
+

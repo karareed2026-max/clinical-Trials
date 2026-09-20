@@ -73,8 +73,7 @@ To evaluate termination risk factors comprehensively, we gathered and synthesize
 Clinical trial volume and termination vulnerability vary widely across medical disciplines. The statistics chart below maps registered trials and termination rates across major therapeutic areas:
 
 ```{r}
-#| label: fig-therapeutic-areas
-#| fig-cap: "Clinical trial volume and termination rate across primary therapeutic areas"
+#| label: home-therapeutic-areas
 #| fig-width: 12.5
 #| fig-height: 7.2
 #| echo: false
@@ -133,8 +132,7 @@ A critical question when predicting trial feasibility is whether clinical trials
 This view tracks median planned enrollment (solid coral line) and the middle 50% interquartile band (shaded mint band) on a logarithmic scale for 575,628 trials with positive reported enrollment.
 
 ```{r}
-#| label: fig-home-enrollment
-#| fig-cap: "The typical and middle 50% of reported trial enrollment by study start year (1990–2026)"
+#| label: home-enrollment-trend
 #| echo: false
 #| message: false
 #| warning: false
@@ -282,7 +280,7 @@ p_enrollment
 The histogram panel below details the distribution of participant enrollment across four distinct historical eras: **1990–1999**, **2000–2009**, **2010–2019**, and **2020–2026**. Use the toggle buttons above the chart to view each era individually with clean, wide bars and direct percentage labels, or select "Compare All" to view the side-by-side comparison.
 
 ```{r}
-#| label: fig-home-histograms
+#| label: home-histograms-panel
 #| echo: false
 #| message: false
 #| warning: false

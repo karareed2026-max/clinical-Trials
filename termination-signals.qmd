@@ -95,6 +95,7 @@ create_signal_chart <- function(
         y = ~rate_pct,
         name = "Termination Rate (%)",
         visible = TRUE,
+        showlegend = FALSE,
         marker = list(
           color = ~bar_color,
           line = list(color = BRAND_NAVY, width = 0.8)
@@ -160,6 +161,7 @@ create_signal_chart <- function(
     p <- layout(
       p,
       barmode = "group",
+      showlegend = FALSE,
       paper_bgcolor = BRAND_BG,
       plot_bgcolor = BRAND_BG,
       font = list(family = BRAND_FONT, color = BRAND_NAVY),
@@ -228,6 +230,7 @@ create_signal_chart <- function(
         x = ~rate_pct,
         name = "Termination Rate (%)",
         visible = TRUE,
+        showlegend = FALSE,
         marker = list(
           color = ~bar_color,
           line = list(color = BRAND_NAVY, width = 0.8)
@@ -293,6 +296,7 @@ create_signal_chart <- function(
     p <- layout(
       p,
       barmode = "group",
+      showlegend = FALSE,
       paper_bgcolor = BRAND_BG,
       plot_bgcolor = BRAND_BG,
       font = list(family = BRAND_FONT, color = BRAND_NAVY),
@@ -364,8 +368,7 @@ create_signal_chart <- function(
 Across the full registry of 602,514 studies, **34,295** are explicitly recorded as `TERMINATED`. The interactive chart below contrasts total registered studies against those marked terminated across all primary status categories. Use the buttons to toggle between linear and logarithmic scale to inspect low-frequency status categories, or hover over bars for exact counts and registry shares.
 
 ```{r}
-#| label: fig-status
-#| fig-cap: "Total registered studies and terminated subset by reported status category"
+#| label: signal-status
 
 status_plot_data <- status_summary |>
   mutate(
@@ -459,7 +462,7 @@ Trial enrollment is one of the most critical structural constraints in clinical 
 The interactive histogram panel below reveals how planned participant cohorts are distributed across major research eras (**1990–1999**, **2000–2009**, **2010–2019**, and **2020–2026**). Use the dropdown menu in the upper-left of the chart to inspect specific eras or compare all eras side-by-side, or hover over bars to view exact trial counts and percentages.
 
 ```{r}
-#| label: fig-interactive-histograms
+#| label: signal-interactive-histograms
 #| echo: false
 #| message: false
 #| warning: false
@@ -549,6 +552,7 @@ buttons[[length(buttons) + 1]] <- list(
 
 p_panel <- layout(
   p_panel,
+  showlegend = FALSE,
   title = list(
     text = paste0("<b>Trial Enrollment Distribution (", eras[length(eras)], ")</b>"),
     font = list(family = BRAND_FONT, size = 15, color = BRAND_NAVY),
@@ -603,8 +607,7 @@ Phase of development is one of the strongest predictive signals for trial termin
 Use the interactive buttons above the chart to toggle between **Termination Rate (%)** and **Study Volume Breakdown**, or hover over bars to inspect exact counts and percentages.
 
 ```{r}
-#| label: fig-phase
-#| fig-cap: "Trial termination rate and study volume across development phases"
+#| label: signal-phase
 
 phase_plot_data <- phase_summary |>
   filter(!phase_display %in% c("Not applicable", "Other / Missing")) |>
@@ -638,8 +641,7 @@ The design of a trial's control mechanism directly impacts patient enrollment wi
 Non-randomized interventional studies experience a significantly higher termination rate (**8.4%**) than randomized trials (**5.5%**), often reflecting single-arm exploratory designs that are vulnerable to early discontinuation.
 
 ```{r}
-#| label: fig-randomization
-#| fig-cap: "Termination rate and volume by study randomization status"
+#| label: signal-randomization
 
 rand_plot_data <- df_randomization |>
   mutate(randomization_status = factor(randomization_status, levels = c("Randomized", "Non-randomized", "Not reported"))) |>
@@ -668,8 +670,7 @@ p_rand
 Placebo-controlled trials demand rigorous double-blinding, identical manufacturing of active and sham agents, and ethical consent for potential inactive treatment. Consequently, trials with reported placebo controls exhibit an **8.6% termination rate**—more than 50% higher than trials without placebo controls (5.6%).
 
 ```{r}
-#| label: fig-placebo
-#| fig-cap: "Termination rate and volume by placebo control reporting"
+#| label: signal-placebo
 
 placebo_plot_data <- df_placebo |>
   mutate(placebo_status = factor(placebo_status, levels = c("Placebo control used", "No placebo reported", "Not reported"))) |>
@@ -700,8 +701,7 @@ p_placebo
 As trials incorporate multiple drugs, combination therapies, or complex dosing arms, the termination hazard rises steadily. The data reveals a clear dose-response relationship between intervention count and study termination:
 
 ```{r}
-#| label: fig-interventions
-#| fig-cap: "Trial termination rate and volume across number of tested interventions"
+#| label: signal-interventions
 
 int_plot_data <- df_interventions |>
   mutate(intervention_label = factor(intervention_label, levels = rev(intervention_label)))
@@ -737,8 +737,7 @@ p_int
 Protocols targeting multiple comorbid conditions or broad diagnostic indications introduce diagnostic heterogeneity and patient subgroup stratification challenges:
 
 ```{r}
-#| label: fig-conditions
-#| fig-cap: "Trial termination rate and volume by number of reported conditions"
+#| label: signal-conditions
 
 cond_plot_data <- df_conditions |>
   filter(conditions_category != "0 / Missing") |>
@@ -767,8 +766,7 @@ p_cond
 How does elapsed study timeline correlate with termination? The chart below tracks termination rates across study duration brackets (from short studies under 6 months to multi-year longitudinal trials):
 
 ```{r}
-#| label: fig-durations
-#| fig-cap: "Termination rate and volume by total study duration bracket"
+#| label: signal-durations
 
 dur_plot_data <- df_durations |>
   mutate(duration_bracket = factor(duration_bracket, levels = rev(duration_bracket)))
@@ -816,8 +814,7 @@ To capture the holistic operational burden of a clinical trial, we synthesized a
 Stratifying 602,514 studies by complexity score reveals a stark, linear escalation in failure risk:
 
 ```{r}
-#| label: fig-complexity
-#| fig-cap: "Trial termination rate and volume across composite protocol complexity tiers"
+#| label: signal-complexity
 
 comp_plot_data <- df_complexity |>
   mutate(complexity_tier = factor(complexity_tier, levels = complexity_tier))
@@ -850,8 +847,7 @@ p_comp
 ### A. Lead Sponsor Category
 
 ```{r}
-#| label: fig-sponsor
-#| fig-cap: "Trial termination rate and volume across lead sponsor categories"
+#| label: signal-sponsor
 
 sponsor_plot_data <- sponsor_summary |>
   filter(total_studies >= 1000) |>
@@ -880,8 +876,7 @@ p_sponsor
 ### B. Clinical Site Footprint
 
 ```{r}
-#| label: fig-sites
-#| fig-cap: "Termination rate and volume across clinical site footprint categories"
+#| label: signal-sites
 
 site_plot_data <- site_summary |>
   filter(site_category != "0 sites / Not reported") |>
