@@ -27,48 +27,424 @@ sponsor_summary <- read_tsv("data/processed/summary_sponsors.tsv", show_col_type
 site_summary <- read_tsv("data/processed/summary_sites.tsv", show_col_types = FALSE)
 hist_summary <- read_tsv("data/processed/summary_enrollment_histograms.tsv", show_col_types = FALSE)
 
-# New signal summaries
+# Signal summaries
 df_interventions <- read_tsv("data/processed/summary_interventions.tsv", show_col_types = FALSE)
 df_durations <- read_tsv("data/processed/summary_durations.tsv", show_col_types = FALSE)
 df_randomization <- read_tsv("data/processed/summary_randomization.tsv", show_col_types = FALSE)
 df_placebo <- read_tsv("data/processed/summary_placebo.tsv", show_col_types = FALSE)
 df_complexity <- read_tsv("data/processed/summary_complexity.tsv", show_col_types = FALSE)
 df_conditions <- read_tsv("data/processed/summary_conditions_count.tsv", show_col_types = FALSE)
+
+# Unified Design Palette & Constants
+BRAND_CORAL <- "#e76f51"
+BRAND_NAVY  <- "#183642"
+BRAND_TEAL  <- "#42616a"
+BRAND_MINT  <- "#b8d8d8"
+BRAND_AMBER <- "#f4a261"
+BRAND_BG    <- "#f7f4ed"
+BRAND_FONT  <- "DM Sans, system-ui, -apple-system, sans-serif"
+
+# Master Helper for Interactive Category Charts
+create_signal_chart <- function(
+    df,
+    cat_var,
+    total_var,
+    term_var,
+    rate_var,
+    x_label = "",
+    y_label = "",
+    highlight_cats = c(),
+    is_horizontal = FALSE,
+    reverse_cats = FALSE,
+    annotation_text = NULL,
+    annotation_cat = NULL,
+    annotation_pos = NULL,
+    custom_colors = NULL,
+    insight_note = NULL,
+    chart_height = 460
+) {
+  df_clean <- df |>
+    mutate(
+      cat_name = as.character(.data[[cat_var]]),
+      total = .data[[total_var]],
+      term = .data[[term_var]],
+      rate = .data[[rate_var]],
+      rate_pct = round(rate * 100, 1),
+      other = total - term
+    )
+  
+  if (!is.null(custom_colors)) {
+    df_clean$bar_color <- unname(custom_colors)
+  } else {
+    df_clean$bar_color <- ifelse(df_clean$cat_name %in% highlight_cats, BRAND_CORAL, BRAND_TEAL)
+  }
+  
+  if (reverse_cats) {
+    df_clean$cat_name <- factor(df_clean$cat_name, levels = rev(df_clean$cat_name))
+  } else {
+    df_clean$cat_name <- factor(df_clean$cat_name, levels = df_clean$cat_name)
+  }
+  
+  p <- plot_ly(data = df_clean, height = chart_height)
+  
+  if (!is_horizontal) {
+    # VERTICAL BAR CHART
+    p <- p |>
+      add_bars(
+        x = ~cat_name,
+        y = ~rate_pct,
+        name = "Termination Rate (%)",
+        visible = TRUE,
+        marker = list(
+          color = ~bar_color,
+          line = list(color = BRAND_NAVY, width = 0.8)
+        ),
+        hovertemplate = paste0(
+          "<b>%{x}</b><br>",
+          "Termination Rate: <b>%{y:.1f}%</b><br>",
+          "Terminated Trials: <b>%{customdata[0]:,}</b><br>",
+          "Total Trials: %{customdata[1]:,}<br>",
+          "Completed / Active: %{customdata[2]:,}",
+          if (!is.null(insight_note)) paste0("<br><i>", insight_note, "</i>") else "",
+          "<extra></extra>"
+        ),
+        customdata = ~mapply(list, term, total, other, SIMPLIFY = FALSE)
+      ) |>
+      add_bars(
+        x = ~cat_name,
+        y = ~other,
+        name = "Completed / Active",
+        visible = FALSE,
+        marker = list(color = BRAND_MINT, line = list(color = BRAND_TEAL, width = 0.8)),
+        hovertemplate = paste0(
+          "<b>%{x}</b><br>",
+          "Completed / Active: <b>%{y:,}</b><br>",
+          "Total Trials: %{customdata:,}<extra></extra>"
+        ),
+        customdata = ~total
+      ) |>
+      add_bars(
+        x = ~cat_name,
+        y = ~term,
+        name = "Terminated",
+        visible = FALSE,
+        marker = list(color = BRAND_CORAL, line = list(color = BRAND_NAVY, width = 0.8)),
+        hovertemplate = paste0(
+          "<b>%{x}</b><br>",
+          "Terminated Trials: <b>%{y:,}</b><br>",
+          "Termination Rate: <b>", df_clean$rate_pct, "%</b><extra></extra>"
+        )
+      )
+    
+    annot_list <- list()
+    if (!is.null(annotation_text) && !is.null(annotation_cat) && !is.null(annotation_pos)) {
+      annot_list <- list(list(
+        x = annotation_cat,
+        y = annotation_pos,
+        text = paste0("<b>", annotation_text, "</b>"),
+        showarrow = TRUE,
+        arrowhead = 2,
+        arrowsize = 1,
+        arrowwidth = 1.5,
+        arrowcolor = BRAND_CORAL,
+        ax = 0,
+        ay = -40,
+        font = list(family = BRAND_FONT, size = 11, color = BRAND_CORAL),
+        bgcolor = "rgba(247, 244, 237, 0.95)",
+        bordercolor = BRAND_CORAL,
+        borderwidth = 1,
+        borderpad = 4
+      ))
+    }
+    
+    p <- layout(
+      p,
+      barmode = "group",
+      paper_bgcolor = BRAND_BG,
+      plot_bgcolor = BRAND_BG,
+      font = list(family = BRAND_FONT, color = BRAND_NAVY),
+      hoverlabel = list(bgcolor = BRAND_NAVY, font = list(color = "#ffffff", family = BRAND_FONT)),
+      xaxis = list(
+        title = list(text = x_label, font = list(size = 12, color = BRAND_NAVY)),
+        tickfont = list(size = 10, color = BRAND_NAVY),
+        gridcolor = "rgba(24, 54, 66, 0.08)"
+      ),
+      yaxis = list(
+        title = list(text = "Termination Rate (%)", font = list(size = 12, color = BRAND_NAVY)),
+        ticksuffix = "%",
+        gridcolor = "rgba(24, 54, 66, 0.1)"
+      ),
+      legend = list(orientation = "h", x = 0.45, y = 1.15, font = list(size = 11)),
+      annotations = annot_list,
+      updatemenus = list(list(
+        type = "buttons",
+        direction = "right",
+        x = 0.0,
+        y = 1.15,
+        xanchor = "left",
+        buttons = list(
+          list(
+            method = "update",
+            args = list(
+              list(visible = list(TRUE, FALSE, FALSE)),
+              list(
+                "yaxis.title.text" = "Termination Rate (%)",
+                "yaxis.ticksuffix" = "%",
+                "yaxis.tickformat" = "",
+                "yaxis.autorange" = TRUE,
+                barmode = "group",
+                showlegend = FALSE,
+                annotations = annot_list
+              )
+            ),
+            label = "Termination Rate (%)"
+          ),
+          list(
+            method = "update",
+            args = list(
+              list(visible = list(FALSE, TRUE, TRUE)),
+              list(
+                "yaxis.title.text" = "Number of Studies",
+                "yaxis.ticksuffix" = "",
+                "yaxis.tickformat" = ",d",
+                "yaxis.autorange" = TRUE,
+                barmode = "stack",
+                showlegend = TRUE,
+                annotations = list()
+              )
+            ),
+            label = "Study Volume Breakdown"
+          )
+        ),
+        font = list(family = BRAND_FONT, size = 11, color = BRAND_NAVY)
+      )),
+      margin = list(t = 65, b = 60, l = 60, r = 30)
+    )
+  } else {
+    # HORIZONTAL BAR CHART
+    p <- p |>
+      add_bars(
+        y = ~cat_name,
+        x = ~rate_pct,
+        name = "Termination Rate (%)",
+        visible = TRUE,
+        marker = list(
+          color = ~bar_color,
+          line = list(color = BRAND_NAVY, width = 0.8)
+        ),
+        hovertemplate = paste0(
+          "<b>%{y}</b><br>",
+          "Termination Rate: <b>%{x:.1f}%</b><br>",
+          "Terminated Trials: <b>%{customdata[0]:,}</b><br>",
+          "Total Trials: %{customdata[1]:,}<br>",
+          "Completed / Active: %{customdata[2]:,}",
+          if (!is.null(insight_note)) paste0("<br><i>", insight_note, "</i>") else "",
+          "<extra></extra>"
+        ),
+        customdata = ~mapply(list, term, total, other, SIMPLIFY = FALSE)
+      ) |>
+      add_bars(
+        y = ~cat_name,
+        x = ~other,
+        name = "Completed / Active",
+        visible = FALSE,
+        marker = list(color = BRAND_MINT, line = list(color = BRAND_TEAL, width = 0.8)),
+        hovertemplate = paste0(
+          "<b>%{y}</b><br>",
+          "Completed / Active: <b>%{x:,}</b><br>",
+          "Total Trials: %{customdata:,}<extra></extra>"
+        ),
+        customdata = ~total
+      ) |>
+      add_bars(
+        y = ~cat_name,
+        x = ~term,
+        name = "Terminated",
+        visible = FALSE,
+        marker = list(color = BRAND_CORAL, line = list(color = BRAND_NAVY, width = 0.8)),
+        hovertemplate = paste0(
+          "<b>%{y}</b><br>",
+          "Terminated Trials: <b>%{x:,}</b><br>",
+          "Termination Rate: <b>", df_clean$rate_pct, "%</b><extra></extra>"
+        )
+      )
+    
+    annot_list <- list()
+    if (!is.null(annotation_text) && !is.null(annotation_cat) && !is.null(annotation_pos)) {
+      annot_list <- list(list(
+        y = annotation_cat,
+        x = annotation_pos,
+        text = paste0("<b>", annotation_text, "</b>"),
+        showarrow = TRUE,
+        arrowhead = 2,
+        arrowsize = 1,
+        arrowwidth = 1.5,
+        arrowcolor = BRAND_CORAL,
+        ax = 45,
+        ay = 0,
+        font = list(family = BRAND_FONT, size = 11, color = BRAND_CORAL),
+        bgcolor = "rgba(247, 244, 237, 0.95)",
+        bordercolor = BRAND_CORAL,
+        borderwidth = 1,
+        borderpad = 4
+      ))
+    }
+    
+    p <- layout(
+      p,
+      barmode = "group",
+      paper_bgcolor = BRAND_BG,
+      plot_bgcolor = BRAND_BG,
+      font = list(family = BRAND_FONT, color = BRAND_NAVY),
+      hoverlabel = list(bgcolor = BRAND_NAVY, font = list(color = "#ffffff", family = BRAND_FONT)),
+      yaxis = list(
+        title = "",
+        tickfont = list(size = 10, color = BRAND_NAVY)
+      ),
+      xaxis = list(
+        title = list(text = "Termination Rate (%)", font = list(size = 12, color = BRAND_NAVY)),
+        ticksuffix = "%",
+        gridcolor = "rgba(24, 54, 66, 0.1)"
+      ),
+      legend = list(orientation = "h", x = 0.45, y = 1.15, font = list(size = 11)),
+      annotations = annot_list,
+      updatemenus = list(list(
+        type = "buttons",
+        direction = "right",
+        x = 0.0,
+        y = 1.15,
+        xanchor = "left",
+        buttons = list(
+          list(
+            method = "update",
+            args = list(
+              list(visible = list(TRUE, FALSE, FALSE)),
+              list(
+                "xaxis.title.text" = "Termination Rate (%)",
+                "xaxis.ticksuffix" = "%",
+                "xaxis.tickformat" = "",
+                "xaxis.autorange" = TRUE,
+                barmode = "group",
+                showlegend = FALSE,
+                annotations = annot_list
+              )
+            ),
+            label = "Termination Rate (%)"
+          ),
+          list(
+            method = "update",
+            args = list(
+              list(visible = list(FALSE, TRUE, TRUE)),
+              list(
+                "xaxis.title.text" = "Number of Studies",
+                "xaxis.ticksuffix" = "",
+                "xaxis.tickformat" = ",d",
+                "xaxis.autorange" = TRUE,
+                barmode = "stack",
+                showlegend = TRUE,
+                annotations = list()
+              )
+            ),
+            label = "Study Volume Breakdown"
+          )
+        ),
+        font = list(family = BRAND_FONT, size = 11, color = BRAND_NAVY)
+      )),
+      margin = list(t = 65, b = 60, l = 175, r = 30)
+    )
+  }
+  
+  p <- config(p, displaylogo = FALSE, responsive = TRUE)
+  return(p)
+}
 ```
 
 ## 1. Study Status & The Scope of Termination
 
-Across the full registry of 602,514 studies, **34,295** are explicitly recorded as `TERMINATED`. The chart below contrasts total registered studies against those marked terminated across all primary status categories.
+Across the full registry of 602,514 studies, **34,295** are explicitly recorded as `TERMINATED`. The interactive chart below contrasts total registered studies against those marked terminated across all primary status categories. Use the buttons to toggle between linear and logarithmic scale to inspect low-frequency status categories, or hover over bars for exact counts and registry shares.
 
 ```{r}
 #| label: fig-status
 #| fig-cap: "Total registered studies and terminated subset by reported status category"
-#| fig-width: 12.5
-#| fig-height: 7.2
 
 status_plot_data <- status_summary |>
-  mutate(overall_status = factor(overall_status, levels = rev(overall_status)))
-
-ggplot(status_plot_data, aes(x = studies, y = overall_status)) +
-  geom_col(fill = "#b8d8d8", width = 0.68) +
-  geom_col(aes(x = terminated_count), fill = "#e76f51", width = 0.68) +
-  geom_text(aes(label = comma(studies)), hjust = -0.12, color = "#183642", size = 3.3) +
-  scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.12))) +
-  labs(
-    x = "Number of studies",
-    y = NULL,
-    subtitle = "Mint bars indicate total registered studies; coral bars denote studies marked TERMINATED."
-  ) +
-  theme_minimal(base_family = "DM Sans") +
-  theme(
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.text.y = element_text(face = "bold", color = "#183642", size = 10),
-    axis.text.x = element_text(color = "#42616a"),
-    plot.subtitle = element_text(color = "#42616a", size = 9.5),
-    plot.background = element_rect(fill = "#f7f4ed", color = NA),
-    panel.background = element_rect(fill = "#f7f4ed", color = NA)
+  mutate(
+    status_label = gsub("_", " ", overall_status),
+    status_label = factor(status_label, levels = rev(gsub("_", " ", overall_status)))
   )
+
+p_status <- plot_ly(data = status_plot_data, height = 560) |>
+  add_bars(
+    y = ~status_label,
+    x = ~studies,
+    name = "Total Registered Studies",
+    marker = list(
+      color = BRAND_MINT,
+      line = list(color = BRAND_TEAL, width = 0.8)
+    ),
+    hovertemplate = paste0(
+      "<b>%{y}</b><br>",
+      "Total Registered: <b>%{x:,}</b><br>",
+      "Share of Registry: <b>", status_plot_data$pct_of_total, "%</b><extra></extra>"
+    )
+  ) |>
+  add_bars(
+    y = ~status_label,
+    x = ~terminated_count,
+    name = "Terminated Subset",
+    marker = list(
+      color = BRAND_CORAL,
+      line = list(color = BRAND_NAVY, width = 0.8)
+    ),
+    hovertemplate = paste0(
+      "<b>%{y}</b><br>",
+      "Terminated Studies: <b>%{x:,}</b><extra></extra>"
+    )
+  ) |>
+  layout(
+    barmode = "overlay",
+    paper_bgcolor = BRAND_BG,
+    plot_bgcolor = BRAND_BG,
+    font = list(family = BRAND_FONT, color = BRAND_NAVY),
+    hoverlabel = list(bgcolor = BRAND_NAVY, font = list(color = "#ffffff", family = BRAND_FONT)),
+    xaxis = list(
+      title = list(text = "Number of Studies (Linear Scale)", font = list(size = 12, color = BRAND_NAVY)),
+      gridcolor = "rgba(24, 54, 66, 0.08)",
+      tickformat = ",d"
+    ),
+    yaxis = list(title = "", tickfont = list(size = 10, color = BRAND_NAVY)),
+    legend = list(orientation = "h", x = 0.42, y = 1.14, font = list(size = 11)),
+    updatemenus = list(list(
+      type = "buttons",
+      direction = "right",
+      x = 0.0,
+      y = 1.14,
+      xanchor = "left",
+      buttons = list(
+        list(
+          method = "relayout",
+          args = list(list(
+            "xaxis.type" = "linear",
+            "xaxis.title.text" = "Number of Studies (Linear Scale)"
+          )),
+          label = "Linear Scale"
+        ),
+        list(
+          method = "relayout",
+          args = list(list(
+            "xaxis.type" = "log",
+            "xaxis.title.text" = "Number of Studies (Log Scale - Reveals Rare Statuses)"
+          )),
+          label = "Log Scale"
+        )
+      ),
+      font = list(family = BRAND_FONT, size = 11, color = BRAND_NAVY)
+    )),
+    margin = list(l = 180, r = 30, t = 60, b = 50)
+  ) |>
+  config(displaylogo = FALSE, responsive = TRUE)
+
+p_status
 ```
 
 ::: {.callout-note}
@@ -80,7 +456,7 @@ While the baseline termination rate across all registered records is 5.7%, among
 
 Trial enrollment is one of the most critical structural constraints in clinical trial design. Under-recruitment directly leads to premature termination, while over-ambitious targets create severe operational drag.
 
-The interactive histogram panel below reveals how planned participant cohorts are distributed across major research eras (**1990–1999**, **2000–2009**, **2010–2019**, and **2020–2026**). Use the dropdown menu in the upper-left of the chart to inspect specific eras, or hover over bars to view exact trial counts and percentages.
+The interactive histogram panel below reveals how planned participant cohorts are distributed across major research eras (**1990–1999**, **2000–2009**, **2010–2019**, and **2020–2026**). Use the dropdown menu in the upper-left of the chart to inspect specific eras or compare all eras side-by-side, or hover over bars to view exact trial counts and percentages.
 
 ```{r}
 #| label: fig-interactive-histograms
@@ -91,7 +467,14 @@ The interactive histogram panel below reveals how planned participant cohorts ar
 hist_summary$bin_label <- factor(hist_summary$bin_label, levels = unique(hist_summary$bin_label))
 eras <- unique(hist_summary$era)
 
-p_panel <- plot_ly()
+era_colors <- c(
+  "1990–1999" = "#42616a",
+  "2000–2009" = "#b8d8d8",
+  "2010–2019" = "#183642",
+  "2020–2026" = "#e76f51"
+)
+
+p_panel <- plot_ly(height = 500)
 
 for (i in seq_along(eras)) {
   e <- eras[i]
@@ -106,8 +489,8 @@ for (i in seq_along(eras)) {
     name = e,
     visible = is_active,
     marker = list(
-      color = "#e76f51",
-      line = list(color = "#183642", width = 0.6)
+      color = era_colors[e],
+      line = list(color = BRAND_NAVY, width = 0.6)
     ),
     hovertemplate = paste0(
       "<b>Era: ", e, "</b><br>",
@@ -118,52 +501,97 @@ for (i in seq_along(eras)) {
   )
 }
 
-buttons <- lapply(seq_along(eras), function(i) {
+buttons <- list()
+for (i in seq_along(eras)) {
   vis <- rep(FALSE, length(eras))
   vis[i] <- TRUE
-  list(
+  buttons[[length(buttons) + 1]] <- list(
     method = "update",
     args = list(
       list(visible = vis),
-      list(title = list(
-        text = paste0("<b>Trial Enrollment Distribution (", eras[i], ")</b>"),
-        font = list(family = "DM Sans", size = 15, color = "#183642")
-      ))
+      list(
+        title = list(
+          text = paste0("<b>Trial Enrollment Distribution (", eras[i], ")</b>"),
+          font = list(family = BRAND_FONT, size = 15, color = BRAND_NAVY),
+          x = 0.0,
+          y = 0.98,
+          xanchor = "left",
+          yanchor = "top"
+        ),
+        barmode = "group",
+        showlegend = FALSE
+      )
     ),
-    label = eras[i]
+    label = paste0("Era: ", eras[i])
   )
-})
+}
+
+# Add "Compare All Eras" option
+buttons[[length(buttons) + 1]] <- list(
+  method = "update",
+  args = list(
+    list(visible = rep(TRUE, length(eras))),
+    list(
+      title = list(
+        text = "<b>Trial Enrollment Distribution: All Eras Compared Side-by-Side</b>",
+        font = list(family = BRAND_FONT, size = 15, color = BRAND_NAVY),
+        x = 0.0,
+        y = 0.98,
+        xanchor = "left",
+        yanchor = "top"
+      ),
+      barmode = "group",
+      showlegend = TRUE
+    )
+  ),
+  label = "Compare All Eras Side-by-Side"
+)
 
 p_panel <- layout(
   p_panel,
   title = list(
     text = paste0("<b>Trial Enrollment Distribution (", eras[length(eras)], ")</b>"),
-    font = list(family = "DM Sans", size = 15, color = "#183642")
+    font = list(family = BRAND_FONT, size = 15, color = BRAND_NAVY),
+    x = 0.0,
+    y = 0.98,
+    xanchor = "left",
+    yanchor = "top"
   ),
+  paper_bgcolor = BRAND_BG,
+  plot_bgcolor = BRAND_BG,
+  font = list(family = BRAND_FONT, color = BRAND_NAVY),
+  hoverlabel = list(bgcolor = BRAND_NAVY, font = list(color = "#ffffff", family = BRAND_FONT)),
   xaxis = list(
-    title = list(text = "Planned Enrollment Range", font = list(size = 11, color = "#183642")),
+    title = list(text = "Planned Enrollment Range", font = list(size = 11, color = BRAND_NAVY)),
     tickangle = -35,
-    tickfont = list(size = 9, color = "#183642"),
+    tickfont = list(size = 9, color = BRAND_NAVY),
     gridcolor = "rgba(24, 54, 66, 0.08)"
   ),
   yaxis = list(
-    title = list(text = "Number of Trials", font = list(size = 11, color = "#183642")),
-    tickfont = list(size = 9, color = "#183642"),
+    title = list(text = "Number of Trials", font = list(size = 11, color = BRAND_NAVY)),
+    tickfont = list(size = 9, color = BRAND_NAVY),
     gridcolor = "rgba(24, 54, 66, 0.1)"
   ),
-  paper_bgcolor = "#f7f4ed",
-  plot_bgcolor = "#f7f4ed",
   updatemenus = list(list(
     type = "dropdown",
     active = length(eras) - 1,
-    y = 1.18,
+    y = 1.12,
     x = 0.0,
     xanchor = "left",
+    yanchor = "top",
     buttons = buttons,
-    font = list(family = "DM Sans", size = 11, color = "#183642")
+    font = list(family = BRAND_FONT, size = 11, color = BRAND_NAVY)
   )),
-  margin = list(t = 60, b = 70, l = 60, r = 30)
-)
+  legend = list(
+    orientation = "h",
+    x = 0.40,
+    y = 1.12,
+    yanchor = "top",
+    font = list(size = 10)
+  ),
+  margin = list(t = 110, b = 70, l = 60, r = 30)
+) |>
+  config(displaylogo = FALSE, responsive = TRUE)
 
 p_panel
 ```
@@ -172,41 +600,33 @@ p_panel
 
 Phase of development is one of the strongest predictive signals for trial termination. As drugs transition from preliminary safety to formal proof-of-concept testing, the failure rate sharply peaks.
 
+Use the interactive buttons above the chart to toggle between **Termination Rate (%)** and **Study Volume Breakdown**, or hover over bars to inspect exact counts and percentages.
+
 ```{r}
 #| label: fig-phase
-#| fig-cap: "Trial termination rate by development phase"
-#| fig-width: 12.5
-#| fig-height: 5.8
+#| fig-cap: "Trial termination rate and study volume across development phases"
 
-phase_plot <- phase_summary |>
+phase_plot_data <- phase_summary |>
   filter(!phase_display %in% c("Not applicable", "Other / Missing")) |>
-  mutate(phase_display = factor(phase_display, levels = c("Phase I", "Mixed Phase (I/II or II/III)", "Phase II", "Phase III", "Phase IV")))
+  mutate(phase_display = factor(phase_display, levels = c("Phase I", "Mixed Phase (I/II or II/III)", "Phase II", "Phase III", "Phase IV"))) |>
+  arrange(phase_display)
 
-ggplot(phase_plot, aes(x = phase_display, y = termination_rate)) +
-  geom_col(fill = "#e76f51", width = 0.62) +
-  geom_text(
-    aes(label = paste0(percent(termination_rate, accuracy = 0.1), "\n(", comma(terminated_studies), " / ", comma(total_studies), ")")),
-    vjust = -0.3,
-    color = "#183642",
-    size = 3.4,
-    lineheight = 0.85
-  ) +
-  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.14), expand = c(0, 0)) +
-  labs(
-    x = "Development Phase",
-    y = "Termination Rate",
-    subtitle = "Phase II experiences the highest termination rate (11.1%), representing the classical 'valley of death' in drug development."
-  ) +
-  theme_minimal(base_family = "DM Sans") +
-  theme(
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.text = element_text(color = "#183642", size = 10),
-    axis.title = element_text(color = "#183642", face = "bold"),
-    plot.subtitle = element_text(color = "#42616a", size = 9.5),
-    plot.background = element_rect(fill = "#f7f4ed", color = NA),
-    panel.background = element_rect(fill = "#f7f4ed", color = NA)
-  )
+p_phase <- create_signal_chart(
+  df = phase_plot_data,
+  cat_var = "phase_display",
+  total_var = "total_studies",
+  term_var = "terminated_studies",
+  rate_var = "termination_rate",
+  x_label = "Development Phase",
+  highlight_cats = c("Phase II", "Mixed Phase (I/II or II/III)"),
+  annotation_text = "Peak: 11.1%<br>Valley of Death",
+  annotation_cat = "Phase II",
+  annotation_pos = 11.1,
+  insight_note = "Phase II transitions to efficacy testing, creating the sharpest attrition peak.",
+  chart_height = 470
+)
+
+p_phase
 ```
 
 ## 4. Study Architecture: Randomization & Placebo Use
@@ -219,38 +639,28 @@ Non-randomized interventional studies experience a significantly higher terminat
 
 ```{r}
 #| label: fig-randomization
-#| fig-cap: "Termination rate by study randomization status"
-#| fig-width: 12.5
-#| fig-height: 5.4
+#| fig-cap: "Termination rate and volume by study randomization status"
 
-rand_plot <- df_randomization |>
-  mutate(randomization_status = factor(randomization_status, levels = c("Randomized", "Non-randomized", "Not reported")))
+rand_plot_data <- df_randomization |>
+  mutate(randomization_status = factor(randomization_status, levels = c("Randomized", "Non-randomized", "Not reported"))) |>
+  arrange(randomization_status)
 
-ggplot(rand_plot, aes(x = randomization_status, y = termination_rate)) +
-  geom_col(fill = "#e76f51", width = 0.55) +
-  geom_text(
-    aes(label = paste0(percent(termination_rate, accuracy = 0.1), "\n(", comma(terminated_studies), " / ", comma(total_studies), " trials)")),
-    vjust = -0.25,
-    color = "#183642",
-    size = 3.4,
-    lineheight = 0.9
-  ) +
-  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.11), expand = c(0, 0)) +
-  labs(
-    x = "Allocation / Randomization Architecture",
-    y = "Termination Rate",
-    subtitle = "Non-randomized studies encounter an 8.4% termination rate, compared to 5.5% in randomized designs."
-  ) +
-  theme_minimal(base_family = "DM Sans") +
-  theme(
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.text = element_text(color = "#183642", size = 10),
-    axis.title = element_text(color = "#183642", face = "bold"),
-    plot.subtitle = element_text(color = "#42616a", size = 9.5),
-    plot.background = element_rect(fill = "#f7f4ed", color = NA),
-    panel.background = element_rect(fill = "#f7f4ed", color = NA)
-  )
+p_rand <- create_signal_chart(
+  df = rand_plot_data,
+  cat_var = "randomization_status",
+  total_var = "total_studies",
+  term_var = "terminated_studies",
+  rate_var = "termination_rate",
+  x_label = "Allocation / Randomization Architecture",
+  highlight_cats = c("Non-randomized"),
+  annotation_text = "8.4% Rate<br>+52% vs Randomized",
+  annotation_cat = "Non-randomized",
+  annotation_pos = 8.4,
+  insight_note = "Single-arm exploratory designs are vulnerable to early discontinuation.",
+  chart_height = 450
+)
+
+p_rand
 ```
 
 ### B. Placebo Use
@@ -259,38 +669,28 @@ Placebo-controlled trials demand rigorous double-blinding, identical manufacturi
 
 ```{r}
 #| label: fig-placebo
-#| fig-cap: "Termination rate by placebo control reporting"
-#| fig-width: 12.5
-#| fig-height: 5.4
+#| fig-cap: "Termination rate and volume by placebo control reporting"
 
-placebo_plot <- df_placebo |>
-  mutate(placebo_status = factor(placebo_status, levels = c("Placebo control used", "No placebo reported", "Not reported")))
+placebo_plot_data <- df_placebo |>
+  mutate(placebo_status = factor(placebo_status, levels = c("Placebo control used", "No placebo reported", "Not reported"))) |>
+  arrange(placebo_status)
 
-ggplot(placebo_plot, aes(x = placebo_status, y = termination_rate)) +
-  geom_col(fill = "#42616a", width = 0.55) +
-  geom_text(
-    aes(label = paste0(percent(termination_rate, accuracy = 0.1), "\n(", comma(terminated_studies), " / ", comma(total_studies), " trials)")),
-    vjust = -0.25,
-    color = "#183642",
-    size = 3.4,
-    lineheight = 0.9
-  ) +
-  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.11), expand = c(0, 0)) +
-  labs(
-    x = "Placebo Reporting",
-    y = "Termination Rate",
-    subtitle = "Placebo-controlled studies terminate at 8.6%, driven by patient reluctance to receive sham therapy and double-blind logistical burdens."
-  ) +
-  theme_minimal(base_family = "DM Sans") +
-  theme(
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.text = element_text(color = "#183642", size = 10),
-    axis.title = element_text(color = "#183642", face = "bold"),
-    plot.subtitle = element_text(color = "#42616a", size = 9.5),
-    plot.background = element_rect(fill = "#f7f4ed", color = NA),
-    panel.background = element_rect(fill = "#f7f4ed", color = NA)
-  )
+p_placebo <- create_signal_chart(
+  df = placebo_plot_data,
+  cat_var = "placebo_status",
+  total_var = "total_studies",
+  term_var = "terminated_studies",
+  rate_var = "termination_rate",
+  x_label = "Placebo Reporting Status",
+  highlight_cats = c("Placebo control used"),
+  annotation_text = "8.6% Rate<br>+53% vs No Placebo",
+  annotation_cat = "Placebo control used",
+  annotation_pos = 8.6,
+  insight_note = "Double-blind burdens and participant sham reluctance drive higher termination.",
+  chart_height = 450
+)
+
+p_placebo
 ```
 
 ## 5. Protocol Scale: Interventions & Number of Conditions
@@ -301,37 +701,35 @@ As trials incorporate multiple drugs, combination therapies, or complex dosing a
 
 ```{r}
 #| label: fig-interventions
-#| fig-cap: "Trial termination rate across number of tested interventions"
-#| fig-width: 12.5
-#| fig-height: 5.6
+#| fig-cap: "Trial termination rate and volume across number of tested interventions"
 
-int_plot <- df_interventions |>
+int_plot_data <- df_interventions |>
   mutate(intervention_label = factor(intervention_label, levels = rev(intervention_label)))
 
-ggplot(int_plot, aes(x = termination_rate, y = intervention_label)) +
-  geom_col(fill = "#e76f51", width = 0.65) +
-  geom_text(
-    aes(label = paste0(percent(termination_rate, accuracy = 0.1), " (", comma(terminated_studies), " / ", comma(total_studies), ")")),
-    hjust = -0.06,
-    color = "#183642",
-    size = 3.3
-  ) +
-  scale_x_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.11), expand = expansion(mult = c(0, 0.18))) +
-  labs(
-    x = "Termination Rate",
-    y = NULL,
-    subtitle = "Monotherapy trials fail at 5.3%, while complex regimens with 5+ interventions experience an 8.2% termination rate."
-  ) +
-  theme_minimal(base_family = "DM Sans") +
-  theme(
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.text.y = element_text(face = "bold", color = "#183642", size = 9.5),
-    axis.text.x = element_text(color = "#42616a"),
-    plot.subtitle = element_text(color = "#42616a", size = 9.5),
-    plot.background = element_rect(fill = "#f7f4ed", color = NA),
-    panel.background = element_rect(fill = "#f7f4ed", color = NA)
-  )
+p_int <- create_signal_chart(
+  df = int_plot_data,
+  cat_var = "intervention_label",
+  total_var = "total_studies",
+  term_var = "terminated_studies",
+  rate_var = "termination_rate",
+  x_label = "Termination Rate (%)",
+  is_horizontal = TRUE,
+  custom_colors = c(
+    "0 (Observational/None)" = "#b8d8d8",
+    "1 intervention"          = "#42616a",
+    "2 interventions"         = "#42616a",
+    "3 interventions"         = "#f4a261",
+    "4 interventions"         = "#e76f51",
+    "5+ interventions"        = "#e76f51"
+  )[as.character(int_plot_data$intervention_label)],
+  annotation_text = "8.2% (+53% vs Monotherapy)",
+  annotation_cat = "5+ interventions",
+  annotation_pos = 8.2,
+  insight_note = "Multi-drug regimens compound toxicities, supply logistics, and dosing complexities.",
+  chart_height = 470
+)
+
+p_int
 ```
 
 ### B. Number of Conditions Listed
@@ -340,39 +738,28 @@ Protocols targeting multiple comorbid conditions or broad diagnostic indications
 
 ```{r}
 #| label: fig-conditions
-#| fig-cap: "Trial termination rate by number of reported conditions"
-#| fig-width: 12.5
-#| fig-height: 5.2
+#| fig-cap: "Trial termination rate and volume by number of reported conditions"
 
-cond_plot <- df_conditions |>
+cond_plot_data <- df_conditions |>
   filter(conditions_category != "0 / Missing") |>
   mutate(conditions_category = factor(conditions_category, levels = conditions_category))
 
-ggplot(cond_plot, aes(x = conditions_category, y = termination_rate)) +
-  geom_col(fill = "#42616a", width = 0.55) +
-  geom_text(
-    aes(label = paste0(percent(termination_rate, accuracy = 0.1), "\n(", comma(terminated_studies), " trials)")),
-    vjust = -0.25,
-    color = "#183642",
-    size = 3.4,
-    lineheight = 0.9
-  ) +
-  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.085), expand = c(0, 0)) +
-  labs(
-    x = "Number of Conditions Listed in Registry",
-    y = "Termination Rate",
-    subtitle = "Single-condition and highly multi-morbid protocols (5+ conditions) each reach 5.8%–6.0% termination rates."
-  ) +
-  theme_minimal(base_family = "DM Sans") +
-  theme(
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.text = element_text(color = "#183642", size = 10),
-    axis.title = element_text(color = "#183642", face = "bold"),
-    plot.subtitle = element_text(color = "#42616a", size = 9.5),
-    plot.background = element_rect(fill = "#f7f4ed", color = NA),
-    panel.background = element_rect(fill = "#f7f4ed", color = NA)
-  )
+p_cond <- create_signal_chart(
+  df = cond_plot_data,
+  cat_var = "conditions_category",
+  total_var = "total_studies",
+  term_var = "terminated_studies",
+  rate_var = "termination_rate",
+  x_label = "Number of Conditions Listed in Registry",
+  highlight_cats = c("5+ conditions", "1 condition"),
+  annotation_text = "6.0% Rate",
+  annotation_cat = "5+ conditions",
+  annotation_pos = 6.0,
+  insight_note = "Broad indications introduce heterogeneous patient populations and strict stratification.",
+  chart_height = 450
+)
+
+p_cond
 ```
 
 ## 6. Study Duration: The Attrition Timeline
@@ -381,38 +768,35 @@ How does elapsed study timeline correlate with termination? The chart below trac
 
 ```{r}
 #| label: fig-durations
-#| fig-cap: "Termination rate by total study duration bracket"
-#| fig-width: 12.5
-#| fig-height: 5.6
+#| fig-cap: "Termination rate and volume by total study duration bracket"
 
-dur_plot <- df_durations |>
+dur_plot_data <- df_durations |>
   mutate(duration_bracket = factor(duration_bracket, levels = rev(duration_bracket)))
 
-ggplot(dur_plot, aes(x = termination_rate, y = duration_bracket)) +
-  geom_col(fill = "#b8d8d8", color = "#183642", width = 0.65) +
-  geom_text(
-    aes(label = paste0(percent(termination_rate, accuracy = 0.1), " (", comma(terminated_studies), " trials)")),
-    hjust = -0.06,
-    color = "#183642",
-    size = 3.3,
-    fontface = "bold"
-  ) +
-  scale_x_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.09), expand = expansion(mult = c(0, 0.16))) +
-  labs(
-    x = "Termination Rate",
-    y = NULL,
-    subtitle = "Trials lasting 2 to 5 years experience the highest termination rate (6.8%), facing chronic accrual fatigue and sponsor shifts."
-  ) +
-  theme_minimal(base_family = "DM Sans") +
-  theme(
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.text.y = element_text(face = "bold", color = "#183642", size = 9.5),
-    axis.text.x = element_text(color = "#42616a"),
-    plot.subtitle = element_text(color = "#42616a", size = 9.5),
-    plot.background = element_rect(fill = "#f7f4ed", color = NA),
-    panel.background = element_rect(fill = "#f7f4ed", color = NA)
-  )
+p_dur <- create_signal_chart(
+  df = dur_plot_data,
+  cat_var = "duration_bracket",
+  total_var = "total_studies",
+  term_var = "terminated_studies",
+  rate_var = "termination_rate",
+  x_label = "Termination Rate (%)",
+  is_horizontal = TRUE,
+  custom_colors = c(
+    "< 6 months"  = "#b8d8d8",
+    "6–12 months" = "#b8d8d8",
+    "1–2 years"   = "#42616a",
+    "2–3 years"   = "#e76f51",
+    "3–5 years"   = "#e76f51",
+    "5+ years"    = "#42616a"
+  )[as.character(dur_plot_data$duration_bracket)],
+  annotation_text = "Peak Danger: 6.8%",
+  annotation_cat = "2–3 years",
+  annotation_pos = 6.8,
+  insight_note = "2–5 year window: trials endure accrual fatigue, PI turnover, and sponsor reprioritization.",
+  chart_height = 470
+)
+
+p_dur
 ```
 
 ::: {.callout-note}
@@ -433,38 +817,32 @@ Stratifying 602,514 studies by complexity score reveals a stark, linear escalati
 
 ```{r}
 #| label: fig-complexity
-#| fig-cap: "Trial termination rate across composite protocol complexity tiers"
-#| fig-width: 12.5
-#| fig-height: 5.6
+#| fig-cap: "Trial termination rate and volume across composite protocol complexity tiers"
 
-comp_plot <- df_complexity |>
+comp_plot_data <- df_complexity |>
   mutate(complexity_tier = factor(complexity_tier, levels = complexity_tier))
 
-ggplot(comp_plot, aes(x = complexity_tier, y = termination_rate)) +
-  geom_col(fill = "#e76f51", width = 0.55) +
-  geom_text(
-    aes(label = paste0(percent(termination_rate, accuracy = 0.1), "\n(", comma(terminated_studies), " / ", comma(total_studies), ")")),
-    vjust = -0.25,
-    color = "#183642",
-    size = 3.4,
-    lineheight = 0.9
-  ) +
-  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.12), expand = c(0, 0)) +
-  labs(
-    x = "Protocol Complexity Tier",
-    y = "Termination Rate",
-    subtitle = "Termination risk nearly doubles from Low Complexity (5.2%) to Very High Complexity (9.3%)."
-  ) +
-  theme_minimal(base_family = "DM Sans") +
-  theme(
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.text = element_text(color = "#183642", size = 10),
-    axis.title = element_text(color = "#183642", face = "bold"),
-    plot.subtitle = element_text(color = "#42616a", size = 9.5),
-    plot.background = element_rect(fill = "#f7f4ed", color = NA),
-    panel.background = element_rect(fill = "#f7f4ed", color = NA)
-  )
+p_comp <- create_signal_chart(
+  df = comp_plot_data,
+  cat_var = "complexity_tier",
+  total_var = "total_studies",
+  term_var = "terminated_studies",
+  rate_var = "termination_rate",
+  x_label = "Protocol Complexity Tier",
+  custom_colors = c(
+    "Low Complexity (0–1)"       = "#b8d8d8",
+    "Moderate Complexity (2)"     = "#42616a",
+    "High Complexity (3)"         = "#f4a261",
+    "Very High Complexity (4+)"   = "#e76f51"
+  )[as.character(comp_plot_data$complexity_tier)],
+  annotation_text = "9.3% Rate<br>+80% vs Low",
+  annotation_cat = "Very High Complexity (4+)",
+  annotation_pos = 9.3,
+  insight_note = "Structural complexity nearly doubles termination rate from 5.2% to 9.3%.",
+  chart_height = 470
+)
+
+p_comp
 ```
 
 ## 8. Sponsor Type & Site Network Footprint
@@ -473,50 +851,39 @@ ggplot(comp_plot, aes(x = complexity_tier, y = termination_rate)) +
 
 ```{r}
 #| label: fig-sponsor
-#| fig-cap: "Trial termination rate across lead sponsor categories"
-#| fig-width: 12.5
-#| fig-height: 5.6
+#| fig-cap: "Trial termination rate and volume across lead sponsor categories"
 
-sponsor_plot <- sponsor_summary |>
+sponsor_plot_data <- sponsor_summary |>
   filter(total_studies >= 1000) |>
   arrange(desc(termination_rate)) |>
   mutate(sponsor_label = factor(sponsor_label, levels = rev(sponsor_label)))
 
-ggplot(sponsor_plot, aes(x = termination_rate, y = sponsor_label)) +
-  geom_col(fill = "#42616a", width = 0.65) +
-  geom_text(
-    aes(label = paste0(percent(termination_rate, accuracy = 0.1), " (", comma(terminated_studies), " trials)")),
-    hjust = -0.08,
-    color = "#183642",
-    size = 3.3
-  ) +
-  scale_x_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.12), expand = expansion(mult = c(0, 0.15))) +
-  labs(
-    x = "Termination Rate",
-    y = NULL,
-    subtitle = "Industry (8.9%) and NIH-sponsored studies (8.5%) exhibit nearly double the termination rate of academic networks (4.8%)."
-  ) +
-  theme_minimal(base_family = "DM Sans") +
-  theme(
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.text.y = element_text(face = "bold", color = "#183642", size = 9.5),
-    axis.text.x = element_text(color = "#42616a"),
-    plot.subtitle = element_text(color = "#42616a", size = 9.5),
-    plot.background = element_rect(fill = "#f7f4ed", color = NA),
-    panel.background = element_rect(fill = "#f7f4ed", color = NA)
-  )
+p_sponsor <- create_signal_chart(
+  df = sponsor_plot_data,
+  cat_var = "sponsor_label",
+  total_var = "total_studies",
+  term_var = "terminated_studies",
+  rate_var = "termination_rate",
+  x_label = "Termination Rate (%)",
+  is_horizontal = TRUE,
+  highlight_cats = c("Industry (Pharma / Biotech)", "National Institutes of Health (NIH)"),
+  annotation_text = "8.9% (Industry Leader)",
+  annotation_cat = "Industry (Pharma / Biotech)",
+  annotation_pos = 8.9,
+  insight_note = "Industry actively terminates underperforming assets; NIH faces rigid grant windows.",
+  chart_height = 480
+)
+
+p_sponsor
 ```
 
 ### B. Clinical Site Footprint
 
 ```{r}
 #| label: fig-sites
-#| fig-cap: "Termination rate across clinical site footprint categories"
-#| fig-width: 12.5
-#| fig-height: 5.4
+#| fig-cap: "Termination rate and volume across clinical site footprint categories"
 
-site_plot <- site_summary |>
+site_plot_data <- site_summary |>
   filter(site_category != "0 sites / Not reported") |>
   mutate(site_category = factor(site_category, levels = c(
     "Single-site (1)",
@@ -526,29 +893,26 @@ site_plot <- site_summary |>
     "Global mega-network (51+)"
   )))
 
-ggplot(site_plot, aes(x = site_category, y = termination_rate)) +
-  geom_col(fill = "#b8d8d8", color = "#183642", width = 0.6) +
-  geom_text(
-    aes(label = percent(termination_rate, accuracy = 0.1)),
-    vjust = -0.5,
-    color = "#183642",
-    fontface = "bold",
-    size = 3.6
-  ) +
-  scale_y_continuous(labels = percent_format(accuracy = 1), limits = c(0, 0.13), expand = c(0, 0)) +
-  labs(
-    x = "Operational Footprint (Number of Clinical Sites)",
-    y = "Termination Rate",
-    subtitle = "Moving from a single site (5.0%) to multi-site networks (10.0%–10.3%) doubles termination risk."
-  ) +
-  theme_minimal(base_family = "DM Sans") +
-  theme(
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor = element_blank(),
-    axis.text = element_text(color = "#183642", size = 9.5),
-    axis.title = element_text(color = "#183642", face = "bold"),
-    plot.subtitle = element_text(color = "#42616a", size = 9.5),
-    plot.background = element_rect(fill = "#f7f4ed", color = NA),
-    panel.background = element_rect(fill = "#f7f4ed", color = NA)
-  )
+p_site <- create_signal_chart(
+  df = site_plot_data,
+  cat_var = "site_category",
+  total_var = "total_studies",
+  term_var = "terminated_studies",
+  rate_var = "termination_rate",
+  x_label = "Operational Footprint (Number of Clinical Sites)",
+  custom_colors = c(
+    "Single-site (1)"          = "#b8d8d8",
+    "Small multi-site (2–5)"   = "#42616a",
+    "Medium multi-site (6–20)" = "#e76f51",
+    "Large multi-site (21–50)" = "#e76f51",
+    "Global mega-network (51+)"= "#e76f51"
+  )[as.character(site_plot_data$site_category)],
+  annotation_text = "10.3% Rate<br>2x Single-site",
+  annotation_cat = "Medium multi-site (6–20)",
+  annotation_pos = 10.3,
+  insight_note = "Risk jumps from 5.0% to 10%+ once trials expand beyond a single institution.",
+  chart_height = 470
+)
+
+p_site
 ```

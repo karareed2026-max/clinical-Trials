@@ -135,42 +135,151 @@ This view tracks median planned enrollment (solid coral line) and the middle 50%
 ```{r}
 #| label: fig-home-enrollment
 #| fig-cap: "The typical and middle 50% of reported trial enrollment by study start year (1990–2026)"
-#| fig-width: 12.5
-#| fig-height: 5.5
 #| echo: false
 #| message: false
 #| warning: false
+
+library(plotly)
 
 annual_enrollment <- read_tsv(
   "data/processed/summary_annual_enrollment.tsv",
   show_col_types = FALSE
 )
 
-ggplot(annual_enrollment, aes(x = start_year)) +
-  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#b8d8d8", alpha = 0.85) +
-  geom_line(aes(y = median), color = "#e76f51", linewidth = 1.15) +
-  geom_point(aes(y = median), color = "#183642", fill = "#e76f51", shape = 21, size = 2.4, stroke = 0.5) +
-  scale_y_log10(labels = comma, breaks = c(10, 100, 1000, 10000, 100000, 1000000)) +
-  scale_x_continuous(breaks = seq(1990, 2025, by = 5), expand = expansion(mult = c(0.01, 0.02))) +
-  labs(
-    x = "Study start year",
-    y = "Reported enrollment (log scale)",
-    subtitle = "Solid coral line represents yearly median; shaded band shows the interquartile range (25th to 75th percentiles)."
-  ) +
-  theme_minimal(base_family = "DM Sans") +
-  theme(
-    panel.grid.minor = element_blank(),
-    axis.text = element_text(color = "#183642"),
-    axis.title = element_text(color = "#183642", face = "bold"),
-    plot.subtitle = element_text(color = "#42616a", size = 9.5),
-    plot.background = element_rect(fill = "#f7f4ed", color = NA),
-    panel.background = element_rect(fill = "#f7f4ed", color = NA)
-  )
+BRAND_CORAL <- "#e76f51"
+BRAND_NAVY  <- "#183642"
+BRAND_TEAL  <- "#42616a"
+BRAND_MINT  <- "#b8d8d8"
+BRAND_AMBER <- "#f4a261"
+BRAND_BG    <- "#f7f4ed"
+BRAND_FONT  <- "DM Sans, system-ui, -apple-system, sans-serif"
+
+p_enrollment <- plot_ly(data = annual_enrollment, height = 490) |>
+  # Upper IQR boundary (75th percentile)
+  add_lines(
+    x = ~start_year,
+    y = ~upper,
+    name = "75th Percentile",
+    line = list(color = "rgba(66, 97, 106, 0.25)", width = 1),
+    hoverinfo = "none",
+    showlegend = FALSE
+  ) |>
+  # Lower IQR boundary (25th percentile) with filled ribbon
+  add_lines(
+    x = ~start_year,
+    y = ~lower,
+    name = "Middle 50% (IQR: 25th–75th %ile)",
+    fill = "tonexty",
+    fillcolor = "rgba(184, 216, 216, 0.55)",
+    line = list(color = "rgba(66, 97, 106, 0.25)", width = 1),
+    hoverinfo = "none",
+    showlegend = TRUE
+  ) |>
+  # Median Line with circular points
+  add_trace(
+    x = ~start_year,
+    y = ~median,
+    type = "scatter",
+    mode = "lines+markers",
+    name = "Median Planned Enrollment",
+    line = list(color = BRAND_CORAL, width = 2.5),
+    marker = list(
+      color = BRAND_CORAL,
+      size = 6.5,
+      line = list(color = BRAND_NAVY, width = 1.2)
+    ),
+    hovertemplate = paste0(
+      "<b>Study Start Year: %{x}</b><br>",
+      "Median Enrollment: <b>%{y:,}</b> participants<br>",
+      "Middle 50% (IQR): <b>%{customdata[0]:,} to %{customdata[1]:,}</b><br>",
+      "Registered Trials: <b>%{customdata[2]:,}</b><br>",
+      "Mean Enrollment: <b>%{customdata[3]:,.0f}</b><extra></extra>"
+    ),
+    customdata = ~mapply(list, lower, upper, studies, mean, SIMPLIFY = FALSE)
+  ) |>
+  # Mean Line (clickable in legend to examine mega-trial skew)
+  add_trace(
+    x = ~start_year,
+    y = ~mean,
+    type = "scatter",
+    mode = "lines",
+    name = "Mean Enrollment (Mega-Trial Skew)",
+    line = list(color = BRAND_AMBER, width = 1.5, dash = "dot"),
+    visible = "legendonly",
+    hovertemplate = paste0(
+      "<b>Year: %{x}</b><br>",
+      "Mean Enrollment: <b>%{y:,.0f}</b> participants<br>",
+      "<i>Heavily skewed by 1,000+ participant trials</i><extra></extra>"
+    )
+  ) |>
+  layout(
+    paper_bgcolor = BRAND_BG,
+    plot_bgcolor = BRAND_BG,
+    font = list(family = BRAND_FONT, color = BRAND_NAVY),
+    hoverlabel = list(
+      bgcolor = BRAND_NAVY,
+      font = list(color = "#ffffff", family = BRAND_FONT, size = 12)
+    ),
+    xaxis = list(
+      title = list(text = "Study Start Year", font = list(size = 12, color = BRAND_NAVY)),
+      tickvals = seq(1990, 2025, by = 5),
+      gridcolor = "rgba(24, 54, 66, 0.08)",
+      tickfont = list(size = 10, color = BRAND_NAVY)
+    ),
+    yaxis = list(
+      title = list(text = "Reported Planned Enrollment (Log Scale)", font = list(size = 12, color = BRAND_NAVY)),
+      type = "log",
+      tickvals = c(10, 100, 1000, 10000, 100000, 1000000),
+      ticktext = c("10", "100", "1,000", "10,000", "100,000", "1,000,000"),
+      gridcolor = "rgba(24, 54, 66, 0.1)",
+      tickfont = list(size = 10, color = BRAND_NAVY)
+    ),
+    legend = list(
+      orientation = "h",
+      x = 0.45,
+      y = 1.18,
+      yanchor = "top",
+      font = list(size = 11, family = BRAND_FONT)
+    ),
+    updatemenus = list(
+      list(
+        type = "buttons",
+        direction = "right",
+        x = 0.0,
+        y = 1.18,
+        xanchor = "left",
+        yanchor = "top",
+        buttons = list(
+          list(
+            method = "relayout",
+            args = list(list(
+              "yaxis.type" = "log",
+              "yaxis.title.text" = "Reported Planned Enrollment (Log Scale)"
+            )),
+            label = "Log Scale (Default)"
+          ),
+          list(
+            method = "relayout",
+            args = list(list(
+              "yaxis.type" = "linear",
+              "yaxis.title.text" = "Reported Planned Enrollment (Linear Scale)"
+            )),
+            label = "Linear Scale"
+          )
+        ),
+        font = list(family = BRAND_FONT, size = 11, color = BRAND_NAVY)
+      )
+    ),
+    margin = list(t = 70, b = 50, l = 70, r = 30)
+  ) |>
+  config(displaylogo = FALSE, responsive = TRUE)
+
+p_enrollment
 ```
 
 ### 2. Interactive Panel of Histograms: Enrollment Distribution by Era
 
-The histogram panel below details the distribution of participant enrollment across four distinct historical eras: **1990–1999**, **2000–2009**, **2010–2019**, and **2020–2026**. Hover over any bar to inspect the exact share and number of trials within that enrollment bin, or click eras in the legend to compare subsets.
+The histogram panel below details the distribution of participant enrollment across four distinct historical eras: **1990–1999**, **2000–2009**, **2010–2019**, and **2020–2026**. Use the toggle buttons above the chart to view each era individually with clean, wide bars and direct percentage labels, or select "Compare All" to view the side-by-side comparison.
 
 ```{r}
 #| label: fig-home-histograms
@@ -186,6 +295,7 @@ hist_data <- read_tsv(
 )
 
 hist_data$bin_label <- factor(hist_data$bin_label, levels = unique(hist_data$bin_label))
+eras <- unique(hist_data$era)
 
 era_colors <- c(
   "1990–1999" = "#42616a",
@@ -194,58 +304,153 @@ era_colors <- c(
   "2020–2026" = "#e76f51"
 )
 
-p_hist <- plot_ly()
+BRAND_CORAL <- "#e76f51"
+BRAND_NAVY  <- "#183642"
+BRAND_TEAL  <- "#42616a"
+BRAND_MINT  <- "#b8d8d8"
+BRAND_BG    <- "#f7f4ed"
+BRAND_FONT  <- "DM Sans, system-ui, -apple-system, sans-serif"
 
-for (era_name in unique(hist_data$era)) {
-  sub_era <- filter(hist_data, era == era_name)
+p_hist <- plot_ly(height = 500)
+
+# Default to latest era (2020–2026) active
+active_era_idx <- length(eras)
+
+for (i in seq_along(eras)) {
+  e <- eras[i]
+  sub_data <- filter(hist_data, era == e) |>
+    mutate(label_text = paste0(round(pct, 1), "%"))
+  is_active <- (i == active_era_idx)
+  
   p_hist <- add_bars(
     p_hist,
-    data = sub_era,
+    data = sub_data,
     x = ~bin_label,
     y = ~pct,
-    name = era_name,
+    name = e,
+    visible = is_active,
     marker = list(
-      color = era_colors[era_name],
-      line = list(color = "#ffffff", width = 0.5)
+      color = era_colors[e],
+      line = list(color = BRAND_NAVY, width = 0.8)
     ),
+    text = ~label_text,
+    textposition = "outside",
+    cliponaxis = FALSE,
+    textfont = list(family = BRAND_FONT, size = 10, color = BRAND_NAVY),
     hovertemplate = paste0(
-      "<b>", era_name, " Era</b><br>",
-      "Cohort Range: %{x} participants<br>",
-      "Share of Trials: %{y:.1f}%<br>",
-      "Total Trials in Bin: ", comma(sub_era$count),
+      "<b>", e, " Era</b><br>",
+      "Cohort: <b>%{x}</b> participants<br>",
+      "Share of Era: <b>%{y:.1f}%</b><br>",
+      "Total Studies: <b>", comma(sub_data$count), "</b> of ", comma(sub_data$total_in_era[1]),
       "<extra></extra>"
     )
   )
 }
 
+# Build toggle buttons for each individual era + compare all
+buttons <- list()
+for (i in seq_along(eras)) {
+  vis <- rep(FALSE, length(eras))
+  vis[i] <- TRUE
+  e <- eras[i]
+  tot <- format(filter(hist_data, era == e)$total_in_era[1], big.mark = ",")
+  
+  buttons[[i]] <- list(
+    method = "update",
+    args = list(
+      list(visible = vis),
+      list(
+        title = list(
+          text = paste0("<b>Enrollment Distribution: ", e, " Era</b> (", tot, " studies)"),
+          font = list(family = BRAND_FONT, size = 15, color = BRAND_NAVY),
+          x = 0.0,
+          y = 0.98,
+          xanchor = "left",
+          yanchor = "top"
+        ),
+        barmode = "group",
+        showlegend = FALSE,
+        "yaxis.range" = list(0, 26)
+      )
+    ),
+    label = e
+  )
+}
+
+# Add "Compare All" button
+buttons[[length(buttons) + 1]] <- list(
+  method = "update",
+  args = list(
+    list(visible = rep(TRUE, length(eras))),
+    list(
+      title = list(
+        text = "<b>Enrollment Distribution: All Eras Compared Side-by-Side</b>",
+        font = list(family = BRAND_FONT, size = 15, color = BRAND_NAVY),
+        x = 0.0,
+        y = 0.98,
+        xanchor = "left",
+        yanchor = "top"
+      ),
+      barmode = "group",
+      showlegend = TRUE,
+      "yaxis.range" = list(0, 26)
+    )
+  ),
+  label = "Compare All"
+)
+
+active_e <- eras[active_era_idx]
+active_tot <- format(filter(hist_data, era == active_e)$total_in_era[1], big.mark = ",")
+
 p_hist <- layout(
   p_hist,
+  title = list(
+    text = paste0("<b>Enrollment Distribution: ", active_e, " Era</b> (", active_tot, " studies)"),
+    font = list(family = BRAND_FONT, size = 15, color = BRAND_NAVY),
+    x = 0.0,
+    y = 0.98,
+    xanchor = "left",
+    yanchor = "top"
+  ),
   barmode = "group",
-  bargap = 0.15,
-  bargroupgap = 0.05,
-  font = list(family = "DM Sans", color = "#183642"),
-  paper_bgcolor = "#f7f4ed",
-  plot_bgcolor = "#f7f4ed",
+  font = list(family = BRAND_FONT, color = BRAND_NAVY),
+  paper_bgcolor = BRAND_BG,
+  plot_bgcolor = BRAND_BG,
+  hoverlabel = list(bgcolor = BRAND_NAVY, font = list(color = "#ffffff", family = BRAND_FONT)),
   xaxis = list(
-    title = list(text = "Planned Enrollment Range", font = list(size = 12, color = "#183642")),
+    title = list(text = "Planned Enrollment Cohort Range", font = list(size = 12, color = BRAND_NAVY)),
     tickangle = -35,
-    tickfont = list(size = 10, color = "#183642"),
+    tickfont = list(size = 10, color = BRAND_NAVY),
     gridcolor = "rgba(24, 54, 66, 0.08)"
   ),
   yaxis = list(
-    title = list(text = "Share of Trials in Era (%)", font = list(size = 12, color = "#183642")),
+    title = list(text = "Share of Trials in Era (%)", font = list(size = 12, color = BRAND_NAVY)),
     ticksuffix = "%",
-    tickfont = list(size = 10, color = "#183642"),
+    range = c(0, 26),
+    tickfont = list(size = 10, color = BRAND_NAVY),
     gridcolor = "rgba(24, 54, 66, 0.1)"
   ),
+  updatemenus = list(list(
+    type = "buttons",
+    direction = "right",
+    x = 0.0,
+    y = 1.12,
+    xanchor = "left",
+    yanchor = "top",
+    active = active_era_idx - 1,
+    buttons = buttons,
+    font = list(family = BRAND_FONT, size = 11, color = BRAND_NAVY)
+  )),
   legend = list(
     title = list(text = "<b>Study Era</b>"),
     orientation = "h",
-    x = 0.15,
-    y = 1.12
+    x = 0.50,
+    y = 1.12,
+    yanchor = "top"
   ),
-  margin = list(t = 50, b = 80, l = 60, r = 30)
-)
+  margin = list(t = 110, b = 75, l = 60, r = 30)
+) |>
+  config(displaylogo = FALSE, responsive = TRUE)
 
 p_hist
 ```
