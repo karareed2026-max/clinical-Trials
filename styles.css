@@ -42,6 +42,21 @@ h1 {
   max-width: 40rem;
 }
 
+.quarto-about-jolla .quarto-title-block {
+  width: 100%;
+}
+
+.quarto-about-jolla .quarto-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quarto-about-jolla .quarto-title h1.title {
+  width: 100%;
+  max-width: 100%;
+}
+
 .quarto-about-jolla {
   border-bottom: 1px solid rgba(24, 54, 66, 0.18);
   margin-bottom: 4rem;
