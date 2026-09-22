@@ -115,6 +115,13 @@ h1 {
   margin: 2rem 0 4.5rem;
 }
 
+.cell-output-display .plotly,
+.cell-output-display .plotly.html-widget,
+.cell-output-display .plotly.html-widget > .js-plotly-plot {
+  width: 100% !important;
+  max-width: 100%;
+}
+
 .cell-output-display img {
   background: var(--paper);
 }

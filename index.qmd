@@ -80,7 +80,9 @@ Clinical trial volume and termination vulnerability vary widely across medical d
 #| message: false
 #| warning: false
 
-library(ggplot2)
+library(plotly)
+library(htmlwidgets)
+library(scales)
 library(dplyr)
 library(readr)
 library(scales)
@@ -123,13 +125,9 @@ ggplot(df_area, aes(x = total_studies, y = therapeutic_area)) +
 - **Healthy Volunteer Baseline**: Studies on healthy volunteers and normal controls display the lowest termination rate (**3.0%**), underscoring that patient disease severity and complex eligibility directly elevate termination hazard.
 :::
 
-## Are trials getting larger? Trial enrollment over time
+## What do individual trials look like over time?
 
-A critical question when predicting trial feasibility is whether clinical trials have grown in scale over the decades. The two coordinated visualizations below combine the **longitudinal trajectory of planned enrollment** with an **interactive panel of histograms** illustrating how trial sizes are distributed across eras.
-
-### 1. Longitudinal Enrollment Trajectory (1990–2026)
-
-This view tracks median planned enrollment (solid coral line) and the middle 50% interquartile band (shaded mint band) on a logarithmic scale for 575,628 trials with positive reported enrollment.
+Summary bars can hide the studies they count. This view shows the individual records directly: each point is one study plotted by its start year and planned enrollment. Coral points are studies marked `TERMINATED`; teal points are all other status categories. The logarithmic y-axis keeps small and very large studies visible together.
 
 ```{r}
 #| label: home-enrollment-trend
@@ -138,141 +136,138 @@ This view tracks median planned enrollment (solid coral line) and the middle 50%
 #| warning: false
 
 library(plotly)
+library(dplyr)
+library(readr)
 
-annual_enrollment <- read_tsv(
-  "data/processed/summary_annual_enrollment.tsv",
-  show_col_types = FALSE
-)
+study_points <- read_tsv(
+  "data/processed/aact_trial_termination_candidate_2026-09-12.tsv.gz",
+  show_col_types = FALSE,
+  progress = FALSE
+) |>
+  filter(!is.na(start_year), !is.na(enrollment), enrollment > 0) |>
+  mutate(
+    termination_label = if_else(terminated_binary == 1, "Terminated", "Not terminated"),
+    termination_label = factor(termination_label, levels = c("Not terminated", "Terminated"))
+  )
+
+set.seed(42)
+not_terminated_count <- sum(study_points$terminated_binary == 0)
+not_terminated_points <- study_points |>
+  filter(terminated_binary == 0) |>
+  slice_sample(n = min(18000L, not_terminated_count))
+
+terminated_points <- study_points |>
+  filter(terminated_binary == 1)
+
+plot_points <- bind_rows(not_terminated_points, terminated_points) |>
+  mutate(
+    hover_label = paste0("NCT: ", nct_id),
+    terminated_binary = as.integer(terminated_binary)
+  )
 
 BRAND_CORAL <- "#e76f51"
 BRAND_NAVY  <- "#183642"
 BRAND_TEAL  <- "#42616a"
-BRAND_MINT  <- "#b8d8d8"
-BRAND_AMBER <- "#f4a261"
 BRAND_BG    <- "#f7f4ed"
 BRAND_FONT  <- "DM Sans, system-ui, -apple-system, sans-serif"
 
-p_enrollment <- plot_ly(data = annual_enrollment, height = 490) |>
-  # Upper IQR boundary (75th percentile)
-  add_lines(
-    x = ~start_year,
-    y = ~upper,
-    name = "75th Percentile",
-    line = list(color = "rgba(66, 97, 106, 0.25)", width = 1),
-    hoverinfo = "none",
-    showlegend = FALSE
-  ) |>
-  # Lower IQR boundary (25th percentile) with filled ribbon
-  add_lines(
-    x = ~start_year,
-    y = ~lower,
-    name = "Middle 50% (IQR: 25th–75th %ile)",
-    fill = "tonexty",
-    fillcolor = "rgba(184, 216, 216, 0.55)",
-    line = list(color = "rgba(66, 97, 106, 0.25)", width = 1),
-    hoverinfo = "none",
-    showlegend = TRUE
-  ) |>
-  # Median Line with circular points
+plot_ly(
+  data = plot_points,
+  height = 700,
+  source = "study-enrollment-scatter"
+) |>
   add_trace(
+    data = filter(plot_points, terminated_binary == 0),
     x = ~start_year,
-    y = ~median,
+    y = ~enrollment,
     type = "scatter",
-    mode = "lines+markers",
-    name = "Median Planned Enrollment",
-    line = list(color = BRAND_CORAL, width = 2.5),
+    mode = "markers",
+    name = "Not terminated",
+    marker = list(
+      color = BRAND_TEAL,
+      opacity = 0.22,
+      size = 5,
+      line = list(color = "rgba(24, 54, 66, 0.15)", width = 0.6)
+    ),
+    customdata = ~hover_label,
+    hovertemplate = paste0(
+      "<b>%{customdata}</b><br>",
+      "Start year: <b>%{x}</b><br>",
+      "Planned enrollment: <b>%{y:,}</b><br>",
+      "Status: <b>Not terminated</b><extra></extra>"
+    )
+  ) |>
+  add_trace(
+    data = filter(plot_points, terminated_binary == 1),
+    x = ~start_year,
+    y = ~enrollment,
+    type = "scatter",
+    mode = "markers",
+    name = "Terminated",
     marker = list(
       color = BRAND_CORAL,
-      size = 6.5,
-      line = list(color = BRAND_NAVY, width = 1.2)
+      opacity = 0.85,
+      size = 6,
+      line = list(color = "rgba(24, 54, 66, 0.35)", width = 0.8)
     ),
+    customdata = ~hover_label,
     hovertemplate = paste0(
-      "<b>Study Start Year: %{x}</b><br>",
-      "Median Enrollment: <b>%{y:,}</b> participants<br>",
-      "Middle 50% (IQR): <b>%{customdata[0]:,} to %{customdata[1]:,}</b><br>",
-      "Registered Trials: <b>%{customdata[2]:,}</b><br>",
-      "Mean Enrollment: <b>%{customdata[3]:,.0f}</b><extra></extra>"
-    ),
-    customdata = ~mapply(list, lower, upper, studies, mean, SIMPLIFY = FALSE)
-  ) |>
-  # Mean Line (clickable in legend to examine mega-trial skew)
-  add_trace(
-    x = ~start_year,
-    y = ~mean,
-    type = "scatter",
-    mode = "lines",
-    name = "Mean Enrollment (Mega-Trial Skew)",
-    line = list(color = BRAND_AMBER, width = 1.5, dash = "dot"),
-    visible = "legendonly",
-    hovertemplate = paste0(
-      "<b>Year: %{x}</b><br>",
-      "Mean Enrollment: <b>%{y:,.0f}</b> participants<br>",
-      "<i>Heavily skewed by 1,000+ participant trials</i><extra></extra>"
+      "<b>%{customdata}</b><br>",
+      "Start year: <b>%{x}</b><br>",
+      "Planned enrollment: <b>%{y:,}</b><br>",
+      "Status: <b>Terminated</b><extra></extra>"
     )
   ) |>
   layout(
+    dragmode = "zoom",
+    hovermode = "closest",
     paper_bgcolor = BRAND_BG,
     plot_bgcolor = BRAND_BG,
     font = list(family = BRAND_FONT, color = BRAND_NAVY),
-    hoverlabel = list(
-      bgcolor = BRAND_NAVY,
-      font = list(color = "#ffffff", family = BRAND_FONT, size = 12)
-    ),
     xaxis = list(
-      title = list(text = "Study Start Year", font = list(size = 12, color = BRAND_NAVY)),
+      title = list(text = "Study Start Year", font = list(size = 14, color = BRAND_NAVY)),
+      range = c(1990, 2026),
       tickvals = seq(1990, 2025, by = 5),
       gridcolor = "rgba(24, 54, 66, 0.08)",
-      tickfont = list(size = 10, color = BRAND_NAVY)
+      tickfont = list(size = 12, color = BRAND_NAVY),
+      zeroline = FALSE
     ),
     yaxis = list(
-      title = list(text = "Reported Planned Enrollment (Log Scale)", font = list(size = 12, color = BRAND_NAVY)),
+      title = list(text = "Planned Enrollment per Study (log scale)", font = list(size = 14, color = BRAND_NAVY)),
       type = "log",
-      tickvals = c(10, 100, 1000, 10000, 100000, 1000000),
-      ticktext = c("10", "100", "1,000", "10,000", "100,000", "1,000,000"),
-      gridcolor = "rgba(24, 54, 66, 0.1)",
-      tickfont = list(size = 10, color = BRAND_NAVY)
+      tickvals = c(1, 10, 100, 1000, 10000, 100000, 1000000),
+      ticktext = c("1", "10", "100", "1k", "10k", "100k", "1M"),
+      gridcolor = "rgba(24, 54, 66, 0.08)",
+      tickfont = list(size = 12, color = BRAND_NAVY),
+      zeroline = FALSE
     ),
     legend = list(
       orientation = "h",
-      x = 0.45,
-      y = 1.18,
-      yanchor = "top",
-      font = list(size = 11, family = BRAND_FONT)
+      x = 0.02,
+      y = 1.02,
+      yanchor = "bottom",
+      font = list(size = 12, color = BRAND_NAVY)
     ),
-    updatemenus = list(
+    margin = list(t = 35, b = 65, l = 85, r = 35),
+    annotations = list(
       list(
-        type = "buttons",
-        direction = "right",
         x = 0.0,
-        y = 1.18,
-        xanchor = "left",
-        yanchor = "top",
-        buttons = list(
-          list(
-            method = "relayout",
-            args = list(list(
-              "yaxis.type" = "log",
-              "yaxis.title.text" = "Reported Planned Enrollment (Log Scale)"
-            )),
-            label = "Log Scale (Default)"
-          ),
-          list(
-            method = "relayout",
-            args = list(list(
-              "yaxis.type" = "linear",
-              "yaxis.title.text" = "Reported Planned Enrollment (Linear Scale)"
-            )),
-            label = "Linear Scale"
-          )
-        ),
-        font = list(family = BRAND_FONT, size = 11, color = BRAND_NAVY)
+        y = 1.02,
+        xref = "paper",
+        yref = "paper",
+        text = paste0("<b>", format(nrow(study_points), big.mark = ","), " studies with positive reported enrollment</b>"),
+        showarrow = FALSE,
+        font = list(size = 12, color = BRAND_TEAL)
       )
-    ),
-    margin = list(t = 70, b = 50, l = 70, r = 30)
+    )
   ) |>
-  config(displaylogo = FALSE, responsive = TRUE)
-
-p_enrollment
+  config(
+    displaylogo = FALSE,
+    responsive = TRUE,
+    scrollZoom = TRUE,
+    modeBarButtonsToRemove = c("select2d", "lasso2d"),
+    toImageButtonOptions = list(format = "png", filename = "study_enrollment_scatter")
+  )
 ```
 
 ### 2. Interactive Panel of Histograms: Enrollment Distribution by Era
