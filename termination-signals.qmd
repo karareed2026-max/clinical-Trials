@@ -11,6 +11,32 @@ execute:
   message: false
 ---
 
+## Key Variables & Data Dimensions Gathered
+
+To evaluate termination risk factors comprehensively, this project brings together multidimensional indicators from **602,514** registered clinical studies. The dimensions below describe what each study contributes to the analysis and why it matters when looking for early warning signs.
+
+::: {.callout-note}
+### The Dataset at a Glance
+
+- The analysis covers all studies, including the **34,295 studies that were marked TERMINATED** out of the complete AACT dataset.
+- The TERMINATED studies represent **5.7% of all studies** and **9.4%** of studies **with a resolved outcome**.
+- The dataset includes **459,840 interventional studies** alongside 140,623 observational studies.
+- **30,742 terminated studies include a documented reason for stopping**, giving the analysis a direct view of reported causes.
+:::
+
+### Variables Collected Across Clinical Dimensions
+
+| Domain | Key Variables Gathered | Description & Analytical Value |
+|:---|:---|:---|
+| **Study Identification & Status** | Study identifier, overall study status, termination indicator, and reported reason for stopping | Tracks each trial across 14 status categories and captures the documented rationale for more than 30,000 terminated studies. |
+| **Recruitment & Scale** | Planned enrollment and enrollment type | Quantifies expected participant cohorts and distinguishes planned targets from actual accrual. |
+| **Development Phase** | Phase I, II, III, IV, mixed, or not applicable | Shows how termination patterns change from early safety testing to large-scale confirmatory trials. |
+| **Sponsorship & Funding** | Lead sponsor type, lead organization, and sponsor count | Groups sponsors into industry, academic or hospital, NIH, and federal categories to examine funding context. |
+| **Study Architecture & Complexity** | Randomized design, placebo use, number of treatment arms, and number of sites | Captures protocol structure, control groups, and the operational reach of each study. |
+| **Timeline & Duration** | Start year, start date, completion date, and study duration | Follows trial activity across 36 years, from 1990 to 2026, and measures how long studies remain active before resolution. |
+
+These measures are descriptive signals rather than guarantees of failure. Together, they help researchers compare study designs, identify patterns associated with termination, and focus prevention efforts where they may have the greatest value.
+
 ```{r}
 #| message: false
 library(ggplot2)

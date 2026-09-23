@@ -30,44 +30,6 @@ A central finding immediately emerges: **34,295 studies were explicitly marked `
 While completed studies represent the largest single group (329,096 trials), over 34,000 trials halted prematurely. Understanding the operational, design, and clinical factors associated with these terminations provides a blueprint for early detection and prevention.
 :::
 
-## Key Variables & Data Dimensions Gathered
-
-To evaluate termination risk factors comprehensively, we gathered and synthesized multidimensional indicators across 602,514 studies:
-
-<div class="metrics-container">
-  <div class="metric-card">
-    <div class="metric-number">602,514</div>
-    <div class="metric-label">Total Studies</div>
-    <div class="metric-sub">Complete AACT spine analyzed</div>
-  </div>
-  <div class="metric-card">
-    <div class="metric-number">34,295</div>
-    <div class="metric-label">Terminated Trials</div>
-    <div class="metric-sub">5.7% of total; 9.4% of resolved trials</div>
-  </div>
-  <div class="metric-card alt">
-    <div class="metric-number">459,840</div>
-    <div class="metric-label">Interventional Trials</div>
-    <div class="metric-sub">vs 140,623 observational studies</div>
-  </div>
-  <div class="metric-card alt">
-    <div class="metric-number">30,742</div>
-    <div class="metric-label">Reported Reasons</div>
-    <div class="metric-sub">Documented causes of premature halts</div>
-  </div>
-</div>
-
-### Variables Collected Across Clinical Dimensions
-
-| Domain | Key Variables Gathered | Description & Analytical Value |
-|:---|:---|:---|
-| **Study Identification & Status** | `nct_id`, `overall_status`, `terminated_binary`, `why_stopped` | Tracks trial status across 14 categories and captures free-text stopping rationales for over 30,000 terminated studies. |
-| **Recruitment & Scale** | `enrollment`, `enrollment_type` | Quantifies planned and actual participant cohorts, distinguishing between anticipated targets and actual accrual. |
-| **Development Phase** | `phase` (Phase I, II, III, IV, Mixed, NA) | Evaluates how failure rates evolve from early safety testing to large-scale confirmatory trials. |
-| **Sponsorship & Funding** | `lead_sponsor_type`, `lead_sponsor_organization`, `sponsor_count` | Categorizes sponsors into Industry, Academic/Hospital, NIH, and Federal agencies to assess funding stability. |
-| **Study Architecture & Complexity** | `randomized_vs_nonrandomized`, `placebo_used`, `number_of_arms`, `number_of_sites` | Captures structural protocol complexity, including blinding, control arms, and global facility footprints. |
-| **Timeline & Duration** | `start_year`, `study_start_date`, `study_completion_date`, `study_duration_days` | Tracks temporal evolution over 36 years (1990–2026) and measures elapsed trial duration before resolution. |
-
 ## Therapeutic Areas & Disease Distribution
 
 Clinical trial volume and termination vulnerability vary widely across medical disciplines. The statistics chart below maps registered trials and termination rates across major therapeutic areas:
