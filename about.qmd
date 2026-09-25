@@ -1,0 +1,17 @@
+---
+title: "About"
+subtitle: "How to reach out."
+---
+
+## About the researcher
+
+I’m **Kara Reed**, a student at New College of Florida exploring how public clinical-trial data can support better research decisions. This project focuses on a practical question: what can patterns in terminated studies teach us before another study reaches the same outcome?
+
+**Contact:** [k.reed30@ncf.edu](mailto:k.reed30@ncf.edu) 
+**GitHub:** [karareed2026-max](https://github.com/karareed2026-max)  
+**Final project repository:** [clinical-Trials on GitHub](https://github.com/karareed2026-max/clinical-Trials)  
+**College:** [New College of Florida](https://www.ncf.edu/)
+
+## Data source
+
+The analysis uses the [Aggregate Analysis of ClinicalTrials.gov (AACT)](https://aact.ctti-clinicaltrials.org/) dataset, which provides a structured version of records from [ClinicalTrials.gov](https://clinicaltrials.gov/). The project examines 602,514 registered clinical studies and compares the characteristics of studies marked `TERMINATED` with other status categories. The [repository data directory](https://github.com/karareed2026-max/clinical-Trials/tree/main/data) contains the source inventories, processed tables, and documentation used for the visualizations on this site.

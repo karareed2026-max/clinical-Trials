@@ -17,6 +17,10 @@ website:
         text: What Termination Looks Like
       - href: prevention.qmd
         text: Prevention & Benefits
+      - href: data-methods.qmd
+        text: Drawing Conclusions
+      - href: about.qmd
+        text: About
   page-footer:
     left: "© 2026 Clinical Trial Termination Project"
     right: "Built with Quarto"
