@@ -1,35 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://karareed2026-max.github.io/clinical-Trials/data-methods.html</loc>
+    <lastmod>2026-09-25T19:32:38.766Z</lastmod>
+  </url>
+  <url>
     <loc>https://karareed2026-max.github.io/clinical-Trials/prevention.html</loc>
-    <lastmod>2026-09-21T14:27:51.797Z</lastmod>
+    <lastmod>2026-09-25T19:40:15.196Z</lastmod>
   </url>
   <url>
     <loc>https://karareed2026-max.github.io/clinical-Trials/termination-signals.html</loc>
-    <lastmod>2026-09-21T14:27:51.798Z</lastmod>
+    <lastmod>2026-09-25T14:35:06.881Z</lastmod>
   </url>
   <url>
     <loc>https://karareed2026-max.github.io/clinical-Trials/data/inventory/clinicaltrials_api_2026-09-13_report.html</loc>
-    <lastmod>2026-09-21T14:27:51.652Z</lastmod>
+    <lastmod>2026-09-25T14:35:06.724Z</lastmod>
   </url>
   <url>
     <loc>https://karareed2026-max.github.io/clinical-Trials/data/inventory/openfda_dataset_assessment_2026-09-13.html</loc>
-    <lastmod>2026-09-21T14:27:51.653Z</lastmod>
+    <lastmod>2026-09-25T14:35:06.725Z</lastmod>
   </url>
   <url>
     <loc>https://karareed2026-max.github.io/clinical-Trials/index.html</loc>
-    <lastmod>2026-09-22T03:34:21.267Z</lastmod>
+    <lastmod>2026-09-25T14:35:06.879Z</lastmod>
   </url>
   <url>
     <loc>https://karareed2026-max.github.io/clinical-Trials/data/inventory/aact_2026-09-12_readable.html</loc>
-    <lastmod>2026-09-21T14:27:51.652Z</lastmod>
+    <lastmod>2026-09-25T14:35:06.724Z</lastmod>
   </url>
   <url>
     <loc>https://karareed2026-max.github.io/clinical-Trials/data/processed/aact_trial_termination_candidate_2026-09-12_report.html</loc>
-    <lastmod>2026-09-21T14:27:51.795Z</lastmod>
+    <lastmod>2026-09-25T14:35:06.878Z</lastmod>
   </url>
   <url>
     <loc>https://karareed2026-max.github.io/clinical-Trials/trial-termination.html</loc>
-    <lastmod>2026-09-21T14:27:51.798Z</lastmod>
+    <lastmod>2026-09-25T19:25:08.920Z</lastmod>
+  </url>
+  <url>
+    <loc>https://karareed2026-max.github.io/clinical-Trials/about.html</loc>
+    <lastmod>2026-09-25T18:19:47.977Z</lastmod>
   </url>
 </urlset>
