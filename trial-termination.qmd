@@ -35,26 +35,26 @@ Unlike studies that are temporarily *suspended* (placed on pause pending safety 
 Across the 602,514 studies registered in ClinicalTrials.gov (AACT), **34,295 trials met this terminal fate**.
 
 <div class="metrics-container">
-  <div class="metric-card">
-    <div class="metric-number">34,295</div>
-    <div class="metric-label">Terminated Trials</div>
-    <div class="metric-sub">Permanent study halts in AACT</div>
-  </div>
-  <div class="metric-card">
-    <div class="metric-number">44.6%</div>
-    <div class="metric-label">Accrual Failures</div>
-    <div class="metric-sub">#1 reported reason for termination</div>
-  </div>
-  <div class="metric-card alt">
-    <div class="metric-number">80%+</div>
-    <div class="metric-label">Operational Causes</div>
-    <div class="metric-sub">Recruitment, funding & administration</div>
-  </div>
-  <div class="metric-card alt">
-    <div class="metric-number">&lt; 10%</div>
-    <div class="metric-label">True Biological Fails</div>
-    <div class="metric-sub">Toxicity or confirmed futility</div>
-  </div>
+<div class="metric-card">
+<div class="metric-number">34,295</div>
+<div class="metric-label">Terminated Trials</div>
+<div class="metric-sub">Permanent study halts in AACT</div>
+</div>
+<div class="metric-card">
+<div class="metric-number">44.6%</div>
+<div class="metric-label">Accrual Failures</div>
+<div class="metric-sub">#1 reported reason for termination</div>
+</div>
+<div class="metric-card alt">
+<div class="metric-number">80%+</div>
+<div class="metric-label">Operational Causes</div>
+<div class="metric-sub">Recruitment, funding & administration</div>
+</div>
+<div class="metric-card alt">
+<div class="metric-number">&lt; 10%</div>
+<div class="metric-label">True Biological Fails</div>
+<div class="metric-sub">Toxicity or confirmed futility</div>
+</div>
 </div>
 
 ## The Anatomy of Failure: Why Do Trials Halt? 

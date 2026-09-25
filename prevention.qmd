@@ -1,5 +1,5 @@
 ---
-title: "Preventing Trial Termination: Warning Signs & Benefits"
+title: "Preventing Trial Termination: Warning Signs"
 subtitle: "Translating empirical risk signals into actionable operational safeguards—and why preventing premature trial halts is essential for patients, sponsors, and science."
 format:
   html:
@@ -18,26 +18,26 @@ Our empirical analysis of **602,514 clinical studies** established that trial te
 Because these root causes are operational rather than biological, **they are largely preventable**. By monitoring specific early warning signals during trial design and the first 90–180 days of execution, research teams can intervene before a study reaches catastrophic failure.
 
 <div class="metrics-container">
-  <div class="metric-card">
-    <div class="metric-number">44.6%</div>
-    <div class="metric-label">Recruitment Risk</div>
-    <div class="metric-sub">Leading target for proactive intervention</div>
-  </div>
-  <div class="metric-card">
-    <div class="metric-number">2x</div>
-    <div class="metric-label">Site Network Drag</div>
-    <div class="metric-sub">Multi-center trials double failure risk</div>
-  </div>
-  <div class="metric-card alt">
-    <div class="metric-number">$50M+</div>
-    <div class="metric-label">Capital at Stake</div>
-    <div class="metric-sub">Average cost of a late-phase clinical trial</div>
-  </div>
-  <div class="metric-card alt">
-    <div class="metric-number">100%</div>
-    <div class="metric-label">Patient Trust</div>
-    <div class="metric-sub">Ethical duty to honor human volunteerism</div>
-  </div>
+<div class="metric-card">
+<div class="metric-number">44.6%</div>
+<div class="metric-label">Recruitment Risk</div>
+<div class="metric-sub">Leading target for proactive intervention</div>
+</div>
+<div class="metric-card">
+<div class="metric-number">2x</div>
+<div class="metric-label">Site Network Drag</div>
+<div class="metric-sub">Multi-center trials double failure risk</div>
+</div>
+<div class="metric-card alt">
+<div class="metric-number">$50M+</div>
+<div class="metric-label">Capital at Stake</div>
+<div class="metric-sub">Average cost of a late-phase clinical trial</div>
+</div>
+<div class="metric-card alt">
+<div class="metric-number">100%</div>
+<div class="metric-label">Patient Trust</div>
+<div class="metric-sub">Ethical duty to honor human volunteerism</div>
+</div>
 </div>
 
 ## 1. How Warning Signs Can Prevent Trial Termination
@@ -72,12 +72,26 @@ Clinical trial sponsors can convert our observed risk indicators into an **early
 - **Proactive Safeguards**:
   - **Adaptive Sample Size Re-estimation**: Pre-plan statistical adaptations allowing sample sizes to adjust dynamically based on unblinded interim variability.
   - **Formal Futility Stopping Rules**: Establish rigorous Bayesian futility boundaries. If a drug truly lacks efficacy, an adaptive design terminates the trial gracefully with statistical rigor—saving patients and capital from prolonged, fruitless exposure.
+These safeguards keep the page focused on interventions that can be applied before a trial reaches a preventable halt.
 
----
+## The Strategic Prevention Framework
 
-## 2. Why Prevent Trial Termination? The Four Core Benefits
+| Phase of Trial Lifecycle | Dominant Risk Signal | Proactive Intervention Strategy | Core Value Generated |
+|:---|:---|:---|:---|
+| **Protocol Design** | Over-restrictive eligibility, excessive site footprint | EHR feasibility simulation, patient advisory input, simplified endpoints | Eliminates recruitment bottlenecks before launch |
+| **Site Activation** | Regulatory lag, variable site capabilities | Tiered rollout, single-IRB agreements, centralized coordinator staffing | Reduces multi-site operational friction |
+| **Active Recruitment** | Day 90 accrual velocity dropping below 50% | Decentralized trial tools, community provider networks, recruitment rescue | Addresses the leading failure mode |
+| **Interim Evaluation** | Indeterminate efficacy, funding cycle cliff | Pre-planned Bayesian adaptive redesign, tranche-based capital covenants | Turns unexpected abandonment into rigorous scientific resolution |
 
-Halting premature trial termination delivers profound positive externalities across medicine, economics, and society:
+::: {.callout-note}
+### The Ultimate Goal: Intentional Science
+
+Preventing trial termination does not mean artificially propping up ineffective or unsafe molecules. It means **ensuring every trial reaches an intentional, statistically sound conclusion** so that clinical decisions are guided by definitive data rather than administrative defeat.
+:::
+
+## Why Prevent Trial Termination?
+
+Halting premature trial termination has consequences across medicine, economics, and society:
 
 ::: {.benefit-box}
 ### 1. Honoring Patient Volunteerism & Ethical Integrity
@@ -90,39 +104,24 @@ Preventing preventable terminations upholds the bioethical promise that patient 
 ::: {.benefit-box}
 ### 2. Conserving Billions in Biomedical R&D Capital
 
-Developing a single novel medicine now costs upwards of **$1.5 to $2.6 billion**, with clinical trials representing the lion's share of that investment. A terminated Phase II or Phase III trial incinerates anywhere from **$20 million to $150 million** in direct expenditures.
+Developing a single novel medicine now costs upwards of **$1.5 to $2.6 billion**, with clinical trials representing the lion's share of that investment. A terminated Phase II or Phase III trial can waste **$20 million to $150 million** in direct expenditures.
 
-By preventing operational failure through predictive risk surveillance, pharmaceutical companies, philanthropic foundations, and government funding agencies (such as the NIH) can preserve hundreds of millions of dollars annually—reinvesting those savings into promising discoveries.
+By preventing operational failure through early risk surveillance, pharmaceutical companies, philanthropic foundations, and government funding agencies can preserve resources and reinvest them into promising discoveries.
 :::
 
 ::: {.benefit-box}
 ### 3. Accelerating the Delivery of Life-Saving Cures
 
-Every clinical trial that stalls and terminates represents lost months or years in the therapeutic timeline. In oncology, rare diseases, and neurodegenerative disorders, delays translate directly into lost patient lives.
+Every clinical trial that stalls and terminates represents lost months or years in the therapeutic timeline. In oncology, rare diseases, and neurodegenerative disorders, delays can translate directly into lost patient lives.
 
-Proactive trial retention and recruitment monitoring keep timelines on track, enabling regulatory authorities (like the FDA and EMA) to evaluate efficacy data sooner and bring breakthrough therapies to waiting patients.
+Proactive trial retention and recruitment monitoring keep timelines on track, enabling regulators to evaluate efficacy data sooner and bring breakthrough therapies to waiting patients.
 :::
 
 ::: {.benefit-box}
 ### 4. Eliminating Publication Bias & Protecting Scientific Evidence
 
-Terminated trials suffer from severe under-reporting: studies that halt prematurely are vastly less likely to publish their results in peer-reviewed journals, disappearing into the "file drawer." This distorts the published scientific literature, obscuring real drug safety signals and causing subsequent researchers to duplicate futile research pathways.
+Terminated trials suffer from severe under-reporting: studies that halt prematurely are less likely to publish their results, disappearing into the "file drawer." This distorts the published literature, obscures safety signals, and can cause subsequent researchers to duplicate futile research pathways.
 
-Ensuring trials achieve planned enrollment and reach definitive conclusions strengthens the entire evidentiary foundation of modern clinical practice.
+Ensuring trials reach planned enrollment and a definitive conclusion strengthens the evidentiary foundation of clinical practice.
 :::
 
----
-
-## The Strategic Prevention Framework
-
-| Phase of Trial Lifecycle | Dominant Risk Signal | Proactive Intervention Strategy | Core Value Generated |
-|:---|:---|:---|:---|
-| **Protocol Design** | Over-restrictive eligibility, excessive site footprint | EHR feasibility simulation, patient advisory input, simplified endpoints | Eliminates recruitment bottlenecks before launch |
-| **Site Activation** | Regulatory lag, variable site capabilities | Tiered rollout, single-IRB agreements, centralized coordinator staffing | Halves the 10.3% multi-site operational failure penalty |
-| **Active Recruitment** | Day 90 accrual velocity dropping below 50% | Decentralized trial tools, community provider networks, recruitment rescue | Directly prevents the #1 failure mode (44.6% of terminations) |
-| **Interim Evaluation** | Indeterminate efficacy, funding cycle cliff | Pre-planned Bayesian adaptive redesign, tranche-based capital covenants | Transforms unexpected abandonment into rigorous scientific resolution |
-
-::: {.callout-note}
-### The Ultimate Goal: Intentional Science
-Preventing trial termination does not mean artificially propping up ineffective or unsafe molecules. Rather, it means **ensuring every trial reaches an intentional, statistically sound conclusion**—so that clinical decisions are guided by definitive data rather than administrative defeat.
-:::

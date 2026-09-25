@@ -1,24 +1,22 @@
 ---
 title: "Drawing Conclusions"
-subtitle: "How this project turns trial records into practical signals."
+subtitle: "What the clinical-trial data can tell us—and what it cannot."
 ---
 
-## From registration records to risk signals
+## What the data suggests
 
-This project uses the Aggregate Analysis of ClinicalTrials.gov (AACT) database to examine patterns associated with clinical trial termination. The analysis begins with registered studies, preserves each reported overall status, and compares terminated studies with the broader set across design, enrollment, duration, intervention, sponsor, site, condition, phase, and therapeutic-area variables.
+The dataset contains **602,514 registered studies**, including **34,295 marked `TERMINATED`**. The clearest conclusion is that termination is not evenly distributed: some study characteristics are associated with noticeably higher or lower termination proportions.
 
-The summary tables and visualizations are descriptive rather than a clinical prediction model. They are intended to help researchers identify recurring operational and design risks early, while keeping the underlying study-level records available for inspection.
+Phase II studies have the highest termination proportion among the main development phases at **11.1%**. Oncology studies are at **9.3%**, while healthy-volunteer studies are at **3.0%**. Planned duration also matters descriptively: studies planned for 2–3 years are at **6.8%**, compared with **3.5%** for studies planned for less than six months.
 
-## What patterns can we see?
+These comparisons help identify where prevention efforts deserve attention. They do not prove that phase, disease area, or duration causes termination, and they should not be read as individual-trial predictions.
 
-Across all 602,514 records, 5.7% are marked `TERMINATED`. The share varies across study characteristics: Phase II studies have an 11.1% termination proportion, compared with 7.9% for Phase I and 8.3% for Phase III. The pattern is not a simple increase with each phase; mixed Phase I/II or II/III studies are also elevated at 10.6%.
+## A few comparisons to remember
 
-Planned duration shows a non-linear pattern: studies in the 2–3 year and 3–5 year groups are around 6.8% terminated, compared with 3.5% for studies under six months and 5.1% for studies planned for five or more years. Therapeutic areas differ too: oncology is at 9.3%, while healthy-volunteer studies are at 3.0%. These are useful comparisons for asking where to investigate further, not evidence that phase, duration, or condition causes termination.
-
-The flow diagram below offers a different view: it traces reported reasons for termination across lead-sponsor groups. Ribbon width represents the number of terminated studies in each sponsor-and-reason combination. Hover over a ribbon to inspect its count and share within that sponsor group.
+The chart below puts six useful reference points on one scale. Hover over a point to see the number of terminated studies and the total number of studies behind each percentage.
 
 ```{r}
-#| label: methods-termination-flows
+#| label: conclusions-comparison-chart
 #| echo: false
 #| message: false
 #| warning: false
@@ -26,123 +24,55 @@ The flow diagram below offers a different view: it traces reported reasons for t
 library(dplyr)
 library(plotly)
 library(readr)
-library(stringr)
 
-reported_terminations <- read_tsv(
-	"data/processed/aact_trial_termination_candidate_2026-09-12.tsv.gz",
-	col_select = c(terminated_binary, why_stopped, lead_sponsor_type),
-	show_col_types = FALSE,
-	progress = FALSE
+comparison_data <- bind_rows(
+    read_tsv("data/processed/summary_phase.tsv", show_col_types = FALSE) |>
+        filter(phase_display %in% c("Phase I", "Phase II", "Phase III")) |>
+        transmute(group = "Development phase", category = phase_display, total_studies, terminated_studies, termination_pct = termination_rate * 100),
+    read_tsv("data/processed/summary_durations.tsv", show_col_types = FALSE) |>
+        filter(duration_bracket %in% c("< 6 months", "2–3 years")) |>
+        transmute(group = "Planned duration", category = duration_bracket, total_studies, terminated_studies, termination_pct = termination_rate * 100),
+    read_tsv("data/processed/summary_therapeutic_areas.tsv", show_col_types = FALSE) |>
+        filter(therapeutic_area %in% c("Oncology / Cancer", "Healthy Volunteers")) |>
+        transmute(group = "Therapeutic area", category = therapeutic_area, total_studies, terminated_studies, termination_pct = termination_rate * 100)
 ) |>
-	filter(terminated_binary == 1, !is.na(why_stopped)) |>
-	mutate(reason_text = str_to_lower(str_trim(why_stopped))) |>
-	filter(reason_text != "", reason_text != "[missing]") |>
-	mutate(
-		sponsor_group = case_when(
-			lead_sponsor_type == "OTHER" ~ "Academic & hospital systems",
-			lead_sponsor_type == "INDUSTRY" ~ "Industry",
-			lead_sponsor_type %in% c("OTHER_GOV", "NIH", "FED") ~ "Government",
-			lead_sponsor_type == "NETWORK" ~ "Research networks",
-			lead_sponsor_type == "INDIV" ~ "Individual investigators",
-			TRUE ~ "Other / not reported"
-		),
-		reason_category = case_when(
-			str_detect(reason_text, "accrual|enroll|recruit|patient|participant|subject") ~ "Accrual & Recruitment Bottlenecks",
-			str_detect(reason_text, "sponsor|fund|business|financial|commercial|strategic|company|budget|priorit") ~ "Business, Funding & Strategic Decisions",
-			str_detect(reason_text, "futil|efficac|endpoint|benefit|no effect|ineffective|interim analysis|failed to show") ~ "Lack of Efficacy & Futility",
-			str_detect(reason_text, "safe|toxic|adverse|death|side effect|risk|harm|dlt") ~ "Safety & Adverse Events",
-			str_detect(reason_text, "pi |investigator|staff|faculty|leave|left|retirement|departure") ~ "Investigator Departure & Staffing",
-			str_detect(reason_text, "covid|pandemic|coronavirus") ~ "External Shocks (COVID-19 / Logistics)",
-			str_detect(reason_text, "drug|product|supply|manufacturer|manufacturing|formulation|lot") ~ "Drug Supply & Manufacturing",
-			str_detect(reason_text, "regulatory|fda|irb|approval|compliance|protocol") ~ "Regulatory & Protocol Compliance",
-			TRUE ~ "Other Administrative & Operational"
-		)
-	)
-
-sponsor_levels <- c(
-	"Academic & hospital systems",
-	"Industry",
-	"Government",
-	"Research networks",
-	"Individual investigators",
-	"Other / not reported"
-)
-reason_levels <- c(
-	"Accrual & Recruitment Bottlenecks",
-	"Business, Funding & Strategic Decisions",
-	"Other Administrative & Operational",
-	"Lack of Efficacy & Futility",
-	"Investigator Departure & Staffing",
-	"Safety & Adverse Events",
-	"External Shocks (COVID-19 / Logistics)",
-	"Drug Supply & Manufacturing",
-	"Regulatory & Protocol Compliance"
-)
-reason_colors <- c(
-	"Accrual & Recruitment Bottlenecks" = "#e76f51",
-	"Business, Funding & Strategic Decisions" = "#f4a261",
-	"Other Administrative & Operational" = "#42616a",
-	"Lack of Efficacy & Futility" = "#183642",
-	"Investigator Departure & Staffing" = "#709775",
-	"Safety & Adverse Events" = "#bc4749",
-	"External Shocks (COVID-19 / Logistics)" = "#8d99ae",
-	"Drug Supply & Manufacturing" = "#d4a373",
-	"Regulatory & Protocol Compliance" = "#778da9"
-)
-sponsor_colors <- c("#183642", "#42616a", "#2a9d8f", "#6b9080", "#8d99ae", "#a8b5ae")
-
-flows <- reported_terminations |>
-	count(sponsor_group, reason_category, name = "studies") |>
-	group_by(sponsor_group) |>
-	mutate(sponsor_share = studies / sum(studies) * 100) |>
-	ungroup() |>
-	arrange(sponsor_group, reason_category)
-
-nodes <- c(sponsor_levels, reason_levels)
-node_colors <- c(sponsor_colors, unname(reason_colors[reason_levels]))
-link_colors <- vapply(flows$reason_category, function(reason) {
-	channels <- grDevices::col2rgb(reason_colors[[reason]])
-	sprintf("rgba(%d,%d,%d,0.38)", channels[1], channels[2], channels[3])
-}, character(1))
+    arrange(termination_pct) |>
+    mutate(label = paste(group, category, sep = " — "))
 
 plot_ly(
-	type = "sankey",
-	orientation = "h",
-	height = 720,
-	node = list(
-		label = nodes,
-		color = node_colors,
-		pad = 16,
-		thickness = 18,
-		line = list(color = "#f7f4ed", width = 1)
-	),
-	link = list(
-		source = match(as.character(flows$sponsor_group), sponsor_levels) - 1L,
-		target = match(as.character(flows$reason_category), reason_levels) + length(sponsor_levels) - 1L,
-		value = flows$studies,
-		color = link_colors,
-		customdata = flows$sponsor_share,
-		hovertemplate = paste0(
-			"<b>%{source.label} → %{target.label}</b><br>",
-			"Studies with reported reason: %{value:,}<br>",
-			"%{customdata:.1f}% of reported reasons in this sponsor group",
-			"<extra></extra>"
-		)
-	)
+    data = comparison_data,
+    x = ~termination_pct,
+    y = ~factor(label, levels = label),
+    type = "scatter",
+    mode = "markers",
+    marker = list(size = 15, color = "#e76f51", line = list(color = "#183642", width = 1)),
+    customdata = ~cbind(terminated_studies, total_studies),
+    hovertemplate = paste0(
+        "<b>%{y}</b><br>",
+        "Termination proportion: %{x:.1f}%<br>",
+        "Terminated studies: %{customdata[0]:,}<br>",
+        "Total studies: %{customdata[1]:,}<extra></extra>"
+    ),
+    showlegend = FALSE
 ) |>
-	layout(
-		paper_bgcolor = "#f7f4ed",
-		font = list(family = "DM Sans, sans-serif", color = "#183642", size = 12),
-		margin = list(l = 12, r = 12, t = 24, b = 12)
-	)
+    layout(
+        height = 520,
+        paper_bgcolor = "#f7f4ed",
+        plot_bgcolor = "#f7f4ed",
+        font = list(family = "DM Sans, sans-serif", color = "#183642"),
+        xaxis = list(
+            title = "Share of studies marked TERMINATED",
+            ticksuffix = "%",
+            range = c(0, 12.5),
+            gridcolor = "rgba(24, 54, 66, 0.12)"
+        ),
+        yaxis = list(title = "", automargin = TRUE),
+        margin = list(l = 190, r = 30, t = 25, b = 70)
+    )
 ```
 
-This diagram includes the 30,742 terminated studies with an informative `why_stopped` entry; the 3,553 terminated studies without one are excluded. Reason categories reuse the project's keyword-based classification, so they summarize what was reported rather than independently verified causes. Because the diagram includes terminated studies only, it compares the mix of reported reasons across sponsor groups; it does not show which sponsor group is more likely to terminate a study.
+## Reading the result carefully
 
-## Source and processing
+The chart describes registered records, not the future outcome of a new trial. It includes studies with active, completed, unknown, and other statuses in the denominator. Planned duration may only be known after a study ends, and the categories can overlap with other design and sponsor characteristics. The strongest conclusion is therefore practical: use these patterns to ask better feasibility and monitoring questions, not to label a trial as destined to fail.
 
-The primary source is [AACT](https://aact.ctti-clinicaltrials.org/), a downloadable relational representation of [ClinicalTrials.gov](https://clinicaltrials.gov/). The project’s processed tables and inventory notes are available in the repository’s [`data/`](https://github.com/karareed2026-max/clinical-Trials/tree/main/data) directory. Counts and percentages shown on this site reflect the project’s candidate dataset and its documented filtering decisions.
-
-## Reproducibility
-
-The analysis scripts used to build the candidate dataset and summary tables are in the repository’s [`scripts/`](https://github.com/karareed2026-max/clinical-Trials/tree/main/scripts) directory. The source files and processing reports provide the detail needed to trace each chart back to its input table.
+The underlying data comes from the [Aggregate Analysis of ClinicalTrials.gov (AACT)](https://aact.ctti-clinicaltrials.org/), a structured version of [ClinicalTrials.gov](https://clinicaltrials.gov/). The processed tables and analysis scripts are documented in the project repository’s [`data/`](https://github.com/karareed2026-max/clinical-Trials/tree/main/data) and [`scripts/`](https://github.com/karareed2026-max/clinical-Trials/tree/main/scripts) directories.
