@@ -83,12 +83,6 @@ These safeguards keep the page focused on interventions that can be applied befo
 | **Active Recruitment** | Day 90 accrual velocity dropping below 50% | Decentralized trial tools, community provider networks, recruitment rescue | Addresses the leading failure mode |
 | **Interim Evaluation** | Indeterminate efficacy, funding cycle cliff | Pre-planned Bayesian adaptive redesign, tranche-based capital covenants | Turns unexpected abandonment into rigorous scientific resolution |
 
-::: {.callout-note}
-### The Ultimate Goal: Intentional Science
-
-Preventing trial termination does not mean artificially propping up ineffective or unsafe molecules. It means **ensuring every trial reaches an intentional, statistically sound conclusion** so that clinical decisions are guided by definitive data rather than administrative defeat.
-:::
-
 ## Why Prevent Trial Termination?
 
 Halting premature trial termination has consequences across medicine, economics, and society:
@@ -123,5 +117,11 @@ Proactive trial retention and recruitment monitoring keep timelines on track, en
 Terminated trials suffer from severe under-reporting: studies that halt prematurely are less likely to publish their results, disappearing into the "file drawer." This distorts the published literature, obscures safety signals, and can cause subsequent researchers to duplicate futile research pathways.
 
 Ensuring trials reach planned enrollment and a definitive conclusion strengthens the evidentiary foundation of clinical practice.
+:::
+
+::: {.callout-note}
+### The Ultimate Goal: Intentional Science
+
+Preventing trial termination does not mean artificially propping up ineffective or unsafe molecules. It means **ensuring every trial reaches an intentional, statistically sound conclusion** so that clinical decisions are guided by definitive data rather than administrative defeat.
 :::
 
