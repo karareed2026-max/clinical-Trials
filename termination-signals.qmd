@@ -391,7 +391,7 @@ create_signal_chart <- function(
 
 ## 1. Study Status & The Scope of Termination
 
-Across the full registry of 602,514 studies, **34,295** are explicitly recorded as `TERMINATED`. The interactive chart below contrasts total registered studies against those marked terminated across all primary status categories. Use the buttons to toggle between linear and logarithmic scale to inspect low-frequency status categories, or hover over bars for exact counts and registry shares.
+Across the full registry of 602,514 studies, **34,295** are explicitly recorded as `TERMINATED`. The interactive chart below, similar to the one on the Home page, contrasts total registered studies against those marked terminated across all primary status categories. Use the buttons to toggle between linear and logarithmic scale to inspect low-frequency status categories, or hover over bars for exact counts and registry shares.
 
 ```{r}
 #| label: signal-status
