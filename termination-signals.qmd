@@ -29,7 +29,7 @@ To evaluate termination risk factors comprehensively, this project brings togeth
 | Domain | Key Variables Gathered | Description & Analytical Value |
 |:---|:---|:---|
 | **Study Identification & Status** | Study identifier, overall study status, termination indicator, and reported reason for stopping | Tracks each trial across 14 status categories and captures the documented rationale for more than 30,000 terminated studies. |
-| **Recruitment & Scale** | Planned enrollment and enrollment type | Quantifies expected participant cohorts and distinguishes planned targets from actual accrual. |
+| **Recruitment & Scale** | Planned enrollment and enrollment type | Quantifies expected participant cohorts and distinguishes planned targets from actual participant accumulation. |
 | **Development Phase** | Phase I, II, III, IV, mixed, or not applicable | Shows how termination patterns change from early safety testing to large-scale confirmatory trials. |
 | **Sponsorship & Funding** | Lead sponsor type, lead organization, and sponsor count | Groups sponsors into industry, academic or hospital, NIH, and federal categories to examine funding context. |
 | **Study Architecture & Complexity** | Randomized design, placebo use, number of treatment arms, and number of sites | Captures protocol structure, control groups, and the operational reach of each study. |
