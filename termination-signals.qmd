@@ -32,7 +32,7 @@ To evaluate termination risk factors comprehensively, this project brings togeth
 | **Recruitment & Scale** | Planned enrollment and enrollment type | Quantifies expected participant cohorts and distinguishes planned targets from actual participant accumulation. |
 | **Development Phase** | Phase I, II, III, IV, mixed, or not applicable | Shows how termination patterns change from early safety testing to large-scale confirmatory trials. |
 | **Sponsorship & Funding** | Lead sponsor type, lead organization, and sponsor count | Groups sponsors into industry, academic or hospital, NIH, and federal categories to examine funding context. |
-| **Study Architecture & Complexity** | Randomized design, placebo use, number of treatment arms, and number of sites | Captures protocol structure, control groups, and the operational reach of each study. |
+| **Study Design & Complexity** | Randomized design, placebo use, number of treatment arms, and number of sites | Captures protocol structure, control groups, and the operational reach of each study. |
 | **Timeline & Duration** | Start year, start date, completion date, and study duration | Follows trial activity across 36 years, from 1990 to 2026, and measures how long studies remain active before resolution. |
 
 These measures are descriptive signals rather than guarantees of failure. Together, they help researchers compare study designs, identify patterns associated with termination, and focus prevention efforts where they may have the greatest value.
