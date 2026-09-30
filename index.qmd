@@ -89,7 +89,7 @@ ggplot(df_area, aes(x = total_studies, y = therapeutic_area)) +
 
 ## What do individual trials look like over time?
 
-Summary bars can hide the studies they count. This view shows the individual records directly: each point is one study plotted by its start year and planned enrollment. Coral points are studies marked `TERMINATED`; teal points are all other status categories. The logarithmic y-axis keeps small and very large studies visible together.
+Each point on this chart is one study plotted by its start year and planned enrollment. Coral points are studies marked `TERMINATED`; teal points are all other status categories. The logarithmic y-axis keeps small and very large studies visible together.
 
 ```{r}
 #| label: home-enrollment-trend
